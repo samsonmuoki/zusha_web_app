@@ -34,7 +34,16 @@ def index(request):
 
 def get_reports(request):
     """Fetch all reports."""
-    # reports = db.child('reports').get()
-    # context = {'reports': reports}
-    # return render(request, 'reports/reports.html', context)
-    return render(request, 'reports/reports.html')
+    reports = db.child('Reports').get()
+    reports_query_data = reports.val()
+    context = {'reports_query_data': reports_query_data}
+    return render(request, 'reports/reports.html', context)
+    # return render(request, 'reports/reports.html')
+
+
+# def reports_by_sacco(request):
+#     """Sort reports by sacco."""
+#     reports_by_sacco = db.child("Reports").order_by_child("sacco").equal_to("lopha").get()
+#     sacco_query_data = reports_by_sacco.val()
+#     context = {'sacco_query_data': sacco_query_data}
+#     return render(request, 'reports/sacco_level.html', context)
