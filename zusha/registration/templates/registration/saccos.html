@@ -1,0 +1,11 @@
+{% if saccos %}
+    <ul>
+        {% for sacco in saccos %}
+            <li>
+                <a href="/registration/{{ sacco.id }}/">{{ sacco.sacco_name}}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No saccos are available</p>
+{% endif %}
