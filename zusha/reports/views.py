@@ -32,6 +32,10 @@ def index(request):
     return HttpResponse("Hello, world. You're at the Reports index page.")
 
 
+def view_map(request):
+    return render(request, 'reports/map.html')
+
+
 def get_reports(request):
     """Fetch all reports."""
     reports = db.child('Reports').get()

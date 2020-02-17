@@ -40,14 +40,14 @@ class Vehicle(models.Model):
     )
 
     def __str__(self):
-        return f"{self.registration_number} => {self.sacco}"
+        return f"{self.registration_number} License:{self.license_status}, Sacco: {self.sacco}"
 
 
 class Driver(models.Model):
     """Driver details."""
 
-    driver_name = models.CharField(max_length=200)
     driver_id = models.CharField(max_length=200)
+    driver_name = models.CharField(max_length=200)
     # driver_id = models.IntegerField(default=0)
     sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
     # date registered = models.DateField
