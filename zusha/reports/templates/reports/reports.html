@@ -1,14 +1,54 @@
-<h1>ALL REPORTED CASES</h1>
-<!-- {{reports_query_data}} -->
-{% if reports_query_data%}
-    {%for report in reports_query_data%}
-        <ul>
-            <li>
-                {{ report }}
-                <!-- <a href="/reports/{{report}}"> </a> -->
-            </li>
-        </ul>
-    {% endfor %}
-{% else %}
-    <p>No reports to display</p>
-{% endif %}
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+    
+    <h2>ALL REPORTED CASES</h2>
+
+    <!-- {{reports_query_data}} -->
+    {% if reports_query_data %}
+        
+        <table>
+            <tr>
+                <th>Reg No</th>
+                <th>Sacco</th>
+                <th>Speed</th>
+                <th>Time</th>
+                <th>Location</th>
+                <th>Driver</th>
+            </tr>
+            {% for report in reports_query_data %}
+            <tr>
+                <td>{{ report.RegNo}}</td>
+                <td>{{ report.Sacco}}</td>
+                <td>{{ report.Speed}}</td>
+                <td>{{ report.Time}}</td>
+                <td><a href="">{{ report.Location}}</a></td>
+                <td>{{ report.Driver}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No reports to display</p>
+    {% endif %}
+
+</body>
+</html>
