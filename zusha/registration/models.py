@@ -4,9 +4,11 @@ from django.db import models
 
 APPROVED = 'approved'
 BLACKLISTED = 'blacklisted'
+EXPIRED = 'expired'
 
 STATUS = [
     (APPROVED, ('Approved to operate')),
+    (EXPIRED, ('License not renewed')),
     (BLACKLISTED, ('Not approved to operate')),
 ]
 

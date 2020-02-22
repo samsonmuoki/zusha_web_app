@@ -7,7 +7,12 @@ app_name = 'reports'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('all/', views.get_reports, name='reports'),
-    path('all/map/', views.view_map, name='map')
+    # path('all/', views.get_reports, name='reports'),
+    path('all/', views.get_reports2, name='reports2'),
+    path('all/<int:report_id>/', views.get_speeding_instance, name='speeding-instance'),
+    path('all/map/', views.view_map, name='map'),
+    # path('all/map2/', views.view_map2, name='map2'),
+    # path('all/map/<str:RegNo>-<str:Location>-<str:speed>', name='speeding-location')
+    # path('all/map/<slug:speeding-instance>', get_sp name='speeding-instance')
     # path('bysacco/', views.reports_by_sacco, name='reportsBySacco')
 ]

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+       /* Set the size of the div element that contains the map */
+      #map {
+        height: 400px;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
+    </style>
+  </head>
+  <body>
+    <h3>OVER SPEEDING LOCATIONS</h3>
+    <!--The div element for the map -->
+    <div id="map"></div>
+    <script>
+        // Initialize and add the map
+        function initMap() {
+        // The location of Uluru
+        //   var uluru = {lat: -25.344, lng: 131.036};
+        var uluru = {lat: -25.344, lng: 131.036};
+        // The map, centered at Uluru
+        var map = new google.maps.Map(
+            document.getElementById('map'), {zoom: 4, center: uluru});
+        // The marker, positioned at Uluru
+        var marker = new google.maps.Marker({position: uluru, map: map});
+        }
+    </script>
+<!-- {{% if reports_query_data %}}
+    <script>
+        // Initialize and add map
+        function initMap() {
+            {{% for report in reports_query_data %}}
+                var location = {lat: {{report.Location.latitude}}, lng: {{report.Location.longitude}}}
+                map = new google.maps.Map(
+                    document.getElementById('map'), {zoom: 4}
+                );
+                var marker = new google.maps.Map({position: location, map: map})
+            {{% endfor %}}
+        }
+    </script>
+{{% else %}}
+    <p>No locations to display</p>
+{{% endif %}} -->
+
+    <!--Load the API from the specified URL
+    * The async attribute allows the browser to render the page while the API loads
+    * The key parameter will contain your own API key (which is not needed for this tutorial)
+    * The callback parameter executes the initMap() function
+    -->
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCdvqkRTeufZj_Dx0YWw2NaX6MZKaCEPn0&callback=initMap">
+    </script>
+  </body>
+</html>

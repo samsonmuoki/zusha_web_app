@@ -3,6 +3,11 @@ from django.shortcuts import render
 import pyrebase
 
 from django.http import HttpResponse
+# from flask import render_template, Flask
+# import json
+
+
+# app = Flask("reports")
 # Create your views here.
 
 
@@ -32,10 +37,6 @@ def index(request):
     return HttpResponse("Hello, world. You're at the Reports index page.")
 
 
-def view_map(request):
-    return render(request, 'reports/map.html')
-
-
 def get_reports(request):
     """Fetch all reports."""
     reports = db.child('Reports').get()
@@ -44,6 +45,37 @@ def get_reports(request):
     return render(request, 'reports/reports.html', context)
     # return render(request, 'reports/reports.html')
 
+
+def view_map(request):
+    """Open map with marker on reported location."""
+    return render(request, 'reports/map.html')
+
+
+# @app.route('/')
+def get_reports2(request):
+    """Fetch all reports."""
+    reports = db.child('Reports').get()
+    reports_query_data = reports.val()
+    # context = {'reports_query_data': reports_query_data}
+    reports_dictionary = {}
+    for value in range(0, len(reports_query_data)):
+        reports_dictionary.update({int(value): reports_query_data[value]})
+    context1 = {'reports_dictionary': reports_dictionary}
+    # reports_list = []
+    # for value in range(0, len(reports_query_data)):
+    #     reports_list.append(value[reports_query_data[value]])
+    # context2 = {'reports_list': reports_list}
+
+    return render(request, 'reports/reports2.html', context1)
+    # return render_template('reports/maps2.html', data=map(json.dumps, context2))
+
+
+def get_speeding_instance(request, report_id):
+    """Fetch a single speeding instance"""
+    report = db.child('Reports').child(report_id).get()
+    report_query_data = report.val()
+    context = {'report_query_data': report_query_data}
+    return render(request, 'reports/single_report.html', context)
 
 # def reports_by_sacco(request):
 #     """Sort reports by sacco."""

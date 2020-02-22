@@ -23,8 +23,27 @@ tr:nth-child(even) {
     
     <h2>ALL REPORTED CASES</h2>
 
-    <!-- {{reports_query_data}} -->
-    {% if reports_query_data %}
+    {{reports_dictionary}}
+    <!-- {{reports_list}} -->
+    <h1><b>List of Reports</b></h1>
+    <!-- <a href="">{{reports_dictionary.0.Driver}}</a></br>
+    <a href="">{{reports_dictionary.1}}</a></br> -->
+
+    <!-- {% with report=8 %}
+        <p>{{report}}</p>
+        {{ reports_dictionary.report }} </br>
+    {% endwith %} -->
+
+
+
+    <h1>Reports</h1>
+    {% if reports_dictionary %}
+        {% for report in reports_dictionary %}
+            {{report}}
+        {% endfor %}
+    {% endif %}
+
+    {% if reports_dictionary_sth %}
         
         <table>
             <tr>
@@ -35,14 +54,13 @@ tr:nth-child(even) {
                 <th>Location</th>
                 <th>Driver</th>
             </tr>
-            {% for report in reports_query_data %}
+            {% for report in reports_dictionary %}
             <tr>
-                <td>{{ report.RegNo}}</td>
+                <td><a href="all/reports/{{report_id}}">{{ report.RegNo}}</a> </td>
                 <td>{{ report.Sacco}}</td>
                 <td>{{ report.Speed}}</td>
                 <td>{{ report.Time}}</td>
-                <!-- <td><a href="map/">{{ report.Location}}</a></td> -->
-                <td><a href="map/[{{report.RegNo}}]-[{{report.Location}}]-[{{report.Speed}}]">{{ report.Location}}</a></td>                
+                <td><a href="map/">{{ report.Location}}</a></td>
                 <td>{{ report.Driver}}</td>
             </tr>
             {% endfor %}
