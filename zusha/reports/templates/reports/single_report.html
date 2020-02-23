@@ -13,26 +13,73 @@
 
 <!-- <h1> {{report_query_data}} </h1> -->
 <h1>Overspeeding Report</h1>
-<p> Registration: {{report_query_data.RegNo}} </p>
-<p> Driver: {{report_query_data.Driver}} </p>
-<p> Sacco: {{report_query_data.Sacco}} </p>
-<p> Speed: {{report_query_data.Speed}} </p>
-<p> Time: {{report_query_data.Time}} </p>
-<p> Location: {{report_query_data.Location}} </p>
+<p> REGISTRATION: <var id="regno"> {{report_query_data.RegNo}} </var> </p>
+<p> DRIVER: <var id="driver"> {{report_query_data.Driver}} </var> </p>
+<p> SACCO: <var id="sacco"> {{report_query_data.Sacco}} </var> </p>
+<p> SPEED: <var id="speed"> {{report_query_data.Speed}} </var> </p>
+<p> TIME: <var id="time"> {{report_query_data.Time}} </var> </p>
+<p> Location: <var id="speedlocation">{{report_query_data.Location}} </var> </p>
 
+
+<h1>Splitting Location</h1>
+
+<!-- <script>
+    // var latitude = document.getElementById("latitude").innerHTML;
+    // var longitude = document.getElementById("longitude").innerHTML;
+    // document.write(longitude); document.write(longitude); 
+    var speedlocation = document.getElementById("speedlocation").innerHTML;
+    document.write(speedlocation);
+    var LocationArray = speedlocation.split(',')
+    
+    var latitude = LocationArray[0].slice(10)
+    var longitude = LocationArray[1].slice(12)
+    document.write("Latitude=" + latitude);
+    document.write("Longitude=" + longitude);
+
+</script> -->
 
 <div id="map"></div>
     <script>
-        // Initialize and add the map
-        function initMap() {
-        // The location of Uluru
-        //   var uluru = {lat: -25.344, lng: 131.036};
-        var uluru = {lat: -25.344, lng: 131.036};
-        // The map, centered at Uluru
+      
+      // Initialize and add the map
+      function initMap() {
+
+        var regno = document.getElementById("regno").innerHTML;
+        var speed = document.getElementById("speed").innerHTML;
+        var sacco = document.getElementById("sacco").innerHTML;
+        var time = document.getElementById("time").innerHTML;
+
+        var maptitle = "Reg:" + regno + "Speed:" + speed + "Sacco:" + sacco + "Date:" + time;
+
+
+        var speedlocation = document.getElementById("speedlocation").innerHTML;
+        var LocationArray = speedlocation.split(',')
+        
+        var latitude = LocationArray[0].slice(10)
+        var longitude = LocationArray[1].slice(12)
+
+        var reportedLocation = {lat: +latitude, lng: +longitude};
+
+        // The map, centered at the reported Location
         var map = new google.maps.Map(
-            document.getElementById('map'), {zoom: 4, center: uluru});
-        // The marker, positioned at Uluru
-        var marker = new google.maps.Marker({position: uluru, map: map});
+            document.getElementById('map'), {zoom: 15, center: reportedLocation});
+        // The marker, positioned at the reported Location
+        var marker = new google.maps.Marker({
+          position: reportedLocation, 
+          map: map,
+          title: maptitle,
+          draggable: true,
+          label: speed,
+          animation: google.maps.Animation.DROP,
+          });
+        marker.addListener('click', toggleBounce);
+        }
+        function toggleBounce() {
+          if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+          } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+          }
         }
     </script>
 
