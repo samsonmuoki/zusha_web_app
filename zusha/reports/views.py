@@ -77,6 +77,7 @@ def get_speeding_instance(request, report_id):
     context = {'report_query_data': report_query_data}
     return render(request, 'reports/single_report.html', context)
 
+
 # def reports_by_sacco(request):
 #     """Sort reports by sacco."""
 #     reports_by_sacco = db.child("Reports").order_by_child("sacco").equal_to("lopha").get()

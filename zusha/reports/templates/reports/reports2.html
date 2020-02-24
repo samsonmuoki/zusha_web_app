@@ -37,9 +37,24 @@ tr:nth-child(even) {
 
 
     <h1>Reports</h1>
+    {% load range %}
     {% if reports_dictionary %}
+        <!-- {#
+        {% with number=reports_dictionary|length %}
+            Number of reports: {{number}} <br>
+            
+            {% for i in number|range %}
+                {{i}}
+                
+            {% endfor %}
+        {% endwith %}
+        #} -->
         {% for report in reports_dictionary %}
-            {{report}}
+            {% with i=forloop.counter %}
+                Counter: {{i}} 
+                {{reports_dictionary.0}}
+            {% endwith %}
+            <!-- {{report}} -->
         {% endfor %}
     {% endif %}
 
@@ -56,7 +71,7 @@ tr:nth-child(even) {
             </tr>
             {% for report in reports_dictionary %}
             <tr>
-                <td><a href="all/reports/{{report_id}}">{{ report.RegNo}}</a> </td>
+                <td><a href="reports/all/{{report_id}}">{{ report.RegNo}}</a> </td>
                 <td>{{ report.Sacco}}</td>
                 <td>{{ report.Speed}}</td>
                 <td>{{ report.Time}}</td>

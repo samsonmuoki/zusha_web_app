@@ -28,21 +28,25 @@ tr:nth-child(even) {
         
         <table>
             <tr>
+                <th>Id</th>
                 <th>Reg No</th>
                 <th>Sacco</th>
                 <th>Speed</th>
                 <th>Time</th>
-                <th>Location</th>
+                <th>Route</th>
+                <th>Location Coordinates</th>
                 <th>Driver</th>
             </tr>
             {% for report in reports_query_data %}
             <tr>
+                <td>{{ forloop.counter|add:'-1'}}</td>
                 <td>{{ report.RegNo}}</td>
                 <td>{{ report.Sacco}}</td>
                 <td>{{ report.Speed}}</td>
                 <td>{{ report.Time}}</td>
+                <td>name of route</td>
                 <!-- <td><a href="map/">{{ report.Location}}</a></td> -->
-                <td><a href="map/[{{report.RegNo}}]-[{{report.Location}}]-[{{report.Speed}}]">{{ report.Location}}</a></td>                
+                <td><a href="/reports/all/{{forloop.counter|add:'-1'}}">{{ report.Location}}</a></td>                
                 <td>{{ report.Driver}}</td>
             </tr>
             {% endfor %}
