@@ -42,10 +42,9 @@ tr:nth-child(even) {
                 <td>{{ forloop.counter|add:'-1'}}</td>
                 <td>{{ report.RegNo}}</td>
                 <td>{{ report.Sacco}}</td>
-                <td>{{ report.Speed}}</td>
+                <td>{{ report.Speed}} KM/H</td>
                 <td>{{ report.Time}}</td>
-                <td>name of route</td>
-                <!-- <td><a href="map/">{{ report.Location}}</a></td> -->
+                <!-- <td>name of route</td> -->
                 <td><a href="/reports/all/{{forloop.counter|add:'-1'}}">{{ report.Location}}</a></td>                
                 <td>{{ report.Driver}}</td>
             </tr>

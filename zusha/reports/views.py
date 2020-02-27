@@ -34,7 +34,8 @@ db = firebase.database()
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the Reports index page.")
+    # return HttpResponse("Hello, world. You're at the Reports index page.")
+    return render(request, 'reports/index.html')
 
 
 def get_reports(request):
@@ -47,8 +48,11 @@ def get_reports(request):
 
 
 def view_map(request):
-    """Open map with marker on reported location."""
-    return render(request, 'reports/map.html')
+    """Open map with markers on reported locations."""
+    reports = db.child('Reports').get()
+    reports_query_data = reports.val()
+    context = {'reports_query_data': reports_query_data}
+    return render(request, 'reports/map.html', context)
 
 
 # @app.route('/')
@@ -67,7 +71,6 @@ def get_reports2(request):
     # context2 = {'reports_list': reports_list}
 
     return render(request, 'reports/reports2.html', context1)
-    # return render_template('reports/maps2.html', data=map(json.dumps, context2))
 
 
 def get_speeding_instance(request, report_id):
