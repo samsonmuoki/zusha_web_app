@@ -2,30 +2,175 @@
 <html>
 <head>
 <style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
+    #header{
+        background-color: floralwhite;
+        text-align: center;
+        font-size: large;
+        width: fit-content;
+        height: 50px;
+    }
+    #menu{
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        width: fit-content;
+    }
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+        
+    }
 
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
+    li {
+        float: left;
+    }
+  
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+  
+    li a:hover:not(.active) {
+        background-color: #111;
+    }
+    .active {
+        background-color: #4CAF50;
+    }
+    #contents{
+        margin-top: 15px;
+    }
+    #statistics{
+        float: left;
+        width: 24%;
+        background-color: #dddddd;
+    }
+    #summary{
+        padding: 5px;
+        background-color: green;
+    }
+    #bargraph{
+        padding: 5px;
+        margin: 5px;
+        background-color: white;
+        height: 180px;
+    }
+    #linegraph{
+        padding: 5px;
+        margin: 5px;
+        background-color: white;
+        height: 180px;
+    }
+    #piechart{
+        padding: 5px;
+        margin: 5px;
+        background-color: white;
+        height: 180px;
+    }
+    #details{
+        float: left;
+        width: 75%;
+        margin-left: 5px;
+    }
+    #details-title{
+        text-align: center;
+    }
+    table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    }
 
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
+    td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    }
+
+    tr:nth-child(even) {
+    background-color: #dddddd;
+    }
+    /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+    @media screen and (max-width: 800px) {
+        #statistics, #contents {   
+          width: 100%;
+          padding: 0;
+        }
+    }
 </style>
 </head>
-<body>
-    
-    <h2>ALL REPORTED CASES</h2>
 
-    {{reports_dictionary}}
-    <!-- {{reports_list}} -->
-    <h1><b>List of Reports</b></h1>
+<!-- <div id="title">
+     
+    Filter by 
+    <select id="filter">
+        <option value="all"><a href="/reports/all/">All</a></option>
+        <option value="sacco">Sacco</option>
+        <option value="driver">Driver</option>
+    </select>
+</div> -->
+<body>
+    <div id="header"> HEADER TEXT HERE </div>
+    <div id="menu">
+        <ul>
+            <li><a href="">HOME</a></li>
+            <li><a href="/reports/all">REPORTS</a></li>
+            <li><a href="">DRIVERS</a></li>
+            <li><a href="">SACCOS</a></li>
+            <li><a href="">EXTRA</a></li>
+        </ul>
+    </div>
+    <div id="contents">
+        <div id="statistics">
+            <div id="summary"> TOTAL REPORTS: {{reports_dictionary|length}} </div>
+            <div id="bargraph">GRAPH 1</div>
+            <div id="linegraph">GRAPH 2</div>
+            <div id="piechart">GRAPH 3</div>
+            
+        </div>
+        <div id="details">
+            <div id="details-title"> ALL REPORTS</div>
+            <div id="table">
+                {% if reports_dictionary %}
+                <table>
+                    <tr>
+                        <th>Id</th>
+                        <th>Reg No</th>
+                        <th>Sacco</th>
+                        <th>Speed</th>
+                        <th>Time</th>
+                        <th>Location</th>
+                        <th>Driver</th>
+                    </tr>
+                    {% for key, value in reports_dictionary.items %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value.RegNo}} </td>
+                        <td>{{ value.Sacco}}</td>
+                        <td>{{ value.Speed}}</td>
+                        <td>{{ value.Time}}</td>
+                        <td><a href="/reports/all/{{key}}">{{ value.Location}}</a></td>
+                        <td>{{ value.Driver}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            
+                {% else %}
+                    <p>No reports to display</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- {{reports_dictionary}}
+    {{reports_list}} -->
+    <!-- <h1><b>List of Reports</b></h1> -->
     <!-- <a href="">{{reports_dictionary.0.Driver}}</a></br>
     <a href="">{{reports_dictionary.1}}</a></br> -->
 
@@ -34,9 +179,7 @@ tr:nth-child(even) {
         {{ reports_dictionary.report }} </br>
     {% endwith %} -->
 
-
-
-    <h1>Reports</h1>
+    <!-- <h1>Reports</h1> -->
     {% load range %}
     {% if reports_dictionary %}
         <!-- {#
@@ -49,40 +192,18 @@ tr:nth-child(even) {
             {% endfor %}
         {% endwith %}
         #} -->
+        <!--{#
         {% for report in reports_dictionary %}
-            {% with i=forloop.counter %}
+            {% with i=forloop.counter|add:'0' %}
                 Counter: {{i}} 
-                {{reports_dictionary.0}}
+                Report: {{reports_dictionary.1}} <br>
             {% endwith %}
-            <!-- {{report}} -->
+            {{report}}
         {% endfor %}
+        #} -->
     {% endif %}
 
-    {% if reports_dictionary_sth %}
-        
-        <table>
-            <tr>
-                <th>Reg No</th>
-                <th>Sacco</th>
-                <th>Speed</th>
-                <th>Time</th>
-                <th>Location</th>
-                <th>Driver</th>
-            </tr>
-            {% for report in reports_dictionary %}
-            <tr>
-                <td><a href="reports/all/{{report_id}}">{{ report.RegNo}}</a> </td>
-                <td>{{ report.Sacco}}</td>
-                <td>{{ report.Speed}}</td>
-                <td>{{ report.Time}}</td>
-                <td><a href="map/">{{ report.Location}}</a></td>
-                <td>{{ report.Driver}}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>No reports to display</p>
-    {% endif %}
+    
 
 </body>
 </html>

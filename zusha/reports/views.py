@@ -66,9 +66,15 @@ def get_reports2(request):
         reports_dictionary.update({int(value): reports_query_data[value]})
     context1 = {'reports_dictionary': reports_dictionary}
     # reports_list = []
+    # indexed_report = []
+    # indexed_reports = []
     # for value in range(0, len(reports_query_data)):
-    #     reports_list.append(value[reports_query_data[value]])
-    # context2 = {'reports_list': reports_list}
+    #     # reports_list.append(reports_query_data[value])
+    #     indexed_report.append(value)
+    #     # indexed_report.append(reports_query_data[value])
+    #     # indexed_report = reports_query_data[value].update({"Report_id": value})
+    #     reports_list.append(value)
+    #     context2 = {'reports_list': reports_list}
 
     return render(request, 'reports/reports2.html', context1)
 
@@ -87,3 +93,27 @@ def get_speeding_instance(request, report_id):
 #     sacco_query_data = reports_by_sacco.val()
 #     context = {'sacco_query_data': sacco_query_data}
 #     return render(request, 'reports/sacco_level.html', context)
+
+
+def reports_by_sacco(request, sacco):
+    """Sort reports by sacco."""
+    # reports_by_sacco = db.child("Reports").order_by_child("sacco").equal_to("lopha").get()
+    # report = db.child("Reports").child(10).child("Sacco").get()
+    reports = db.child("Reports").get()
+    reports_query_data = reports.val()
+    # sacco_query_data = reports_by_sacco.val()
+    # context = {'reports_query_data': reports_query_data}
+    sacco_reports = []
+    # for report in reports_query_data:
+    #     if report['Sacco'] == sacco:
+    #         sacco_reports.append(report)
+    # context = {'sacco_reports': sacco_reports}
+    reports_dictionary = {}
+    for value in range(0, len(reports_query_data)):
+        # reports_dictionary.update({int(value): reports_query_data[value]["Sacco"]})
+        if reports_query_data[value]["Sacco"] == sacco:
+            # sacco_reports.append(reports_query_data[value])
+            reports_dictionary.update({int(value): reports_query_data[value]})
+    context = {'reports_dictionary': reports_dictionary}
+    # context = {'sacco_reports': sacco_reports}
+    return render(request, 'reports/sacco_level.html', context)

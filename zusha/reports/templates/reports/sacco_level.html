@@ -1,3 +1,62 @@
-<h1>REPORTS BY SACCO</h1>
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
 
-{{ sacco_query_data}}
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+    
+    <h2>REPORTS BY SACCO</h2>
+
+    <!-- {{reports_query_data}} -->
+    <!-- {{ reports_dictionary }} -->
+    <!-- {{ sacco_reports }} -->
+    {% if reports_dictionary %}
+        
+        <table>
+            <tr>
+                <th>No</th>
+                <th>ReportId</th>
+                <th>Reg No</th>
+                <th>Sacco</th>
+                <th>Speed</th>
+                <th>Time</th>
+                <!-- <th>Route</th> -->
+                <th>Location Coordinates</th>
+                <th>Driver</th>
+            </tr>
+            {% for key, value in reports_dictionary.items %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ key }}</td>
+                <td>{{ value.RegNo }}</td>
+                <td>{{ value.Sacco }}</td>
+                <td>{{ value.Speed }} KM/H</td>
+                <td>{{ value.Time }}</td>
+                <!-- <td>name of route</td> -->
+                <td><a href="/reports/all/{{key}}">{{ value.Location}}</a></td>                
+                <td>{{ value.Driver }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No reports to display</p>
+    {% endif %}
+
+</body>
+</html>
