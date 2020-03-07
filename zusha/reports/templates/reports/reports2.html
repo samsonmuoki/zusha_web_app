@@ -122,6 +122,7 @@
             <li><a href="/reports/all">REPORTS</a></li>
             <li><a href="">DRIVERS</a></li>
             <li><a href="">SACCOS</a></li>
+            <li><a href="">VEHICLES</a></li>
             <li><a href="">EXTRA</a></li>
         </ul>
     </div>
@@ -137,28 +138,49 @@
             <div id="details-title"> ALL REPORTS</div>
             <div id="table">
                 {% if reports_dictionary %}
-                <table>
-                    <tr>
-                        <th>Id</th>
-                        <th>Reg No</th>
-                        <th>Sacco</th>
-                        <th>Speed</th>
-                        <th>Time</th>
-                        <th>Location</th>
-                        <th>Driver</th>
-                    </tr>
-                    {% for key, value in reports_dictionary.items %}
-                    <tr>
-                        <td>{{ key }}</td>
-                        <td>{{ value.RegNo}} </td>
-                        <td>{{ value.Sacco}}</td>
-                        <td>{{ value.Speed}}</td>
-                        <td>{{ value.Time}}</td>
-                        <td><a href="/reports/all/{{key}}">{{ value.Location}}</a></td>
-                        <td>{{ value.Driver}}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
+                    <table>
+                        <tr>
+                            <th>Id</th>
+                            <th>Reg No</th>
+                            <th>Sacco</th>
+                            <th>Speed</th>
+                            <th>Time</th>
+                            <th>Location</th>
+                            <th>Driver</th>
+                        </tr>
+                        {% for key, value in reports_dictionary.items %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ value.RegNo}} </td>
+                            <td>{{ value.Sacco}}</td>
+                            <td>{{ value.Speed}}</td>
+                            <td>{{ value.Time}}</td>
+                            <td><a href="/reports/all/{{key}}">{{ value.Location}}</a></td>
+                            <td>{{ value.Driver}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <!-- {% if reports_dictionary.has_other_pages %}
+                    <ul class="pagination">
+                        {% if reports_dictionary.has_previous %}
+                            <li><a href="?page={{ reports_dictionary.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in reports_dictionary.paginator.page_range %}
+                            {% if reports_dictionary.number == i %}
+                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                            {% else %}
+                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if reports_dictionary.has_next %}
+                            <li><a href="?page={{ reports_dictionary.next_page_number }}">&raquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul> -->
+                {% endif %}  
             
                 {% else %}
                     <p>No reports to display</p>

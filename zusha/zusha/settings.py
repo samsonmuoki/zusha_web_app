@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from celery.schedules import crontab
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,6 +42,8 @@ INSTALLED_APPS = [
 
     'registration.apps.RegistrationConfig',
     'reports.apps.ReportsConfig',
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -121,3 +125,65 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# celery setting.
+CELERY_CACHE_BACKEND = 'default'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'my_cache_table',
+    }
+}
+BROKER_HOST = os.getenv("BROKER_HOST", "zusha")
+BROKER_PORT = os.getenv("BROKER_PORT", "5672")
+BROKER_USER = os.getenv("BROKER_USER", "zusha")
+BROKER_PASSWORD = os.getenv("BROKER_PASSWORD", "zusha")
+BROKER_VHOST = os.getenv("BROKER_VHOST", "zushavhost")
+CELERY_RESULT_BACKEND = "rpc://"
+CELERY_RESULT_PERSISTENT = False
+CELERY_TASK_RESULT_EXPIRES = 300
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_DEFAULT_QUEUE = os.getenv("CELERY_QUEUE", "sil")
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+
+
+CELERY_BEAT_SCHEDULE = {
+    # 'reports.tasks.send_alerts': {
+    #     'task': 'tasks.send_alerts',
+    #     # 'schedule': crontab(hour=7, minute=30, day_of_week=1),
+    #     'schedule': crontab(),  # execute every minute
+    #     # 'args': (16, 16),
+    # },
+    # 'reports.tasks.blacklist_vehicles': {
+    #     'task': 'tasks.blacklist_vehicles',
+    #     # 'schedule': crontab(hour=7, minute=30, day_of_week=1),
+    #     'schedule': crontab(),  # execute every minute
+    # },
+    # 'reports.tasks.blacklist_saccos': {
+    #     'task': 'tasks.blacklist_saccos',
+    #     # 'schedule': crontab(hour=7, minute=30, day_of_week=1),
+    #     'schedule': crontab(),  # execute every minute
+    # },
+    # 'reports.tasks.blacklist_drivers': {
+    #     'task': 'tasks.blacklist_drivers',
+    #     # 'schedule': crontab(hour=7, minute=30, day_of_week=1),
+    #     'schedule': crontab(),  # execute every minute
+    # },
+}
+
+if DEBUG:
+    CELERY_TASK_ALWAYS_EAGER = True
+
+# app = Celery('tasks', backend='rpc://', broker='pyamqp://')
+
+# app.conf.beat_schedule = {
+#     'add-every-30-seconds': {
+#         'task': 'tasks.add',
+#         'schedule': 30.0,
+#         'args': (16, 16)
+#     },
+# }
+# app.conf.timezone = 'UTC'

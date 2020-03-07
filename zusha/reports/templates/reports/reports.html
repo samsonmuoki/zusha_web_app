@@ -23,7 +23,7 @@ tr:nth-child(even) {
     
     <h2>ALL REPORTED CASES</h2>
 
-    <!-- {{reports_query_data}} -->
+    {{reports_query_data}}
     {% if reports_query_data %}
         
         <table>
@@ -50,6 +50,7 @@ tr:nth-child(even) {
             </tr>
             {% endfor %}
         </table>
+        <!-- Lopha count =  -->
     {% else %}
         <p>No reports to display</p>
     {% endif %}

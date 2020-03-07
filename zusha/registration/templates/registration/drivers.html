@@ -1,11 +1,124 @@
-{% if drivers %}
-    {% for driver in drivers %}
-        <ul>
-            <li>
-                <a href="/registration/drivers/{{driver.driver_id}}/">{{ driver.driver_name}} Sacco: {{driver.sacco}} </a>
-            </li>
-        </ul>
-    {%endfor%}
-{% else %}
-    <p>No drivers are available</p>
-{% endif %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #header{
+                background-color: floralwhite;
+                text-align: center;
+                font-size: large;
+                width: fit-content;
+                height: 50px;
+            }
+            #menu{
+                position: -webkit-sticky;
+                position: sticky;
+                top: 0;
+                width: fit-content;
+            }
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: #333;
+                
+            }
+        
+            li {
+                float: left;
+            }
+          
+            li a {
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+          
+            li a:hover:not(.active) {
+                background-color: #111;
+            }
+            .active {
+                background-color: #4CAF50;
+            }
+            table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            }
+
+            td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            }
+
+            tr:nth-child(even) {
+            background-color: #dddddd;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="header"> HEADER TEXT HERE </div>
+        <div id="menu">
+            <ul>
+                <li><a href="">HOME</a></li>
+                <li><a href="/reports/all">REPORTS</a></li>
+                <li><a href="/registration/drivers">DRIVERS</a></li>
+                <li><a href="/registration/saccos">SACCOS</a></li>
+                <li><a href="/registration/vehicles">VEHICLES</a></li>
+                <li><a href="">EXTRA</a></li>
+            </ul>
+        </div>
+        {% if drivers %}
+            <table>
+                <tr>
+                    <th>Driver ID</th>
+                    <th>Name</th>
+                    <th>Sacco</th>
+                    <th>License Status</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+                {% for driver in drivers %}
+                    <tr>
+                        <td>{{ driver.driver_id}}</td> 
+                        <td>{{ driver.driver_name}}</td> 
+                        <td>{{ driver.sacco}}</td> 
+                        <td>{{ driver.license_status}}</td> 
+                        <td>{{ driver.email}}</td> 
+                        <td>{{ driver.phone}}</td> 
+                        
+                    </tr>
+                {% endfor %}
+            </table>    
+            {% if drivers.has_other_pages %}
+                <ul class="pagination">
+                    {% if drivers.has_previous %}
+                    <li><a href="?page={{ saccos.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                    <li class="disabled"><span>&laquo;</span></li>
+                    {% endif %}
+                    {% for i in drivers.paginator.page_range %}
+                    {% if drivers.number == i %}
+                        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% else %}
+                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if drivers.has_next %}
+                    <li><a href="?page={{ saccos.next_page_number }}">&raquo;</a></li>
+                    {% else %}
+                    <li class="disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            {% endif %}    
+
+        {% else %}
+            <p>No Drivers are available</p>
+        {% endif %}
+
+
+    </body>
+</html>

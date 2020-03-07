@@ -6,7 +6,7 @@ APPROVED = 'approved'
 BLACKLISTED = 'blacklisted'
 EXPIRED = 'expired'
 
-STATUS = [
+LICENSE_STATUS = [
     (APPROVED, ('Approved to operate')),
     (EXPIRED, ('License not renewed')),
     (BLACKLISTED, ('Not approved to operate')),
@@ -16,17 +16,19 @@ STATUS = [
 class Sacco(models.Model):
     """Sacco details."""
 
-    sacco_name = models.CharField(max_length=200)
+    sacco_name = models.CharField(max_length=200, primary_key=True)
     # date registered = models.DateField
     # last_report_revision_date = models.DateField
+    email = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=200)
     license_status = models.CharField(
         max_length=32,
-        choices=STATUS,
+        choices=LICENSE_STATUS,
         default=APPROVED,
     )
 
     def __str__(self):
-        return f"{self.sacco_name} => {self.license_status}"
+        return self.sacco_name
 
 
 class Vehicle(models.Model):
@@ -37,12 +39,12 @@ class Vehicle(models.Model):
     # last_report_revision_date = models.DateField
     license_status = models.CharField(
         max_length=32,
-        choices=STATUS,
+        choices=LICENSE_STATUS,
         default=APPROVED,
     )
 
     def __str__(self):
-        return f"{self.registration_number} License:{self.license_status}, Sacco: {self.sacco}"
+        return self.registration_number
 
 
 class Driver(models.Model):
@@ -52,13 +54,16 @@ class Driver(models.Model):
     driver_name = models.CharField(max_length=200)
     # driver_id = models.IntegerField(default=0)
     sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
+    # sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
     # date registered = models.DateField
     # last_report_revision_date = models.DateField
+    email = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=200)
     license_status = models.CharField(
         max_length=32,
-        choices=STATUS,
+        choices=LICENSE_STATUS,
         default=APPROVED,
     )
 
     def __str__(self):
-        return f"{self.driver_name} => {self.sacco}"
+        return self.driver_name

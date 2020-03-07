@@ -3,9 +3,12 @@ from django.shortcuts import render
 import pyrebase
 
 from django.http import HttpResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 # from flask import render_template, Flask
 # import json
 
+from registration.models import Vehicle, Sacco, Driver
 
 # app = Flask("reports")
 # Create your views here.
@@ -64,6 +67,16 @@ def get_reports2(request):
     reports_dictionary = {}
     for value in range(0, len(reports_query_data)):
         reports_dictionary.update({int(value): reports_query_data[value]})
+
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(reports_dictionary, 25)
+    # try:
+    #     reports_dictionary = paginator.page(page)
+    # except PageNotAnInteger:
+    #     reports_dictionary = paginator.page(1)
+    # except EmptyPage:
+    #     reports_dictionary = paginator.page(paginator.num_pages)
+
     context1 = {'reports_dictionary': reports_dictionary}
     # reports_list = []
     # indexed_report = []
@@ -103,7 +116,7 @@ def reports_by_sacco(request, sacco):
     reports_query_data = reports.val()
     # sacco_query_data = reports_by_sacco.val()
     # context = {'reports_query_data': reports_query_data}
-    sacco_reports = []
+    # sacco_reports = []
     # for report in reports_query_data:
     #     if report['Sacco'] == sacco:
     #         sacco_reports.append(report)
