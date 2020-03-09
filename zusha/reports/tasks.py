@@ -4,8 +4,11 @@ import pyrebase
 from django.core.mail import send_mail
 
 from celery import shared_task, Celery
-from celery.decorators import periodic_task
-from celery.schedules import crontab
+# from celery.decorators import periodic_task
+# from celery.schedules import crontab
+
+from django.utils import timezone
+from datetime import timedelta
 # from celery.contrib import rdb
 
 from registration.models import Sacco, Driver, Vehicle
@@ -76,13 +79,41 @@ def blacklist_gari2():
 # @periodic_task
 @shared_task
 def send_alerts():
-    send_mail(
-        'ZUSHA REPORT',
-        'Your vehicle has been reported',
-        'samsonmuoki97@gmail.com',
-        ['samsonmuoki97@gmail.com'],
-        fail_silently=False,
-    )
+    """Send notifications to Saccos whose vehicles have been reported."""
+    # Fetch each sacco's email from the local database.
+    saccos = Sacco.objects.all()
+    # Fetch all reports from the firebase
+    reports = db.child('Reports').get()
+    reports_query_data = reports.val()
+    # Filter the reports send in the last minute
+    all_latest_reports = []
+    for report in reports_query_data:
+        if report["Time"]-timezone.now() < timedelta(minutes=1):
+            all_latest_reports.append(report)
+    for sacco in saccos:
+        # latest_sacco_reports = []
+        for report in all_latest_reports:
+            if report["Sacco"] == sacco.sacco_name:
+                email_subject = "ZUSHA REPORT"
+                email_message = f"Vehicle REG: {report.RegNo} belonging to "
+                f"your sacco, has been reported for overspeeding at "
+                f"{report.Speed} KM/H in this Location {report.Location}"
+                send_mail(
+                    email_subject,
+                    email_message,
+                    'samsonmuoki97@gmail.com',
+                    [sacco.email],
+                    fail_silently=False,
+                )
+
+    # Send the reports to the respective emails
+    # send_mail(
+    #     'ZUSHA REPORT',
+    #     'Your vehicle has been reported',
+    #     'samsonmuoki97@gmail.com',
+    #     ['samsonmuoki97@gmail.com'],
+    #     fail_silently=False,
+    # )
 
 
 # @periodic_task
