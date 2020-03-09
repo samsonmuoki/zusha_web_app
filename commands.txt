@@ -1,0 +1,6 @@
+
+
+
+CELERY 
+$ python manage.py migrate django_celery_results
+$ celery -A proj beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler

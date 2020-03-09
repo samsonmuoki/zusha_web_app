@@ -10,7 +10,8 @@ from .models import Sacco, Vehicle, Driver
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the Registration index page.")
+    # return HttpResponse("Hello, world. You're at the Registration index page.")
+    return render(request, "registration/home.html")
 
 
 def get_all_saccos(request):

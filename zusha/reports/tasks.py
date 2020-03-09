@@ -1,6 +1,8 @@
 from __future__ import absolute_import, unicode_literals
 import pyrebase
 
+from django.core.mail import send_mail
+
 from celery import shared_task, Celery
 from celery.decorators import periodic_task
 from celery.schedules import crontab
@@ -8,7 +10,7 @@ from celery.schedules import crontab
 
 from registration.models import Sacco, Driver, Vehicle
 
-from registration.models import LICENSE_STATUS
+# from registration.models import LICENSE_STATUS
 
 app = Celery('tasks', backend='rpc://', broker='pyamqp://')
 
@@ -37,28 +39,54 @@ user = auth.sign_in_with_email_and_password(
 db = firebase.database()
 
 
+# @shared_task
+# def blacklist_gari():
+#     reports = db.child('Reports').get()
+#     reports_query_data = reports.val()
+#     reports_list = []
+#     vehicle = Vehicle.objects.get(registration_number="KAA")
+#     for report in reports_query_data:
+#         if report["RegNo"] == f"{vehicle.registration_number} ":
+#             reports_list.append(report)
+#     # rdb.set_trace()
+#     if len(reports_list) > 1:
+#         # vehicle.license_status = LICENSE_STATUS.BLACKLISTED
+#         vehicle.license_status = "blacklisted"
+#         vehicle.save()
+
+
 @shared_task
-def blacklist_gari():
+def blacklist_gari2():
+    # Fecth all registered vehicles
+    # Fetch all reports
+    # If count for each vehicle is above threshold, blacklist the vehicle.
+    vehicles = Vehicle.objects.all()
     reports = db.child('Reports').get()
     reports_query_data = reports.val()
-    reports_list = []
-    vehicle = Vehicle.objects.get(registration_number="KAA")
-    for report in reports_query_data:
-        if report["RegNo"] == f"{vehicle.registration_number} ":
-            reports_list.append(report)
-    # rdb.set_trace()
-    if len(reports_list) > 1:
-        # vehicle.license_status = LICENSE_STATUS.BLACKLISTED
-        vehicle.license_status = "blacklisted"
-        vehicle.save()
+    for vehicle in vehicles:
+        reports_list = []
+        for report in reports_query_data:
+            if report["RegNo"] == f"{vehicle.registration_number}":
+                reports_list.append(report)
+        if len(reports_list) > 1:
+            vehicle.license_status = "blacklisted"
+            vehicle.save()
 
 
-@periodic_task
+# @periodic_task
+@shared_task
 def send_alerts():
-    pass
+    send_mail(
+        'ZUSHA REPORT',
+        'Your vehicle has been reported',
+        'samsonmuoki97@gmail.com',
+        ['samsonmuoki97@gmail.com'],
+        fail_silently=False,
+    )
 
 
-@periodic_task
+# @periodic_task
+@shared_task
 def blacklist_vehicles():
     # Fecth all registered vehicles
     # Fetch all reports
@@ -69,14 +97,15 @@ def blacklist_vehicles():
     for vehicle in vehicles:
         reports_list = []
         for report in reports_query_data:
-            if report["RegNo"] == f"{vehicle.registration_number} ":
+            if report["RegNo"] == f"{vehicle.registration_number}":
                 reports_list.append(report)
         if len(reports_list) > 1:
             vehicle.license_status = "BLACKLISTED"
             vehicle.save()
 
 
-@periodic_task
+# @periodic_task
+@shared_task
 def blacklist_sacco(sacco):
     # Fetch all reports
     # Fecth all registered saccos
@@ -94,7 +123,8 @@ def blacklist_sacco(sacco):
             sacco.save()
 
 
-@periodic_task
+# @periodic_task
+@shared_task
 def blacklist_drivers():
     # Fetch all reports
     # Fecth all registered saccos

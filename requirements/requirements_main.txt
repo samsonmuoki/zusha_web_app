@@ -1,4 +1,7 @@
+celery
 Django==3.0.3
+django-celery-beat
+django-celery-results
 flake8==3.7.9
 Jinja2==2.11.1
 Pyrebase==3.0.27
