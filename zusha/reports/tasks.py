@@ -8,8 +8,10 @@ from celery import shared_task, Celery
 # from celery.schedules import crontab
 
 from django.utils import timezone
-from datetime import timedelta
-# from celery.contrib import rdb
+from datetime import timedelta, datetime
+import pytz
+
+from celery.contrib import rdb
 
 from registration.models import Sacco, Driver, Vehicle
 
@@ -76,6 +78,8 @@ def blacklist_gari2():
             vehicle.save()
 
 
+utc = pytz.utc
+
 # @periodic_task
 @shared_task
 def send_alerts():
@@ -87,24 +91,49 @@ def send_alerts():
     reports_query_data = reports.val()
     # Filter the reports send in the last minute
     all_latest_reports = []
-    for report in reports_query_data:
-        if report["Time"]-timezone.now() < timedelta(minutes=1):
-            all_latest_reports.append(report)
-    for sacco in saccos:
-        # latest_sacco_reports = []
-        for report in all_latest_reports:
-            if report["Sacco"] == sacco.sacco_name:
+    reports_dictionary = {}
+
+    for value in range(0, len(reports_query_data)):
+        time_str = datetime.strptime(reports_query_data[value]['Time'], '%Y.%m.%d at %H:%M:%S')
+        if timezone.now().replace(tzinfo=None)-time_str > timedelta(minutes=1):
+            reports_dictionary.update({int(value): reports_query_data[value]})
+    # rdb.set_trace()
+
+    # for sacco in saccos:
+    for key, value in reports_dictionary.items():
+        for sacco in saccos:
+            if value["Sacco"] == sacco.sacco_name:
                 email_subject = "ZUSHA REPORT"
-                email_message = f"Vehicle REG: {report.RegNo} belonging to "
-                f"your sacco, has been reported for overspeeding at "
-                f"{report.Speed} KM/H in this Location {report.Location}"
+                email_message = f"Vehicle REG: {value['RegNo']} belonging to your sacco, has been reported for overspeeding at {value['Speed']} KM/H in this Location {value['Location']}"
                 send_mail(
                     email_subject,
                     email_message,
                     'samsonmuoki97@gmail.com',
-                    [sacco.email],
+                    ['samsonmuoki97@gmail.com'],
                     fail_silently=False,
+                    html_message=f"Vehicle REG: <b>{value['RegNo']}</b> belonging to <b>{sacco.sacco_name}</b> sacco, has been reported for overspeeding at <b>{value['Speed']}</b> KM/H in this Location <a href='http://localhost:8000/reports/all/{key}'>{value['Location']}</a>."
                 )
+
+    # for report in reports_query_data:
+    #     time_object = datetime.strptime(report['Time'], '%Y.%m.%d at %H:%M:%S')
+    #     if timezone.now().replace(tzinfo=None)-time_object > timedelta(minutes=1):
+    #         all_latest_reports.append(report)
+    # # rdb.set_trace()
+
+    # for sacco in saccos:
+
+    #     for report in all_latest_reports:
+    #         if report["Sacco"] == "Makos":
+    #             email_subject = "ZUSHA REPORT"
+    #             email_message = f"Vehicle REG: {report['RegNo']} belonging to your sacco, has been reported for overspeeding at {report['Speed']} KM/H in this Location {report['Location']}"
+    #             send_mail(
+    #                 email_subject,
+    #                 email_message,
+    #                 'samsonmuoki97@gmail.com',
+    #                 [sacco.email],
+    #                 fail_silently=False,
+    #                 html_message=f"Vehicle REG: <b>{report['RegNo']}</b> belonging to your sacco, has been reported for overspeeding at <b>{report['Speed']}</b> KM/H in this Location <a href='http://localhost:8000/reports/all/5'>{report['Location']}</a>."
+    #             )
 
     # Send the reports to the respective emails
     # send_mail(
