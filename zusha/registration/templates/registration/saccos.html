@@ -71,7 +71,7 @@
                 <li><a href="">EXTRA</a></li>
             </ul>
         </div>
-        {% load qr_code %}
+        <!-- {% load qr_code %} -->
 
         <!-- {% qr_from_text "Hello World!" size="T" %} -->
 
@@ -79,7 +79,7 @@
             <table>
                 <tr>
                     <!-- <th>QR CODE</th> -->
-                    <th>id</th>
+                    <!-- <th>id</th> -->
                     <th>Name</th>
                     <th>License Status</th>
                     <th>Email</th>
@@ -88,7 +88,7 @@
                 {% for sacco in saccos %}
                     <tr>
                         <!-- <td>{% qr_from_text sacco.sacco_name size="8" version="" image_format="png" error_correction="L" %}</td>  -->
-                        <td>{{sacco.id}}</td>
+                        <!-- <td>{{sacco.id}}</td> -->
                         <td><a href="/registration/saccos/{sacco.id}">{{ sacco.sacco_name}}</a></td> 
                         <td>{{ sacco.license_status}}</td> 
                         <td>{{ sacco.email}}</td> 

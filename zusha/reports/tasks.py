@@ -95,7 +95,7 @@ def send_alerts():
 
     for value in range(0, len(reports_query_data)):
         time_str = datetime.strptime(reports_query_data[value]['Time'], '%Y.%m.%d at %H:%M:%S')
-        if timezone.now().replace(tzinfo=None)-time_str > timedelta(minutes=1):
+        if timezone.now().replace(tzinfo=None)-time_str < timedelta(hours=1):
             reports_dictionary.update({int(value): reports_query_data[value]})
     # rdb.set_trace()
 
