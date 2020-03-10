@@ -90,7 +90,7 @@ def send_alerts():
     reports = db.child('Reports').get()
     reports_query_data = reports.val()
     # Filter the reports send in the last minute
-    all_latest_reports = []
+    # all_latest_reports = []
     reports_dictionary = {}
 
     for value in range(0, len(reports_query_data)):
@@ -134,15 +134,6 @@ def send_alerts():
     #                 fail_silently=False,
     #                 html_message=f"Vehicle REG: <b>{report['RegNo']}</b> belonging to your sacco, has been reported for overspeeding at <b>{report['Speed']}</b> KM/H in this Location <a href='http://localhost:8000/reports/all/5'>{report['Location']}</a>."
     #             )
-
-    # Send the reports to the respective emails
-    # send_mail(
-    #     'ZUSHA REPORT',
-    #     'Your vehicle has been reported',
-    #     'samsonmuoki97@gmail.com',
-    #     ['samsonmuoki97@gmail.com'],
-    #     fail_silently=False,
-    # )
 
 
 # @periodic_task

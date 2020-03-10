@@ -1,7 +1,8 @@
 celery
-Django==3.0.3
+Django
 django-celery-beat
 django-celery-results
-flake8==3.7.9
-Jinja2==2.11.1
+django-qr-code
+flake8
+Jinja2
 Pyrebase==3.0.27

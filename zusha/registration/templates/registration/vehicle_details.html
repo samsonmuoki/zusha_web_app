@@ -1,0 +1,17 @@
+
+{% load qr_code %}
+
+
+<h1><b>{{vehicle.registration_number}}</b></h1>
+<p>{{ vehicle.sacco }}</p>
+<p>{{ vehicle.license_status }}</p>
+reports: <a href="/reports/all/{{ vehicle.registration_number }}">Cases</a>
+
+<p>QR CODE OPTIONS HERE</p>
+
+{{qr_code_values}} <br>
+
+{% qr_from_text qr_code_values options=qr_options %}
+<!-- {% qr_from_text qr_code_values size="m" image_format="png" error_correction="L" %} -->
+<!-- {{qr_list}}
+{% qr_from_text qr_list size="m" image_format="png" error_correction="L" %} -->

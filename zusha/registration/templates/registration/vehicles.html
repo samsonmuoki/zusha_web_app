@@ -71,6 +71,7 @@
                 <li><a href="">EXTRA</a></li>
             </ul>
         </div>
+
         {% if vehicles %}
             <table>
                 <tr>
@@ -80,7 +81,7 @@
                 </tr>
                 {% for vehicle in vehicles %}
                     <tr>
-                        <td>{{ vehicle.registration_number}}</td> 
+                        <td><a href="/registration/vehicles/{{vehicle.registration_number}}">{{ vehicle.registration_number}}</a></td> 
                         <td>{{ vehicle.sacco}}</td> 
                         <td>{{ vehicle.license_status}}</td> 
                         

@@ -3,8 +3,11 @@
 from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
-from django.http import HttpResponse
+# from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+# from qr_code.qrcode.utils import ContactDetail  # QRCodeOptions
+from qr_code.qrcode.utils import QRCodeOptions
 
 from .models import Sacco, Vehicle, Driver
 
@@ -63,6 +66,24 @@ def get_all_vehicles(request):
 
     context = {'vehicles': vehicles}
     return render(request, 'registration/vehicles.html', context)
+
+
+def get_a_single_vehicle(request, registration_number):
+    """Fetch a single sacco details."""
+    vehicle = Vehicle.objects.get(registration_number=registration_number)
+    qr_code_values = f"{vehicle.registration_number},{vehicle.sacco}"
+    # qr_list = [vehicle.registration_number, vehicle.sacco]
+    # import pdb;
+    # pdb.set_trace()
+    context = dict(
+        vehicle=vehicle,
+        # qr_list=qr_list,
+        qr_code_values=qr_code_values,
+        qr_options=QRCodeOptions(
+            size='m', border=6, error_correction='L', image_format='png',
+        ),
+    )
+    return render(request, 'registration/vehicle_details.html', context)
 
 
 def get_driver_details(request, driver_id):

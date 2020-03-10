@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'reports.apps.ReportsConfig',
     'django_celery_results',
     'django_celery_beat',
+    'qr_code',
 ]
 
 MIDDLEWARE = [
@@ -142,7 +143,15 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
         'LOCATION': 'my_cache_table',
     }
+    # 'qr-code': {
+    #     'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    #     'LOCATION': 'qr-code-cache',
+    #     'TIMEOUT': 3600
+    # }
 }
+
+QR_CODE_CACHE_ALIAS = 'qr-code'
+
 BROKER_HOST = os.getenv("BROKER_HOST", "zusha")
 BROKER_PORT = os.getenv("BROKER_PORT", "5672")
 BROKER_USER = os.getenv("BROKER_USER", "zusha")
