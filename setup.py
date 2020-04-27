@@ -13,7 +13,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     license='BSD License',  # example license
-    description='Web server project for Zusha mobile app.',
+    description='Web server for Zusha mobile app.',
     long_description=README,
     url='https://github.com/samsonmuoki/zusha_web_app',
     author='Samson Muoki',
