@@ -1,8 +1,11 @@
+ansible
 celery
 Django
 django-celery-beat
 django-celery-results
 django-qr-code
+Fabric3
 flake8
+gunicorn
 Jinja2
 Pyrebase==3.0.27
