@@ -42,10 +42,10 @@
           #     dest: /home/project/zusha_web_app/
           #     mode: 0777
           
-          # - name: stop supervisor
-          #   service:
-          #     name: supervisor
-          #     state: stopped
+          - name: stop supervisor
+            service:
+              name: supervisor
+              state: stopped
           
           # - name: Install setuptools
           #   pip:

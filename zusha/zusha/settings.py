@@ -27,7 +27,9 @@ SECRET_KEY = 'hm=f0aql1tc!s2$aenq+991t5lds-d@3o9t$i%!4+(a=kr*dp1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'zusha.duckdns.org',
+]
 
 
 # Application definition

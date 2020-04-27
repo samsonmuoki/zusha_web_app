@@ -4,10 +4,6 @@
   become: yes
   gather_facts: True
 
-  # apache_vhosts:
-  #   - {servername: "muokipolls.duckdns.org", documentroot: "/var/www/muokipolls.duckdns.org"}
-    # - {servername: "abcyourdomain1.com", documentroot: "/var/www/abcyourdomain1.com"}
-
   tasks:
     # - name: Upgrade System
     #   apt: upgrade=dist update_cache=yes
