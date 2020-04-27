@@ -33,8 +33,7 @@
           
           - name: Pull project from github
             git:
-              # repo: 'https://github.com/samsonmuoki/Django-PollsApp.git'
-              repo: 'git@github.com:samsonmuoki/zusha_web_app.git'
+              repo: 'https://github.com/samsonmuoki/zusha_web_app.git'
               dest: project/
 
           # - name: copy db to server
@@ -48,36 +47,36 @@
           #     name: supervisor
           #     state: stopped
           
-          - name: Install setuptools
-            pip:
-              name: setuptools
-              executable: pip3
+          # - name: Install setuptools
+          #   pip:
+          #     name: setuptools
+          #     executable: pip3
           
 # Comment here after setup
-          # - name: install virtualenv
-          #   pip: 
-          #     name: virtualenv
-          #     executable: pip3
-          #   become: yes
-          #   become_user: root              
+          - name: install virtualenv
+            pip: 
+              name: virtualenv
+              executable: pip3
+            become: yes
+            become_user: root              
           
-          # - name: create virtualenv
-          #   command: /usr/local/bin/virtualenv project/venv
+          - name: create virtualenv
+            command: /usr/local/bin/virtualenv project/venv
             
-          # - name: installing requirements
-          #   pip:
-          #     requirements: /home/project/requirements/requirements_main.txt
-          #     virtualenv: /home/project/venv
-          #     virtualenv_python: python3.6
+          - name: installing requirements
+            pip:
+              requirements: /home/ubuntu/project/requirements/requirements_main.txt
+              virtualenv: /home/ubuntu/project/venv
+              virtualenv_python: python3.6
 # comment upto here
           - name: activate venv and make migrations
             shell: |
-              . /home/project/venv/bin/activate
-              python3 /home/project/zusha/manage.py migrate
+              . /home/ubuntu/project/venv/bin/activate
+              python3 /home/ubuntu/project/zusha/manage.py migrate
 
           - name: Recursively change ownership of zusha directory
             file:
-              path: /home/project/zusha
+              path: /home/ubuntu/project/zusha
               state: directory
               recurse: yes
-              owner: sam
+              owner: ubuntu

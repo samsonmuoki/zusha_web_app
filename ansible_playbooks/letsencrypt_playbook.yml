@@ -42,7 +42,7 @@
                 state: stopped
           
           - name: Obtain SSL certificate
-            command: certbot --nginx --noninteractive --agree-tos --email samsonmuoki97@gmail.com  -d sampolls.duckdns.org -d www.sampolls.duckdns.org
+            command: certbot --nginx --noninteractive --agree-tos --email samsonmuoki97@gmail.com  -d zusha.duckdns.org -d www.zusha.duckdns.org
             become: yes
                     
           - name: free port 80 to reassign ownership to nginx

@@ -15,12 +15,12 @@
           
           - name: copy supervisor/conf.d files to server
             copy:
-              src: /home/sam/Desktop/4th Year Project/configuration_files/supervisor/zusha_app.conf
+              src: /home/sam/Desktop/4th_Year_Project/configuration_files/supervisor/zusha_app.conf
               dest: /etc/supervisor/conf.d
 
           - name: copy supervisord.conf files to server
             copy:
-              src: /home/sam/Desktop/4th Year Project/configuration_files/supervisor/supervisord.conf
+              src: /home/sam/Desktop/4th_Year_Project/configuration_files/supervisor/supervisord.conf
               dest: /etc/supervisor
           
           - name: reread changes and update supervisor

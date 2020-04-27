@@ -5,31 +5,30 @@
   gather_facts: True
 
   tasks:
-    - name: make continous deployment to server
+    - name: Make continous deployment to server
       git:
-              # repo: 'https://github.com/samsonmuoki/Django-PollsApp.git'
-              repo: 'git@github.com:samsonmuoki/zusha_web_app.git'
+              repo: 'https://github.com/samsonmuoki/zusha_web_app.git'
               dest: project/
     
     # comment here
     - name: installing requirements
       pip:
-        requirements: /home/project/requirements/requirements_main.txt
-        virtualenv: /home/project/venv
+        requirements: /home/ubuntu/project/requirements/requirements_main.txt
+        virtualenv: /home/ubuntu/project/venv
         virtualenv_python: python3.6
     # comments up to here
 
 
     - name: activate venv and make migrations
       shell: |
-        . /home/project/venv/bin/activate
-        pip3 install -r /home/project/requirements/requirements_main.txt
-        python3 /home/project/zusha/manage.py migrate
+        . /home/ubuntu/project/venv/bin/activate
+        pip3 install -r /home/ubuntu/project/requirements/requirements_main.txt
+        python3 /home/ubuntu/project/zusha/manage.py migrate
     
     - name: start gunicorn
       shell: |
-        . /home/project/venv/bin/activate
-        cd /home/project/zusha
-        gunicorn --daemon --workers 3 --bind unix:/home/project/zusha/zusha_app.sock zusha_app.wsgi
+        . /home/ubuntu/project/venv/bin/activate
+        cd /home/ubuntu/project/zusha
+        gunicorn --daemon --workers 3 --bind unix:/home/ubuntu/project/zusha/zusha_app.sock zusha_app.wsgi
           
 

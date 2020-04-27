@@ -29,7 +29,7 @@
       with_items: "{{ apache_vhosts }}"
       vars:
         apache_vhosts:
-          - {servername: "muokipolls.duckdns.org", documentroot: "/var/www/muokipolls.duckdns.org"}
+          - {servername: "zusha.duckdns.org", documentroot: "/var/www/zusha.duckdns.org"}
     # - name: Stop services to allow certbot to generate a cert.
     #   service:
     #     name: "{{ item }}"

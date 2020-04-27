@@ -8,9 +8,6 @@
           
           - name: start gunicorn
             shell: |
-              . /home/sam/muoki/venv/bin/activate
-              cd /home/sam/muoki/pollsapp
-              gunicorn --daemon --workers 3 --bind unix:/home/sam/muoki/pollsapp/pollsapp.sock pollsapp.wsgi
-            
-          
-
+              . /home/ubuntu/project/venv/bin/activate
+              cd /home/ubuntu/project/zusha
+              gunicorn --daemon --workers 3 --bind unix:/home/ubuntu/project/zusha/zusha.sock zusha.wsgi

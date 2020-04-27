@@ -11,7 +11,7 @@
       become: yes
     - name: copy the nginx config file and restart nginx
       copy:
-        src: /home/sam/Desktop/4th Year Project/configuration_files/nginx/zusha_app
+        src: /home/sam/Desktop/4th_Year_Project/configuration_files/nginx/zusha_app
         dest: /etc/nginx/sites-available
       become: yes
     - name: create symlink
