@@ -7,8 +7,9 @@
   tasks:
     - name: Make continous deployment to server
       git:
-              repo: 'https://github.com/samsonmuoki/zusha_web_app.git'
-              dest: project/
+        repo: 'https://github.com/samsonmuoki/zusha_web_app.git'
+        dest: project/
+        owner: ubuntu
     
     # comment here
     - name: installing requirements

@@ -6,7 +6,7 @@
 
   tasks:
 
-          - name: add universe repository for bionic
+          - name: Add universe repository for bionic
             apt_repository: 
               repo: deb http://archive.ubuntu.com/ubuntu bionic universe
               state: present
@@ -36,40 +36,34 @@
               repo: 'https://github.com/samsonmuoki/zusha_web_app.git'
               dest: project/
 
-          # - name: copy db to server
-          #   copy:
-          #     src: /home/sam/Desktop/4th Year Project/zusha_web_app/zusha/db.sqlite3
-          #     dest: /home/project/zusha_web_app/
-          #     mode: 0777
+          - name: Copy db to server
+            copy:
+              src: /home/sam/Desktop/4th_Year_Project/zusha_web_app/zusha/db.sqlite3
+              dest: /home/ubuntu/project/zusha/
+              mode: 0777
           
-          - name: stop supervisor
+          - name: Stop supervisor
             service:
               name: supervisor
               state: stopped
           
-          # - name: Install setuptools
-          #   pip:
-          #     name: setuptools
-          #     executable: pip3
-          
-# Comment here after setup
-          - name: install virtualenv
+          - name: Install virtualenv
             pip: 
               name: virtualenv
               executable: pip3
             become: yes
             become_user: root              
           
-          - name: create virtualenv
+          - name: Create virtualenv
             command: /usr/local/bin/virtualenv project/venv
             
-          - name: installing requirements
+          - name: Installing requirements
             pip:
               requirements: /home/ubuntu/project/requirements/requirements_main.txt
               virtualenv: /home/ubuntu/project/venv
               virtualenv_python: python3.6
-# comment upto here
-          - name: activate venv and make migrations
+
+          - name: Activate venv and make migrations
             shell: |
               . /home/ubuntu/project/venv/bin/activate
               python3 /home/ubuntu/project/zusha/manage.py migrate

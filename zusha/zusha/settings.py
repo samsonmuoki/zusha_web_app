@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'zusha.duckdns.org',
+    'localhost'
 ]
 
 
