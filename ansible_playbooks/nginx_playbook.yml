@@ -14,7 +14,7 @@
         src: /home/sam/Desktop/4th_Year_Project/configuration_files/nginx/zusha_app
         dest: /etc/nginx/sites-available
       become: yes
-    - name: create symlink
+    - name: create symbolic link
       file:
         src: /etc/nginx/sites-available/zusha_app
         dest: /etc/nginx/sites-enabled/default

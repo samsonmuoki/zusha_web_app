@@ -16,3 +16,6 @@
 
     - name: Obtaining SSL cetifificate
       include: letsencrypt_playbook.yml
+    
+    -name: Start periodic tasks
+      include: periodic_tasks.yml
