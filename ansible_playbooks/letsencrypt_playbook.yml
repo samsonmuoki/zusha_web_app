@@ -1,0 +1,57 @@
+---
+- hosts: all
+  remote_user: root
+  become: yes
+  gather_facts: True
+
+  tasks:
+          - name: add public key for certbot repo
+            shell: apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8C47BE8E75BCA694
+            become: yes
+          
+          - name: add repository for certbot
+            apt_repository: 
+              repo: deb http://ppa.launchpad.net/certbot/certbot/ubuntu bionic main
+              state: present
+            when: ansible_distribution_release == 'bionic'
+            
+          - name: Install base packages
+            apt: 
+              name: "{{ packages }}"
+            vars:
+              packages:
+                - python-certbot-nginx
+                          
+          - name: Enable UFW
+            ufw:
+              state: enabled
+
+          - name: Allow OpenSSH
+            ufw:
+              rule: allow
+              name: OpenSSH
+
+          - name: Allow Nginx Full
+            ufw:
+              rule: allow
+              name: Nginx Full
+
+          - name: stop nginx 
+            service:
+                name: nginx
+                state: stopped
+          
+          - name: Obtain SSL certificate
+            command: certbot --nginx --noninteractive --agree-tos --email samsonmuoki97@gmail.com  -d sampolls.duckdns.org -d www.sampolls.duckdns.org
+            become: yes
+                    
+          - name: free port 80 to reassign ownership to nginx
+            command: fuser -k 80/tcp
+            become: yes
+          
+          - name: restart nginx
+            service:
+                name: nginx
+                state: restarted
+            become: yes
+          

@@ -1,0 +1,83 @@
+---
+- hosts: all
+  remote_user: root
+  become: yes
+  gather_facts: True
+
+  tasks:
+
+          - name: add universe repository for bionic
+            apt_repository: 
+              repo: deb http://archive.ubuntu.com/ubuntu bionic universe
+              state: present
+            when: ansible_distribution_release == 'bionic'
+  
+          - name: Install base packages
+            apt: 
+              name: "{{ packages }}"
+            vars:
+              packages:
+                - locales
+                - build-essential
+                - htop
+                - git
+                - python3-apt
+                - python3-pip
+                - supervisor
+                # - redis-server
+            
+          - name: Create project directory
+            file:
+              state: directory
+              path: project
+          
+          - name: Pull project from github
+            git:
+              # repo: 'https://github.com/samsonmuoki/Django-PollsApp.git'
+              repo: 'git@github.com:samsonmuoki/zusha_web_app.git'
+              dest: project/
+
+          # - name: copy db to server
+          #   copy:
+          #     src: /home/sam/Desktop/4th Year Project/zusha_web_app/zusha/db.sqlite3
+          #     dest: /home/project/zusha_web_app/
+          #     mode: 0777
+          
+          # - name: stop supervisor
+          #   service:
+          #     name: supervisor
+          #     state: stopped
+          
+          - name: Install setuptools
+            pip:
+              name: setuptools
+              executable: pip3
+          
+# Comment here after setup
+          # - name: install virtualenv
+          #   pip: 
+          #     name: virtualenv
+          #     executable: pip3
+          #   become: yes
+          #   become_user: root              
+          
+          # - name: create virtualenv
+          #   command: /usr/local/bin/virtualenv project/venv
+            
+          # - name: installing requirements
+          #   pip:
+          #     requirements: /home/project/requirements/requirements_main.txt
+          #     virtualenv: /home/project/venv
+          #     virtualenv_python: python3.6
+# comment upto here
+          - name: activate venv and make migrations
+            shell: |
+              . /home/project/venv/bin/activate
+              python3 /home/project/zusha/manage.py migrate
+
+          - name: Recursively change ownership of zusha directory
+            file:
+              path: /home/project/zusha
+              state: directory
+              recurse: yes
+              owner: sam

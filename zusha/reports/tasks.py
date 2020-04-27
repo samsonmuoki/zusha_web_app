@@ -103,7 +103,7 @@ def send_alerts():
     for key, value in reports_dictionary.items():
         for sacco in saccos:
             if value["Sacco"] == sacco.sacco_name:
-                email_subject = "ZUSHA REPORT"
+                email_subject = "ZUSHA COMPLAINT"
                 email_message = f"Vehicle REG: {value['RegNo']} belonging to your sacco, has been reported for overspeeding at {value['Speed']} KM/H in this Location {value['Location']}"
                 send_mail(
                     email_subject,

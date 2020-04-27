@@ -1,0 +1,36 @@
+---
+- hosts: all
+  remote_user: root
+  become: yes
+  gather_facts: True
+
+  tasks:
+
+          - name: Install base packages
+            apt: 
+              name: "{{ packages }}"
+            vars:
+              packages:
+                - supervisor
+          
+          - name: copy supervisor/conf.d files to server
+            copy:
+              src: /home/sam/Desktop/4th Year Project/configuration_files/supervisor/zusha_app.conf
+              dest: /etc/supervisor/conf.d
+
+          - name: copy supervisord.conf files to server
+            copy:
+              src: /home/sam/Desktop/4th Year Project/configuration_files/supervisor/supervisord.conf
+              dest: /etc/supervisor
+          
+          - name: reread changes and update supervisor
+            shell: |
+              supervisorctl reread
+              supervisorctl update
+            become: yes
+          
+          - name: restart supervisor
+            shell: supervisorctl reload
+            become: yes
+                          
+          

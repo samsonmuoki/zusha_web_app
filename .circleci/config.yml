@@ -1,0 +1,123 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+
+  version: 2
+  jobs:
+    # build-job:
+    build:
+      docker:
+        - image: circleci/python:3.7
+      environment:
+        ANSIBLE_HOST_KEY_CHECKING: "no"
+        # documented at https://circleci.com/docs/2.0/circleci-images/
+        # - image: circleci/postgres:9.4
+
+      working_directory: ~/repo
+
+      # branches:
+      #   only:
+      #     - master
+
+      steps:
+        - checkout
+
+        - run:
+            name: install dependencies
+            command: |
+              python3 -m venv venv
+              . venv/bin/activate
+              pip install --upgrade pip
+              pip install -r requirements/requirements_main.txt
+
+        # - run:
+        #     name: run tests
+        #     command: |
+        #       . venv/bin/activate
+        #       tox
+        #       # cd pollsapp
+        #       # python3 manage.py test
+        #       # coverage run --source="." manage.py test
+        #       # coverage report
+
+
+        # - store_artifacts:
+        #     path: test-reports
+        #     destination: test-reports
+
+        
+        
+        # - add_ssh_keys:
+        #     fingerprints:
+        #         - "8e:51:4b:14:06:44:dc:20:d2:ae:6f:4d:be:39:21:07"
+   
+        # - run:
+        #         name: deploy to server
+        #         command: |
+        #             . venv/bin/activate
+        #             cd pollsapp/ansible
+        #             ansible-playbook cd_playbook.yml -i hosts.yml
+        
+    publish:
+      docker:
+        - image: circleci/python:3.7
+      environment:
+       ANSIBLE_HOST_KEY_CHECKING: "no"
+      # working_directory: ~/repo
+      steps:
+        - checkout
+        
+        - run:
+            name: init .pypirc
+            command: |
+              echo -e "[pypi]" >> ~/.pypirc
+              echo -e "username = samsonmuoki" >> ~/.pypirc
+              echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+        
+        - run:
+            name: create packages
+            command: |
+              python setup.py sdist
+        - run:
+            name: upload to pypi
+            command: |
+              python3 -m venv venv
+              . venv/bin/activate
+              pip install twine    
+              twine upload --skip-existing ./dist/*
+
+
+    deploy:
+      docker:
+        - image: circleci/python:3.7
+      environment:
+       ANSIBLE_HOST_KEY_CHECKING: "no"
+      # working_directory: ~/repo
+      steps:
+        - checkout
+        - run:
+            name: Deploy to SERVER
+            command: |
+                python3 -m venv venv
+                . venv/bin/activate
+                pip install ansible
+                cd ansible_playbooks/
+                ansible-playbook cd_playbook.yml -i hosts.yml
+    
+  workflows:
+    version: 2
+    build-deploy:
+      jobs:
+        - build
+        - publish:
+            requires:
+                - build
+            filters:
+              branches:
+                only: master
+        - deploy:
+            requires:
+              - build
+            filters:
+              branches:
+                only: master
