@@ -13,8 +13,7 @@ from .models import Sacco, Vehicle, Driver
 
 
 def index(request):
-    # return HttpResponse("Hello, world. You're at the Registration index page.")
-    return render(request, "registration/home.html")
+    return render(request, "registrations/home.html")
 
 
 def get_all_saccos(request):
@@ -31,7 +30,7 @@ def get_all_saccos(request):
         saccos = paginator.page(paginator.num_pages)
 
     context = {'saccos': saccos}
-    return render(request, 'registration/saccos.html', context)
+    return render(request, 'registrations/saccos.html', context)
 
 
 def get_all_drivers(request):
@@ -48,7 +47,7 @@ def get_all_drivers(request):
         drivers = paginator.page(paginator.num_pages)
 
     context = {'drivers': drivers}
-    return render(request, 'registration/drivers.html', context)
+    return render(request, 'registrations/drivers.html', context)
 
 
 def get_all_vehicles(request):
@@ -65,7 +64,7 @@ def get_all_vehicles(request):
         vehicles = paginator.page(paginator.num_pages)
 
     context = {'vehicles': vehicles}
-    return render(request, 'registration/vehicles.html', context)
+    return render(request, 'registrations/vehicles.html', context)
 
 
 def get_a_single_vehicle(request, registration_number):
@@ -86,11 +85,11 @@ def get_a_single_vehicle(request, registration_number):
             size='m', border=6, error_correction='L', image_format='png',
         ),
     )
-    return render(request, 'registration/vehicle_details.html', context)
+    return render(request, 'registrations/vehicle_details.html', context)
 
 
 def get_driver_details(request, driver_id):
     """Fetch a specific driver's details."""
     driver = get_object_or_404(Driver, driver_id=driver_id)
     context = {'driver': driver}
-    return render(request, 'registration/driver_details.html', context)
+    return render(request, 'registrations/driver_details.html', context)

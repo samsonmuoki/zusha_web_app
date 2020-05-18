@@ -65,9 +65,9 @@
             <ul>
                 <li><a href="">HOME</a></li>
                 <li><a href="/reports/all">REPORTS</a></li>
-                <li><a href="/registration/drivers">DRIVERS</a></li>
-                <li><a href="/registration/saccos">SACCOS</a></li>
-                <li><a href="/registration/vehicles">VEHICLES</a></li>
+                <li><a href="/registrations/drivers">DRIVERS</a></li>
+                <li><a href="/registrations/saccos">SACCOS</a></li>
+                <li><a href="/registrations/vehicles">VEHICLES</a></li>
                 <li><a href="">EXTRA</a></li>
             </ul>
         </div>
@@ -81,7 +81,7 @@
                 </tr>
                 {% for vehicle in vehicles %}
                     <tr>
-                        <td><a href="/registration/vehicles/{{vehicle.registration_number}}">{{ vehicle.registration_number}}</a></td> 
+                        <td><a href="/registrations/vehicles/{{vehicle.registration_number}}">{{ vehicle.registration_number}}</a></td> 
                         <td>{{ vehicle.sacco}}</td> 
                         <td>{{ vehicle.license_status}}</td> 
                         

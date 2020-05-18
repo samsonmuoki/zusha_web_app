@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'registration.apps.RegistrationConfig',
+    # 'registration.apps.RegistrationConfig',
+    'registrations.apps.RegistrationsConfig',
     'reports.apps.ReportsConfig',
     'django_celery_results',
     'django_celery_beat',

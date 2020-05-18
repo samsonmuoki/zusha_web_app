@@ -8,7 +8,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from flask import render_template, Flask
 # import json
 
-from registration.models import Vehicle, Sacco, Driver
+# from registration.models import Vehicle, Sacco, Driver
+from registrations.models import Vehicle, Sacco, Driver
 
 # app = Flask("reports")
 # Create your views here.

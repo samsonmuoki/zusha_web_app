@@ -65,58 +65,62 @@
             <ul>
                 <li><a href="">HOME</a></li>
                 <li><a href="/reports/all">REPORTS</a></li>
-                <li><a href="/registration/drivers">DRIVERS</a></li>
-                <li><a href="/registration/saccos">SACCOS</a></li>
-                <li><a href="/registration/vehicles">VEHICLES</a></li>
+                <li><a href="/registrations/drivers">DRIVERS</a></li>
+                <li><a href="/registrations/saccos">SACCOS</a></li>
+                <li><a href="/registrations/vehicles">VEHICLES</a></li>
                 <li><a href="">EXTRA</a></li>
             </ul>
         </div>
-        {% if drivers %}
+        <!-- {% load qr_code %} -->
+
+        <!-- {% qr_from_text "Hello World!" size="T" %} -->
+
+        {% if saccos %}
             <table>
                 <tr>
-                    <th>Driver ID</th>
+                    <!-- <th>QR CODE</th> -->
+                    <!-- <th>id</th> -->
                     <th>Name</th>
-                    <th>Sacco</th>
                     <th>License Status</th>
                     <th>Email</th>
                     <th>Phone</th>
                 </tr>
-                {% for driver in drivers %}
+                {% for sacco in saccos %}
                     <tr>
-                        <td>{{ driver.driver_id}}</td> 
-                        <td>{{ driver.driver_name}}</td> 
-                        <td>{{ driver.sacco}}</td> 
-                        <td>{{ driver.license_status}}</td> 
-                        <td>{{ driver.email}}</td> 
-                        <td>{{ driver.phone}}</td> 
+                        <!-- <td>{% qr_from_text sacco.sacco_name size="8" version="" image_format="png" error_correction="L" %}</td>  -->
+                        <!-- <td>{{sacco.id}}</td> -->
+                        <td><a href="/registrations/saccos/{sacco.id}">{{ sacco.sacco_name}}</a></td> 
+                        <td>{{ sacco.license_status}}</td> 
+                        <td>{{ sacco.email}}</td> 
+                        <td>{{ sacco.phone}}</td> 
                         
                     </tr>
                 {% endfor %}
-            </table>    
-            {% if drivers.has_other_pages %}
+            </table>
+            {% if saccos.has_other_pages %}
                 <ul class="pagination">
-                    {% if drivers.has_previous %}
+                    {% if saccos.has_previous %}
                     <li><a href="?page={{ saccos.previous_page_number }}">&laquo;</a></li>
                     {% else %}
                     <li class="disabled"><span>&laquo;</span></li>
                     {% endif %}
-                    {% for i in drivers.paginator.page_range %}
-                    {% if drivers.number == i %}
+                    {% for i in saccos.paginator.page_range %}
+                    {% if saccos.number == i %}
                         <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
                     {% else %}
                         <li><a href="?page={{ i }}">{{ i }}</a></li>
                     {% endif %}
                     {% endfor %}
-                    {% if drivers.has_next %}
+                    {% if saccos.has_next %}
                     <li><a href="?page={{ saccos.next_page_number }}">&raquo;</a></li>
                     {% else %}
                     <li class="disabled"><span>&raquo;</span></li>
                     {% endif %}
                 </ul>
             {% endif %}    
-
+            
         {% else %}
-            <p>No Drivers are available</p>
+            <p>No Saccos are available</p>
         {% endif %}
 
 
