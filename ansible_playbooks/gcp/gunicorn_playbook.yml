@@ -1,0 +1,13 @@
+---
+- hosts: all
+  remote_user: root
+  become: yes
+  gather_facts: True
+
+  tasks:            
+          
+          - name: start gunicorn
+            shell: |
+              . /home/ubuntu/project/venv/bin/activate
+              cd /home/ubuntu/project/zusha
+              gunicorn --daemon --workers 3 --bind unix:/home/ubuntu/project/zusha/zusha.sock zusha.wsgi

@@ -71,7 +71,10 @@ def get_all_vehicles(request):
 def get_a_single_vehicle(request, registration_number):
     """Fetch a single sacco details."""
     vehicle = Vehicle.objects.get(registration_number=registration_number)
-    qr_code_values = f"{vehicle.registration_number},{vehicle.sacco}"
+    reg_no = vehicle.registration_number
+    sacco = vehicle.sacco
+    email = sacco.email
+    qr_code_values = f"{reg_no},{sacco},{email}"
     # qr_list = [vehicle.registration_number, vehicle.sacco]
     # import pdb;
     # pdb.set_trace()

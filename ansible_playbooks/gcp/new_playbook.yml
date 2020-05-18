@@ -1,0 +1,121 @@
+---
+- hosts: all
+  remote_user: root
+  become: yes
+  gather_facts: True
+
+  tasks:
+
+          - name: add universe repository for bionic
+            apt_repository: 
+              repo: deb http://archive.ubuntu.com/ubuntu bionic universe
+              state: present
+            when: ansible_distribution_release == 'bionic'
+
+          - name: add repository for certbot
+            apt_repository: 
+              repo: deb http://ppa.launchpad.net/certbot/certbot/ubuntu bionic main
+              state: present
+            when: ansible_distribution_release == 'bionic'
+            
+          - name: Install base packages
+            apt: name={{ item }} 
+            with_items:
+              - locales
+              - build-essential
+              - htop
+              - git
+              - supervisor
+              - python3-apt
+              - python3-pip
+              - nginx
+              - python-certbot-nginx
+            tags:
+              - packages
+            
+          - name: Upgrade pip
+            pip: name=pip state=latest
+            tags:
+              - packages
+
+          - name: Create directory myname
+            file:
+              state: directory
+              path: muoki
+          
+          - name: Pull project from github
+            git:
+              repo: 'https://github.com/samsonmuoki/Django-PollsApp.git'
+              dest: muoki/
+
+          - name: copy db to server
+            copy:
+              src: /home/sam/Desktop/Django_Tutorial/Django-PollsApp/pollsapp/db.sqlite3
+              dest: /home/sam/muoki/pollsapp/
+              mode: 0777
+          
+          - name: install virtualenv
+            pip: name=virtualenv
+          
+          - name: create virtualenv
+            command: /usr/local/bin/virtualenv muoki/venv
+            
+          - name: installing requirements
+            pip:
+              requirements: /home/sam/muoki/pollsapp/requirements.txt
+              virtualenv: /home/sam/muoki/venv
+              virtualenv_python: python3.6
+
+          - name: activate venv and make migrations
+            shell: |
+              . /home/sam/muoki/venv/bin/activate
+              python3 /home/sam/muoki/pollsapp/manage.py migrate
+
+          - name: grant user ownership to pollsapp folder
+            command: "sudo chown sam:www-data /home/sam/muoki/pollsapp"
+
+          - name: Copy nginx configuration files to remote host
+            copy:
+              src: /home/sam/Desktop/Django_Tutorial/Django-PollsApp/nginx/pollsapp
+              dest: /etc/nginx/sites-available
+              # mode: 0755
+
+          - name: delete default configuration files in nginx
+            shell: sudo rm /etc/nginx/sites-enabled/default
+             
+
+          - name: create symbolic link
+            command: "sudo ln -s /etc/nginx/sites-available/pollsapp /etc/nginx/sites-enabled"
+
+
+          - name: start nginx
+            service: name=nginx state=started
+          
+          - name: start gunicorn
+            shell: |
+              . /home/sam/muoki/venv/bin/activate
+              cd pollsapp
+              gunicorn --daemon --workers 3 --bind unix:/home/sam/muoki/pollsapp/pollsapp.sock pollsapp.wsgi
+            # command: /home/sam/muoki/venv/bin/gunicorn --daemon --workers 3 --bind unix:/home/sam/muoki/pollsapp/pollsapp.sock /home/sam/muoki/pollsapp/pollsapp.wsgi
+
+          - name: copy supervisor/conf.d files to server
+            copy:
+              src: /home/sam/Desktop/Django_Tutorial/Django-PollsApp/supervisor/pollsapp
+              dest: /etc/supervisor/conf.d
+
+          - name: copy supervisord.conf files to server
+            copy:
+              src: /home/sam/Desktop/Django_Tutorial/Django-PollsApp/supervisor/supervisord.conf
+              dest: /etc/supervisor
+          
+          
+          # - name: run supervisord
+          #   command: "sudo /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"
+            # command: "/home/ubuntu/.local/bin/supervisorctl start pollsapp"
+            # command: "supervisorctl start pollsapp"
+
+          # - name: begin polls app
+          #   supervisorctl: name=pollsapp state=started
+
+          
+

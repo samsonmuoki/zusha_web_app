@@ -1,0 +1,35 @@
+---
+- hosts: all
+  remote_user: root
+  become: yes
+  gather_facts: True
+
+  tasks:
+    - name: Make continous deployment to server
+      git:
+        repo: 'https://github.com/samsonmuoki/zusha_web_app.git'
+        dest: project/
+        owner: ubuntu
+    
+    # comment here
+    - name: installing requirements
+      pip:
+        requirements: /home/ubuntu/project/requirements/requirements_main.txt
+        virtualenv: /home/ubuntu/project/venv
+        virtualenv_python: python3.6
+    # comments up to here
+
+
+    - name: activate venv and make migrations
+      shell: |
+        . /home/ubuntu/project/venv/bin/activate
+        pip3 install -r /home/ubuntu/project/requirements/requirements_main.txt
+        python3 /home/ubuntu/project/zusha/manage.py migrate
+    
+    - name: start gunicorn
+      shell: |
+        . /home/ubuntu/project/venv/bin/activate
+        cd /home/ubuntu/project/zusha
+        gunicorn --daemon --workers 3 --bind unix:/home/ubuntu/project/zusha/zusha_app.sock zusha_app.wsgi
+          
+

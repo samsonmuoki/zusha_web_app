@@ -1,0 +1,21 @@
+---
+- hosts: all
+  remote_user: root
+  become: yes
+  gather_facts: True
+
+  tasks:
+    - name: Initializing server
+      include: initialization_playbook.yml
+
+    - name: Setting up Nginx
+      include: nginx_playbook.yml
+
+    - name: Setting up gunicorn
+      include: gunicorn_playbook.yml
+
+    - name: Obtaining SSL cetifificate
+      include: letsencrypt_playbook.yml
+    
+    -name: Start periodic tasks
+      include: periodic_tasks.yml

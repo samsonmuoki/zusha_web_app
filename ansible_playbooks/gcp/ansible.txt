@@ -1,0 +1,3 @@
+
+for ini inventory
+ ansible all -m ping -u ubuntu -i <path to inventory, eg hosts.ini>
