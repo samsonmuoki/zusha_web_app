@@ -47,14 +47,10 @@
             become_method: sudo
             postgresql_db:
               name: zusha
-              # encoding: UTF-8
-              # lc_ctype: en_US.UTF-8
-              # template: template0
               state: present
             
 
           - name: Ensure user has access to db
-            # sudo_user: postgres
             become: yes
             become_user: postgres
             postgresql_user:
@@ -74,17 +70,11 @@
               repo: 'https://github.com/samsonmuoki/zusha_web_app.git'
               dest: project/
 
-          # - name: Copy db to server
-          #   copy:
-          #     src: /home/sam/Desktop/4th_Year_Project/zusha_web_app/zusha/db.sqlite3
-          #     dest: /home/sam/project/zusha/
-          #     mode: 0777
-
           - name: Copy env.sh to server
             copy:
               src: /home/sam/Desktop/4th_Year_Project/zusha_web_app/env.sh
               dest: /home/sam/project/
-              mode: 0700
+              mode: 0766
           
           - name: Stop supervisor
             service:
