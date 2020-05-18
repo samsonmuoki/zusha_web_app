@@ -170,11 +170,10 @@ def add_driver(request):
             driver_id = form.cleaned_data['driver_id']
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
+            sacco_name = form.cleaned_data['sacco']
             email = form.cleaned_data['email']
             phone_number = form.cleaned_data['phone_number']
-            sacco_name = form.cleaned_data['sacco']
 
-            # sacco = Sacco.objects.get(sacco_name=sacco_name)
             sacco = get_object_or_404(Sacco, sacco_name=sacco_name)
             driver = get_object_or_404(Driver, driver_id=driver_id)
 

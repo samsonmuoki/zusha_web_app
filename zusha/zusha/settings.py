@@ -131,6 +131,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+QR_CODE_CACHE_ALIAS = 'qr-code'
+
 # EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -154,7 +156,6 @@ CACHES = {
     # }
 }
 
-QR_CODE_CACHE_ALIAS = 'qr-code'
 
 BROKER_HOST = os.getenv("BROKER_HOST", "zusha")
 BROKER_PORT = os.getenv("BROKER_PORT", "5672")
@@ -207,13 +208,13 @@ CELERY_BEAT_SCHEDULE = {
 if DEBUG:
     CELERY_TASK_ALWAYS_EAGER = True
 
-# app = Celery('tasks', backend='rpc://', broker='pyamqp://')
 
-# app.conf.beat_schedule = {
-#     'add-every-30-seconds': {
-#         'task': 'tasks.add',
-#         'schedule': 30.0,
-#         'args': (16, 16)
-#     },
-# }
-# app.conf.timezone = 'UTC'
+# FIREBASE CONFIGURATIONS
+FIREBASE_API_KEY = os.getenv("FIREBASE_API_KEY", "")
+FIREBASE_AUTH_DOMAIN = os.getenv("FIREBASE_AUTH_DOMAIN", "")
+FIREBASE_DATABASE_URL = os.getenv("FIREBASE_DATABASE_URL", "")
+FIREBASE_PROJECT_ID = os.getenv("FIREBASE_PROJECT_ID", "")
+FIREBASE_STORAGE_BUCKET = os.getenv("FIREBASE_STORAGE_BUCKET", "")
+FIREBASE_MESSAGING_SENDER_ID = os.getenv("FIREBASE_MESSAGING_SENDER_ID", "")
+FIREBASE_APP_ID = os.getenv("FIREBASE_APP_ID", "")
+FIREBASE_MEASUREMENT_ID = os.getenv("FIREBASE_MEASUREMENT_ID", "")

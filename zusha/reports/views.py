@@ -10,21 +10,23 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # from registration.models import Vehicle, Sacco, Driver
 from registrations.models import Vehicle, Sacco, Driver
+from zusha import settings
 
 # app = Flask("reports")
 # Create your views here.
 
 
 firebaseConfig = {
-    'apiKey': "AIzaSyADbsrYL3TfrkN_jjIQgbUA1JZiJux9-Yw",
-    'authDomain': "deep-cascade-240110.firebaseapp.com",
-    'databaseURL': "https://deep-cascade-240110.firebaseio.com",
-    'projectId': "deep-cascade-240110",
-    'storageBucket': "deep-cascade-240110.appspot.com",
-    'messagingSenderId': "908598726815",
-    'appId': "1:908598726815:web:a6da5cc222b75c52e392aa",
-    'measurementId': "G-3QH3QGTQ09"
+    'apiKey': settings.FIREBASE_API_KEY,
+    'authDomain': settings.FIREBASE_AUTH_DOMAIN,
+    'databaseURL': settings.FIREBASE_DATABASE_URL,
+    'projectId': settings.FIREBASE_PROJECT_ID,
+    'storageBucket': settings.FIREBASE_STORAGE_BUCKET,
+    'messagingSenderId': settings.FIREBASE_MESSAGING_SENDER_ID,
+    'appId': settings.FIREBASE_APP_ID,
+    'measurementId': settings.FIREBASE_MEASUREMENT_ID
   }
+
 #   // Initialize Firebase
 #   firebase.initializeApp(firebaseConfig);
 #   firebase.analytics();
