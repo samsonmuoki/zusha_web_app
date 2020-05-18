@@ -1,15 +1,21 @@
 # import pyrebase
 
-from django.shortcuts import render, get_object_or_404
+from django.contrib.auth import (
+    # authenticate,
+    login, logout
+)
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 # Create your views here.
-# from django.http import HttpResponse
+from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # from qr_code.qrcode.utils import ContactDetail  # QRCodeOptions
 from qr_code.qrcode.utils import QRCodeOptions
 
-from .models import Sacco, Vehicle, Driver
+from .models import Sacco, Vehicle, Driver, SaccoDriver, SaccoVehicle
+from .forms import VehicleForm, DriverForm
 
 
 def index(request):
@@ -93,3 +99,101 @@ def get_driver_details(request, driver_id):
     driver = get_object_or_404(Driver, driver_id=driver_id)
     context = {'driver': driver}
     return render(request, 'registrations/driver_details.html', context)
+
+
+def signup_sacco_admin(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # login the user in
+            login(request, user)
+            return redirect('registrations:saccos')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registrations/signup.html', {'form': form})
+
+
+def login_sacco_admin(request):
+    """Login for Sacco Admin."""
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            # login the user
+            user = form.get_user()
+            login(request, user)
+            return redirect('registrations:saccos')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'registrations/login.html', {'form': form})
+
+
+def logout_sacco_admin(request):
+    """Logout sacco admin."""
+    if request.method == 'POST':
+        logout(request)
+        return redirect('registrations:saccos')
+
+
+def add_vehicle(request):
+    """Sacco admins add the list of vehicles they operate."""
+    if request.method == 'POST':
+        form = VehicleForm(request.POST)
+        if form.is_valid():
+            sacco_name = form.cleaned_data['sacco']
+            regno = form.cleaned_data['regno']
+
+            vehicle = get_object_or_404(Vehicle, registration_number=regno)
+            sacco = get_object_or_404(Sacco, sacco_name=sacco_name)
+            if sacco:
+                SaccoVehicle.objects.create(
+                    vehicle=vehicle,
+                    sacco=sacco
+                )
+                return HttpResponse('Vehicle successfully Added')
+            # TODO provide useful response below if invalid sacco is provided
+            # else:
+            #     return HttpResponse('The sacco provided does not exist')
+    else:
+        form = VehicleForm()
+        return render(
+            request, 'registrations/register_vehicle.html',
+            {'form': form}
+        )
+
+
+def add_driver(request):
+    """Sacco admins add the list of vehicles they operate."""
+    if request.method == 'POST':
+        form = DriverForm(request.POST)
+        if form.is_valid():
+            driver_id = form.cleaned_data['driver_id']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            email = form.cleaned_data['email']
+            phone_number = form.cleaned_data['phone_number']
+            sacco_name = form.cleaned_data['sacco']
+
+            # sacco = Sacco.objects.get(sacco_name=sacco_name)
+            sacco = get_object_or_404(Sacco, sacco_name=sacco_name)
+            driver = get_object_or_404(Driver, driver_id=driver_id)
+
+            SaccoDriver.objects.create(
+                driver=driver,
+                sacco=sacco,
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                phone_number=phone_number
+            )
+            return HttpResponse('Driver successfully Added')
+            # TODO provide useful response below if invalid sacco
+            # or driver is provided
+            # else:
+            #     return HttpResponse('The sacco provided does not exist')
+    else:
+        form = VehicleForm()
+        return render(
+            request, 'registrations/add_driver.html',
+            {'form': form}
+        )

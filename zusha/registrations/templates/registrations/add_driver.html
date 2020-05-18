@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Add a vehicle</h1>
+        <form action="{% url 'registrations:add_driver' %}" method="post">
+            {% csrf_token %}
+            <label>National ID</label> <input type="text" name="driver_id">
+            </br>
+            <label>First Name</label>
+            <input type="text" name="first_name">
+            </br>
+            <label>Last Name</label>
+            <input type="text" name="last_name">
+            </br>
+            <label>Sacco</label>
+            <input type="text" name="sacco">
+            </br>
+            <label>Email</label>
+            <input type="text" name="email">
+            </br>
+            <label>Phone Number</label>
+            <input type="text" name="phone_number">
+            </br>
+            <input type="submit" name="Add">
+        </form>
+    </body>
+</html>

@@ -60,7 +60,13 @@
         </style>
     </head>
     <body>
-        <div id="header"> HEADER TEXT HERE </div>
+        <div id="header">
+            HEADER TEXT HERE
+            <form class="logout-link" action="{% url 'registrations:sacco_logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </div>
         <div id="menu">
             <ul>
                 <li><a href="">HOME</a></li>
@@ -69,6 +75,7 @@
                 <li><a href="/registrations/saccos">SACCOS</a></li>
                 <li><a href="/registrations/vehicles">VEHICLES</a></li>
                 <li><a href="">EXTRA</a></li>
+
             </ul>
         </div>
         <!-- {% load qr_code %} -->

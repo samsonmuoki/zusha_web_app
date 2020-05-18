@@ -32,9 +32,9 @@ class Sacco(models.Model):
 
 
 class Vehicle(models.Model):
-    """Vehicle details."""
-    registration_number = models.CharField(max_length=200)
-    sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
+    """This model stores details of all vehicles registered by NTSA."""
+    registration_number = models.CharField(max_length=7, unique=True)
+    # sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
     # date registered = models.DateField
     # last_report_revision_date = models.DateField
     license_status = models.CharField(
@@ -48,17 +48,15 @@ class Vehicle(models.Model):
 
 
 class Driver(models.Model):
-    """Driver details."""
+    """Details of drivers registered to operate by NTSA"""
 
-    driver_id = models.CharField(max_length=200)
-    driver_name = models.CharField(max_length=200)
-    # driver_id = models.IntegerField(default=0)
-    sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
-    # sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
+    driver_id = models.CharField(max_length=8, unique=True)
+    first_name = models.CharField(max_length=10)
+    last_name = models.CharField(max_length=10)
     # date registered = models.DateField
     # last_report_revision_date = models.DateField
-    email = models.CharField(max_length=200)
-    phone_number = models.CharField(max_length=200)
+    email = models.CharField(max_length=50)
+    phone_number = models.CharField(max_length=10)
     license_status = models.CharField(
         max_length=32,
         choices=LICENSE_STATUS,
@@ -66,4 +64,28 @@ class Driver(models.Model):
     )
 
     def __str__(self):
-        return self.driver_name
+        return f"{self.first_name} {self.last_name}"
+
+
+class SaccoVehicle(models.Model):
+    """Each sacco stores the details of the vehicles
+    they operate in this model."""
+    vehicle = models.OneToOneField(Vehicle, on_delete=models.PROTECT)
+    sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return f"{self.vehicle}: {self.sacco}"
+
+
+class SaccoDriver(models.Model):
+    """Each sacco stores the details of drivers it has employed
+    in this model."""
+    driver = models.OneToOneField(Driver, on_delete=models.PROTECT)
+    sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
+    first_name = models.CharField(max_length=10)
+    last_name = models.CharField(max_length=10)
+    email = models.CharField(max_length=50)
+    phone_number = models.CharField(max_length=10)
+
+    def __str__(self):
+        return f"{self.driver}: {self.sacco}"

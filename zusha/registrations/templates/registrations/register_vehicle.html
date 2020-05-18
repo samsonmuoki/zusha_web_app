@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Add a vehicle</h1>
+        <form action="{% url 'registrations:add_vehicle' %}" method="post">
+            {% csrf_token %}
+            <label>sacco</label>
+            <input type="text" name="sacco">
+            </br>
+            <label>Registration Number</label>
+            <input type="text" name="regno" placeholder="K***123*">
+            </br>
+            <input type="submit" name="Add">
+        </form>
+    </body>
+</html>
