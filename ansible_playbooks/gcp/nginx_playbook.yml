@@ -4,16 +4,23 @@
     - name: ensure nginx is at the latest version
       apt: name=nginx state=latest
       become: yes
+    
+    - name: free port 80 to reassign ownership to nginx
+      command: fuser -k 80/tcp
+      become: yes
+
     - name: start nginx
       service:
           name: nginx
           state: started
       become: yes
+
     - name: copy the nginx config file and restart nginx
       copy:
         src: /home/sam/Desktop/4th_Year_Project/configuration_files/nginx/zusha_app
         dest: /etc/nginx/sites-available
       become: yes
+
     - name: create symbolic link
       file:
         src: /etc/nginx/sites-available/zusha_app

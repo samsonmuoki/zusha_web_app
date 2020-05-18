@@ -8,4 +8,5 @@ Fabric3
 flake8
 gunicorn
 Jinja2
+psycopg2
 Pyrebase==3.0.27

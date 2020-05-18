@@ -1,3 +1,4 @@
 
-for ini inventory
+for ini inventory or yml
  ansible all -m ping -u ubuntu -i <path to inventory, eg hosts.ini>
+ansible all -m ping -u sam -i hosts.yml

@@ -8,6 +8,7 @@
           
           - name: start gunicorn
             shell: |
-              . /home/ubuntu/project/venv/bin/activate
-              cd /home/ubuntu/project/zusha
-              gunicorn --daemon --workers 3 --bind unix:/home/ubuntu/project/zusha/zusha.sock zusha.wsgi
+              . /home/sam/project/env.sh
+              . /home/sam/project/venv/bin/activate
+              cd /home/sam/project/zusha
+              gunicorn --daemon --workers 3 --bind unix:/home/sam/project/zusha/zusha.sock zusha.wsgi

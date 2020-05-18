@@ -23,8 +23,46 @@
                 - git
                 - python3-apt
                 - python3-pip
+                - python-psycopg2
                 - supervisor
                 # - redis-server
+                - postgresql
+                - libpq-dev
+                - ufw
+                - psmisc
+          
+          - name: Ensure PostgreSQL service is running
+            service:
+              name: postgresql
+              state: started
+              enabled: yes
+
+          - name: install setfacl support to enable ansible create temporary files
+            become: yes
+            apt: pkg=acl
+          
+          - name: Create database
+            become: yes
+            become_user: postgres
+            become_method: sudo
+            postgresql_db:
+              name: zusha
+              # encoding: UTF-8
+              # lc_ctype: en_US.UTF-8
+              # template: template0
+              state: present
+            
+
+          - name: Ensure user has access to db
+            # sudo_user: postgres
+            become: yes
+            become_user: postgres
+            postgresql_user:
+              db: zusha
+              name: admin
+              password: admin
+              priv: ALL
+              state: present
             
           - name: Create project directory
             file:
@@ -36,11 +74,17 @@
               repo: 'https://github.com/samsonmuoki/zusha_web_app.git'
               dest: project/
 
-          - name: Copy db to server
+          # - name: Copy db to server
+          #   copy:
+          #     src: /home/sam/Desktop/4th_Year_Project/zusha_web_app/zusha/db.sqlite3
+          #     dest: /home/sam/project/zusha/
+          #     mode: 0777
+
+          - name: Copy env.sh to server
             copy:
-              src: /home/sam/Desktop/4th_Year_Project/zusha_web_app/zusha/db.sqlite3
-              dest: /home/ubuntu/project/zusha/
-              mode: 0777
+              src: /home/sam/Desktop/4th_Year_Project/zusha_web_app/env.sh
+              dest: /home/sam/project/
+              mode: 0700
           
           - name: Stop supervisor
             service:
@@ -59,18 +103,19 @@
             
           - name: Installing requirements
             pip:
-              requirements: /home/ubuntu/project/requirements/requirements_main.txt
-              virtualenv: /home/ubuntu/project/venv
+              requirements: /home/sam/project/requirements/requirements_main.txt
+              virtualenv: /home/sam/project/venv
               virtualenv_python: python3.6
 
           - name: Activate venv and make migrations
             shell: |
-              . /home/ubuntu/project/venv/bin/activate
-              python3 /home/ubuntu/project/zusha/manage.py migrate
+              . /home/sam/project/env.sh
+              . /home/sam/project/venv/bin/activate
+              python3 /home/sam/project/zusha/manage.py migrate
 
           - name: Recursively change ownership of zusha directory
             file:
-              path: /home/ubuntu/project/zusha
+              path: /home/sam/project/zusha
               state: directory
               recurse: yes
-              owner: ubuntu
+              owner: sam

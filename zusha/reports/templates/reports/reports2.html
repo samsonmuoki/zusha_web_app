@@ -147,16 +147,20 @@
                             <th>Time</th>
                             <th>Location</th>
                             <th>Driver</th>
+                            <th>SACCO ACTION</th>
+                            <th>NTSA ACTION</th>
                         </tr>
                         {% for key, value in reports_dictionary.items %}
                         <tr>
                             <td>{{ key }}</td>
-                            <td>{{ value.RegNo}} </td>
-                            <td>{{ value.Sacco}}</td>
-                            <td>{{ value.Speed}}</td>
-                            <td>{{ value.Time}}</td>
-                            <td><a href="/reports/all/{{key}}">{{ value.Location}}</a></td>
+                            <td>{{ value.RegNo }} </td>
+                            <td>{{ value.Sacco }}</td>
+                            <td>{{ value.Speed }}</td>
+                            <td>{{ value.Time }}</td>
+                            <td><a href="/reports/all/{{key}}">{{ value.Location }}</a></td>
                             <td>{{ value.Driver}}</td>
+                            <td>[OPTIONS]/</td>
+                            <td>[OPTIONS]/</td>
                         </tr>
                         {% endfor %}
                     </table>

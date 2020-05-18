@@ -8,6 +8,6 @@
     
     - name: start gunicorn
       shell: |
-        . /home/ubuntu/project/venv/bin/activate
-        cd /home/ubuntu/project/zusha
+        . /home/sam/project/venv/bin/activate
+        cd /home/sam/project/zusha
         celery -A proj beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
