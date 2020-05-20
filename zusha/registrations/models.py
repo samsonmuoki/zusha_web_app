@@ -19,7 +19,7 @@ class Sacco(models.Model):
     sacco_name = models.CharField(max_length=200, primary_key=True)
     # date registered = models.DateField
     # last_report_revision_date = models.DateField
-    email = models.CharField(max_length=200)
+    email = models.EmailField(max_length=200)
     phone_number = models.CharField(max_length=200)
     license_status = models.CharField(
         max_length=32,
@@ -55,7 +55,7 @@ class Driver(models.Model):
     last_name = models.CharField(max_length=10)
     # date registered = models.DateField
     # last_report_revision_date = models.DateField
-    email = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
     phone_number = models.CharField(max_length=10)
     license_status = models.CharField(
         max_length=32,
@@ -84,7 +84,7 @@ class SaccoDriver(models.Model):
     sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
     first_name = models.CharField(max_length=10)
     last_name = models.CharField(max_length=10)
-    email = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
     phone_number = models.CharField(max_length=10)
 
     def __str__(self):

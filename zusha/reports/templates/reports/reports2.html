@@ -134,13 +134,14 @@
             <div id="piechart">GRAPH 3</div>
             
         </div>
+
         <div id="details">
             <div id="details-title"> ALL REPORTS</div>
             <div id="table">
                 {% if reports_dictionary %}
                     <table>
                         <tr>
-                            <th>Id</th>
+                            <!-- <th>Id</th> -->
                             <th>Reg No</th>
                             <th>Sacco</th>
                             <th>Speed</th>
@@ -152,15 +153,15 @@
                         </tr>
                         {% for key, value in reports_dictionary.items %}
                         <tr>
-                            <td>{{ key }}</td>
-                            <td>{{ value.RegNo }} </td>
-                            <td>{{ value.Sacco }}</td>
-                            <td>{{ value.Speed }}</td>
-                            <td>{{ value.Time }}</td>
-                            <td><a href="/reports/all/{{key}}">{{ value.Location }}</a></td>
-                            <td>{{ value.Driver}}</td>
-                            <td>[OPTIONS]/</td>
-                            <td>[OPTIONS]/</td>
+                            <!-- <td>{{ key }}</td> -->
+                            <td>{{ value.regno }} </td>
+                            <td>{{ value.sacco }}</td>
+                            <td>{{ value.speed }}</td>
+                            <td>{{ value.time }}</td>
+                            <td><a href="/reports/all/{{key}}">{{ value.location }}</a></td>
+                            <td>{{ value.driver}}</td>
+                            <td>{{value.sacco_resolution}}</td>
+                            <td>{{value.ntsa_resolution}}</td>
                         </tr>
                         {% endfor %}
                     </table>

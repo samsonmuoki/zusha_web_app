@@ -35,7 +35,6 @@ tr:nth-child(even) {
               <th>Driver</th>
               <th>NTSA STATUS</th>
               <th>SACCO STATUS</th>
-              <th>ACTION</th>
             </tr>
             {% for key, value in reports_dictionary.items %}
             <tr>
@@ -48,8 +47,6 @@ tr:nth-child(even) {
               <td>{{ value.driver}}</td>
               <td>{{value.ntsa_resolution}}</td>
               <td>{{value.sacco_resolution}}</td>
-              <td><a href="/reports/all/{{value.sacco}}/{{value.regno}}/{{key}}">update status</a></td>
-              <!-- <td><a href="/reports/all/{{value.sacco}}/{{value.regno}}/updatestatus">update status</a></td> -->
             </tr>
             {% endfor %}
         </table>

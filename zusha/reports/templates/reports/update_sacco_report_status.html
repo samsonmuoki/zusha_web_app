@@ -20,6 +20,14 @@
 <p> TIME: <var id="time"> {{report_query_data.time}} </var> </p>
 <p> Location: <var id="speedlocation">{{report_query_data.location}} </var> </p>
 
+<p>
+  UPDATE STATUS
+  <select id="sacco_options">
+    <option value="pending">Pending</option>
+    <option value="in_progress">In Progress</option>
+    <option value="resolved">Resolve</option>
+  </select>
+</p>
 <h1>Map Location</h1>
 
 <!-- <script>

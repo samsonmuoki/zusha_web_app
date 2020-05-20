@@ -5,11 +5,10 @@ import pyrebase
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-# from flask import render_template, Flask
-# import json
 
 # from registration.models import Vehicle, Sacco, Driver
-from registrations.models import Vehicle, Sacco, Driver
+from .models import Report
+from .forms import ResolveCaseForm
 from zusha import settings
 
 # app = Flask("reports")
@@ -44,21 +43,43 @@ def index(request):
     return render(request, 'reports/index.html')
 
 
-def get_reports(request):
-    """Fetch all reports."""
-    reports = db.child('Reports').get()
-    reports_query_data = reports.val()
-    context = {'reports_query_data': reports_query_data}
-    return render(request, 'reports/reports.html', context)
-    # return render(request, 'reports/reports.html')
-
-
-def view_map(request):
+def view_all_reports_on_map(request):
     """Open map with markers on reported locations."""
     reports = db.child('Reports').get()
     reports_query_data = reports.val()
     context = {'reports_query_data': reports_query_data}
     return render(request, 'reports/map.html', context)
+
+
+def get_reports(request):
+    """Fetch all reports."""
+    reports = Report.objects.all().order_by('-id')
+    reports_dictionary = {}
+    for value in range(0, len(reports)):
+        data = {
+            'regno': reports[value].regno,
+            'sacco': reports[value].sacco,
+            'speed': reports[value].speed,
+            'time': reports[value].time,
+            'location': reports[value].location,
+            'driver': reports[value].driver,
+            'sacco_resolution': reports[value].sacco_resolution,
+            'ntsa_resolution': reports[value].ntsa_resolution,
+        }
+        reports_dictionary.update({reports[value].id: data})
+
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(reports_dictionary, 25)
+    # try:
+    #     reports_dictionary = paginator.page(page)
+    # except PageNotAnInteger:
+    #     reports_dictionary = paginator.page(1)
+    # except EmptyPage:
+    #     reports_dictionary = paginator.page(paginator.num_pages)
+
+    context = {'reports_dictionary': reports_dictionary}
+
+    return render(request, 'reports/reports2.html', context)
 
 
 # @app.route('/')
@@ -81,55 +102,170 @@ def get_reports2(request):
     #     reports_dictionary = paginator.page(paginator.num_pages)
 
     context1 = {'reports_dictionary': reports_dictionary}
-    # reports_list = []
-    # indexed_report = []
-    # indexed_reports = []
-    # for value in range(0, len(reports_query_data)):
-    #     # reports_list.append(reports_query_data[value])
-    #     indexed_report.append(value)
-    #     # indexed_report.append(reports_query_data[value])
-    #     # indexed_report = reports_query_data[value].update({"Report_id": value})
-    #     reports_list.append(value)
-    #     context2 = {'reports_list': reports_list}
 
     return render(request, 'reports/reports2.html', context1)
 
 
 def get_speeding_instance(request, report_id):
     """Fetch a single speeding instance"""
-    report = db.child('Reports').child(report_id).get()
-    report_query_data = report.val()
+    # report = db.child('Reports').child(report_id).get()
+    report = Report.objects.get(id=report_id)
+    report_query_data = {
+        'regno': report.regno,
+        'sacco': report.sacco,
+        'speed': report.speed,
+        'time': report.time,
+        'location': report.location,
+        'driver': report.driver,
+        'sacco_resolution': report.sacco_resolution,
+        'ntsa_resolution': report.ntsa_resolution,
+    }
     context = {'report_query_data': report_query_data}
     return render(request, 'reports/single_report.html', context)
 
 
-# def reports_by_sacco(request):
-#     """Sort reports by sacco."""
-#     reports_by_sacco = db.child("Reports").order_by_child("sacco").equal_to("lopha").get()
-#     sacco_query_data = reports_by_sacco.val()
-#     context = {'sacco_query_data': sacco_query_data}
-#     return render(request, 'reports/sacco_level.html', context)
-
-
-def reports_by_sacco(request, sacco):
+def order_reports_by_sacco(request):
     """Sort reports by sacco."""
-    # reports_by_sacco = db.child("Reports").order_by_child("sacco").equal_to("lopha").get()
-    # report = db.child("Reports").child(10).child("Sacco").get()
-    reports = db.child("Reports").get()
-    reports_query_data = reports.val()
-    # sacco_query_data = reports_by_sacco.val()
-    # context = {'reports_query_data': reports_query_data}
-    # sacco_reports = []
-    # for report in reports_query_data:
-    #     if report['Sacco'] == sacco:
-    #         sacco_reports.append(report)
-    # context = {'sacco_reports': sacco_reports}
+    reports = Report.objects.all().order_by('sacco')
     reports_dictionary = {}
-    for value in range(0, len(reports_query_data)):
-        # reports_dictionary.update({int(value): reports_query_data[value]["Sacco"]})
-        if reports_query_data[value]["Sacco"] == sacco:
-            # sacco_reports.append(reports_query_data[value])
-            reports_dictionary.update({int(value): reports_query_data[value]})
+    for value in range(0, len(reports)):
+        data = {
+            'regno': reports[value].regno,
+            'sacco': reports[value].sacco,
+            'speed': reports[value].speed,
+            'time': reports[value].time,
+            'location': reports[value].location,
+            'driver': reports[value].driver,
+            'sacco_resolution': reports[value].sacco_resolution,
+            'ntsa_resolution': reports[value].ntsa_resolution,
+        }
+        reports_dictionary.update({reports[value].id: data})
+
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(reports_dictionary, 25)
+    # try:
+    #     reports_dictionary = paginator.page(page)
+    # except PageNotAnInteger:
+    #     reports_dictionary = paginator.page(1)
+    # except EmptyPage:
+    #     reports_dictionary = paginator.page(paginator.num_pages)
+
     context = {'reports_dictionary': reports_dictionary}
-    # context = {'sacco_reports': sacco_reports}
+
+    return render(request, 'reports/reports2.html', context)
+
+
+def single_sacco_reports(request, sacco):
+    """Sort reports by sacco."""
+    reports = Report.objects.filter(sacco=sacco).order_by('-time', '-regno')
+    reports_dictionary = {}
+    for value in range(0, len(reports)):
+        data = {
+            'regno': reports[value].regno,
+            'sacco': reports[value].sacco,
+            'speed': reports[value].speed,
+            'time': reports[value].time,
+            'location': reports[value].location,
+            'driver': reports[value].driver,
+            'sacco_resolution': reports[value].sacco_resolution,
+            'ntsa_resolution': reports[value].ntsa_resolution,
+        }
+        reports_dictionary.update({reports[value].id: data})
+
+    # page = request.GET.get('page', 1)
+    # paginator = Paginator(reports_dictionary, 25)
+    # try:
+    #     reports_dictionary = paginator.page(page)
+    # except PageNotAnInteger:
+    #     reports_dictionary = paginator.page(1)
+    # except EmptyPage:
+    #     reports_dictionary = paginator.page(paginator.num_pages)
+
+    context = {'reports_dictionary': reports_dictionary}
+
     return render(request, 'reports/sacco_level.html', context)
+
+
+def resolve_sacco_case(request, regno, sacco, report_id):
+    """Resolve all cases for a single vehicle that are reported
+    on the same day."""
+    # fetch regno
+    # fetch date reported
+    # Report.objects.filter(
+    #     regno=regno,
+    #     # time=time
+    # ).update(
+    #     sacco_resolution=option
+    # )
+    # reports = Report.objects.filter(regno=regno)
+    # reports_dictionary = {}
+    # for value in range(0, len(reports)):
+    #     data = {
+    #         'regno': reports[value].regno,
+    #         'sacco': reports[value].sacco,
+    #         'speed': reports[value].speed,
+    #         'time': reports[value].time,
+    #         'location': reports[value].location,
+    #         'driver': reports[value].driver,
+    #         'sacco_resolution': reports[value].sacco_resolution,
+    #         'ntsa_resolution': reports[value].ntsa_resolution,
+    #     }
+    #     reports_dictionary.update({reports[value].id: data})
+    # context = {'reports_dictionary': reports_dictionary}
+    # report = Report.objects.get(regno=regno)
+    report = Report.objects.get(id=report_id)
+    report_query_data = {
+        'regno': report.regno,
+        'sacco': report.sacco,
+        'speed': report.speed,
+        'time': report.time,
+        'location': report.location,
+        'driver': report.driver,
+        'sacco_resolution': report.sacco_resolution,
+        'ntsa_resolution': report.ntsa_resolution,
+    }
+    context = {'report_query_data': report_query_data}
+    # return render(request, 'reports/single_report.html', context)
+
+    return render(request, 'reports/update_sacco_report_status.html', context)
+
+
+def update_sacco_report_status(request, regno, sacco):
+    """Resolve all cases for a single vehicle that are reported
+    on the same day."""
+    # fetch regno
+    # fetch date reported
+    # Report.objects.filter(
+    #     regno=regno,
+    #     # time=time
+    # ).update(
+    #     sacco_resolution=option
+    # )
+    reports = Report.objects.filter(regno=regno)
+    reports_dictionary = {}
+    for value in range(0, len(reports)):
+        data = {
+            'regno': reports[value].regno,
+            'sacco': reports[value].sacco,
+            'speed': reports[value].speed,
+            'time': reports[value].time,
+            'location': reports[value].location,
+            'driver': reports[value].driver,
+            'sacco_resolution': reports[value].sacco_resolution,
+            'ntsa_resolution': reports[value].ntsa_resolution,
+        }
+        reports_dictionary.update({reports[value].id: data})
+    context = {'reports_dictionary': reports_dictionary}
+    # report = Report.objects.get(regno=regno)
+    # report_query_data = {
+    #     'regno': report.regno,
+    #     'sacco': report.sacco,
+    #     'speed': report.speed,
+    #     'time': report.time,
+    #     'location': report.location,
+    #     'driver': report.driver,
+    #     'sacco_resolution': report.sacco_resolution,
+    #     'ntsa_resolution': report.ntsa_resolution,
+    # }
+    # context = {'report_query_data': report_query_data}
+    return render(request, 'reports/resolve_case.html', context)

@@ -24,7 +24,18 @@ tr:nth-child(even) {
     <h2>ALL REPORTED CASES</h2>
 
     {{reports_query_data}}
-    {% if reports_query_data %}
+    
+
+    {% for report in reports_dictionary %}
+        {{report}}
+    {% endfor %}
+    {% for key, value in reports_dictionary.items %}
+        {{key}}==> {{value.regno}} {{value.sacco_resolution}}
+    {% endfor %}
+
+    <h1>ALL REPORTS</h1>
+    {{reports_dictionary}}
+    {% if reports_dictionary %}
         
         <table>
             <tr>

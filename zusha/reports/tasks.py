@@ -11,9 +11,11 @@ from django.utils import timezone
 from datetime import timedelta, datetime
 import pytz
 
-from celery.contrib import rdb
+# from celery.contrib import rdb
+from zusha import settings
 
-from registration.models import Sacco, Driver, Vehicle
+from registrations.models import Sacco, Driver, Vehicle
+from .models import Report
 
 # from registration.models import LICENSE_STATUS
 
@@ -23,14 +25,14 @@ app = Celery('tasks', backend='rpc://', broker='pyamqp://')
 
 
 firebaseConfig = {
-    'apiKey': "AIzaSyADbsrYL3TfrkN_jjIQgbUA1JZiJux9-Yw",
-    'authDomain': "deep-cascade-240110.firebaseapp.com",
-    'databaseURL': "https://deep-cascade-240110.firebaseio.com",
-    'projectId': "deep-cascade-240110",
-    'storageBucket': "deep-cascade-240110.appspot.com",
-    'messagingSenderId': "908598726815",
-    'appId': "1:908598726815:web:a6da5cc222b75c52e392aa",
-    'measurementId': "G-3QH3QGTQ09"
+    'apiKey': settings.FIREBASE_API_KEY,
+    'authDomain': settings.FIREBASE_AUTH_DOMAIN,
+    'databaseURL': settings.FIREBASE_DATABASE_URL,
+    'projectId': settings.FIREBASE_PROJECT_ID,
+    'storageBucket': settings.FIREBASE_STORAGE_BUCKET,
+    'messagingSenderId': settings.FIREBASE_MESSAGING_SENDER_ID,
+    'appId': settings.FIREBASE_APP_ID,
+    'measurementId': settings.FIREBASE_MEASUREMENT_ID
   }
 #   // Initialize Firebase
 #   firebase.initializeApp(firebaseConfig);
@@ -38,26 +40,50 @@ firebaseConfig = {
 firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
 user = auth.sign_in_with_email_and_password(
-    "samsonmuoki97@gmail.com", "KingJulien97"
+    settings.FIREBASE_USER, settings.FIREBASE_PASSWORD
 )
 
 db = firebase.database()
 
 
-# @shared_task
-# def blacklist_gari():
-#     reports = db.child('Reports').get()
-#     reports_query_data = reports.val()
-#     reports_list = []
-#     vehicle = Vehicle.objects.get(registration_number="KAA")
-#     for report in reports_query_data:
-#         if report["RegNo"] == f"{vehicle.registration_number} ":
-#             reports_list.append(report)
-#     # rdb.set_trace()
-#     if len(reports_list) > 1:
-#         # vehicle.license_status = LICENSE_STATUS.BLACKLISTED
-#         vehicle.license_status = "blacklisted"
-#         vehicle.save()
+@shared_task
+def update_reports_db():
+    reports = db.child('Reports').get()
+    reports_query_data = reports.val()
+    for report in reports_query_data:
+        # driver = report['Driver']
+        location = report['Location']
+        regno = report['RegNo']
+        sacco = report['Sacco']
+        speed = report['Speed']
+        time = report['Time'].replace(' at', '').replace('.', '-')
+
+        Report.objects.get_or_create(
+            regno=regno,
+            sacco=sacco,
+            speed=speed,
+            time=time,
+            location=location,
+        )
+
+
+@shared_task
+def blacklist_vehicles():
+    # Fecth all registered vehicles
+    # Fetch all reports
+    # If count for each vehicle is above threshold, blacklist the vehicle.
+    vehicles = Vehicle.objects.all()
+    # reports = db.child('Reports').get()
+    reports = Report.objects.all()
+    # reports_query_data = reports.val()
+    for vehicle in vehicles:
+        reports_list = []
+        for report in reports_query_data:
+            if report["RegNo"] == f"{vehicle.registration_number}":
+                reports_list.append(report)
+        if len(reports_list) > 1:
+            vehicle.license_status = "blacklisted"
+            vehicle.save()
 
 
 @shared_task
@@ -113,27 +139,6 @@ def send_alerts():
                     fail_silently=False,
                     html_message=f"Vehicle REG: <b>{value['RegNo']}</b> belonging to <b>{sacco.sacco_name}</b> sacco, has been reported for overspeeding at <b>{value['Speed']}</b> KM/H in this Location <a href='http://localhost:8000/reports/all/{key}'>{value['Location']}</a>."
                 )
-
-    # for report in reports_query_data:
-    #     time_object = datetime.strptime(report['Time'], '%Y.%m.%d at %H:%M:%S')
-    #     if timezone.now().replace(tzinfo=None)-time_object > timedelta(minutes=1):
-    #         all_latest_reports.append(report)
-    # # rdb.set_trace()
-
-    # for sacco in saccos:
-
-    #     for report in all_latest_reports:
-    #         if report["Sacco"] == "Makos":
-    #             email_subject = "ZUSHA REPORT"
-    #             email_message = f"Vehicle REG: {report['RegNo']} belonging to your sacco, has been reported for overspeeding at {report['Speed']} KM/H in this Location {report['Location']}"
-    #             send_mail(
-    #                 email_subject,
-    #                 email_message,
-    #                 'samsonmuoki97@gmail.com',
-    #                 [sacco.email],
-    #                 fail_silently=False,
-    #                 html_message=f"Vehicle REG: <b>{report['RegNo']}</b> belonging to your sacco, has been reported for overspeeding at <b>{report['Speed']}</b> KM/H in this Location <a href='http://localhost:8000/reports/all/5'>{report['Location']}</a>."
-    #             )
 
 
 # @periodic_task
@@ -191,14 +196,3 @@ def blacklist_drivers():
         if len(reports_list) > 1:
             driver.license_status = "BLACKLISTED"
             driver.save()
-
-
-# app.conf.beat_schedule = {
-#     # Executes every Monday morning at 7:30 a.m.
-#     'send-notifications-every-minute': {
-#         'task': 'tasks.add',
-#         # 'schedule': crontab(hour=7, minute=30, day_of_week=1),
-#         'schedule': crontab(),  # execute every minute
-#         'args': (16, 16),
-#     },
-# }
