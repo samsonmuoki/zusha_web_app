@@ -9,16 +9,14 @@
       git:
         repo: 'https://github.com/samsonmuoki/zusha_web_app.git'
         dest: project/
+        force: yes
         # owner: sam
     
-    # comment here
     - name: Installing requirements
       pip:
         requirements: /home/sam/project/requirements/requirements_main.txt
         virtualenv: /home/sam/project/venv
         virtualenv_python: python3.6
-    # comments up to here
-
 
     - name: Activate venv and make migrations
       shell: |
