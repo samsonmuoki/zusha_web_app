@@ -8,7 +8,10 @@ from celery import shared_task, Celery
 # from celery.schedules import crontab
 
 from django.utils import timezone
-from datetime import timedelta, datetime
+from datetime import (
+    timedelta, date
+    # datetime,
+)
 import pytz
 
 # from celery.contrib import rdb
@@ -58,7 +61,8 @@ def update_reports_db():
         speed = report['Speed']
         time = report['Time'].replace(' at', '').replace('.', '-')
         date_list = time.replace(' ', '-').replace(':', '-').split('-')
-        date = datetime.date(
+        # date = datetime.date(
+        day = date(
             int(date_list[0]), int(date_list[1]), int(date_list[2])
         )
 
@@ -68,7 +72,7 @@ def update_reports_db():
             speed=speed,
             time=time,
             location=location,
-            date=date
+            date=day
         )
 
 

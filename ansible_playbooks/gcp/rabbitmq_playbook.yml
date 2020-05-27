@@ -1,0 +1,43 @@
+---
+- hosts: all
+  remote_user: root
+  become: yes
+  gather_facts: True
+
+  tasks:
+          - name: Update cache
+            apt:
+              update_cache: yes
+          
+          - name: Install base packages
+            apt: 
+              name: "{{ packages }}"
+            vars:
+              packages:
+                - curl
+                - apt-transport-https
+
+          # - name: Add Erlang official bintray repo
+          #   apt_repository:
+          #     repo: deb https://dl.bintray.com/rabbitmq-erlang/debian bionic erlang
+          #     state: present
+          #     filename: rabbitmq
+
+          # - name: Install RabbitMQ public key
+          #   apt_key:
+          #     url: https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
+          #     state: present
+
+          # - name: Add rabbitmq bintray repository
+          #   apt_repository:
+          #     repo: deb https://dl.bintray.com/rabbitmq/debian bionic main
+          #     state: present
+          #     filename: erlang  
+          
+          - name: Install rabbitmq-server
+            shell: |
+              curl -fsSL https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
+              apt-key add -
+            become: yes
+            become_user: root              
+          
