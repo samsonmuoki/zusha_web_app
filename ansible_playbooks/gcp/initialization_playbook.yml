@@ -105,11 +105,11 @@
               . /home/sam/project/venv/bin/activate
               python3 /home/sam/project/zusha/manage.py migrate
           
-          - name: Collect static
-            shell: |
-              . /home/sam/project/env.sh
-              . /home/sam/project/venv/bin/activate
-              python3 /home/sam/project/zusha/manage.py collectstatic
+          # - name: Collect static
+          #   shell: |
+          #     . /home/sam/project/env.sh
+          #     . /home/sam/project/venv/bin/activate
+          #     python3 /home/sam/project/zusha/manage.py collectstatic
 
 
           - name: Recursively change ownership of zusha directory

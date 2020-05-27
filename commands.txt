@@ -6,6 +6,6 @@ $ python3 manage.py migrate django_celery_results
 $ celery -A zusha beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
 RABBITMQ
-rabbitmqctl add_user zusha zusha
-rabbitmqctl add_vhost zushavhost
-rabbitmqctl set_permissions -p zushavhost zusha ".*" ".*" ".*"
+sudo rabbitmqctl add_user zusha zusha
+sudo rabbitmqctl add_vhost zushavhost
+sudo rabbitmqctl set_permissions -p zushavhost zusha ".*" ".*" ".*"

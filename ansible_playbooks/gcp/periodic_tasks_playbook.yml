@@ -6,7 +6,7 @@
 
   tasks:            
     
-    - name: start gunicorn
+    - name: start Celery
       shell: |
         . /home/sam/project/venv/bin/activate
         cd /home/sam/project/zusha
