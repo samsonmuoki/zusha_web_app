@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # 'registration.apps.RegistrationConfig',
     'registrations.apps.RegistrationsConfig',
     'reports.apps.ReportsConfig',
     'django_celery_results',
@@ -198,27 +197,22 @@ CELERY_BEAT_SCHEDULE = {
     # },
     'update-db': {
         'task': 'reports.tasks.update_reports_db',
-        # 'schedule': crontab(hour=1, minute=30, day_of_week=1),
         'schedule': crontab(),  # execute every minute
     },
     'send-alerts': {
         'task': 'reports.tasks.send_alerts',
-        # 'schedule': crontab(hour=7, minute=30, day_of_week=1),
         'schedule': crontab(),  # execute every minute
     },
     'zusha.reports.tasks.blacklist_vehicles': {
         'task': 'reports.tasks.blacklist_vehicles',
-        # 'schedule': crontab(hour=7, minute=30, day_of_week=1),
         'schedule': crontab(),  # execute every minute
     },
     'zusha.reports.tasks.blacklist_saccos': {
         'task': 'reports.tasks.blacklist_saccos',
-        # 'schedule': crontab(hour=7, minute=30, day_of_week=1),
         'schedule': crontab(),  # execute every minute
     },
     'zusha.reports.tasks.blacklist_drivers': {
         'task': 'reports.tasks.blacklist_drivers',
-        # 'schedule': crontab(hour=7, minute=30, day_of_week=1),
         'schedule': crontab(),  # execute every minute
     },
 }
