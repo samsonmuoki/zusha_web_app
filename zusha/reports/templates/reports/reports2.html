@@ -1,3 +1,4 @@
+{% load static %} 
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,19 +68,19 @@
         padding: 5px;
         margin: 5px;
         background-color: white;
-        height: 180px;
+        height: 250px;
     }
     #linegraph{
         padding: 5px;
         margin: 5px;
         background-color: white;
-        height: 180px;
+        height: 250px;
     }
     #piechart{
         padding: 5px;
         margin: 5px;
         background-color: white;
-        height: 180px;
+        height: 250px;
     }
     #details{
         float: left;
@@ -131,7 +132,7 @@
     </select>
 </div> -->
 <body>
-    <div id="header"> HEADER TEXT HERE </div>
+    <div id="header"> ZUSHA ROAD SAFETY </div>
     <div id="menu">
         <ul>
             <li><a href="">HOME</a></li>
@@ -145,9 +146,9 @@
     <div id="contents">
         <div id="statistics">
             <div id="summary"> TOTAL REPORTS: {{reports_dictionary|length}} </div>
-            <div id="bargraph">GRAPH 1</div>
-            <div id="linegraph">GRAPH 2</div>
-            <div id="piechart">GRAPH 3</div>
+            <div id="bargraph"> <img src="{% static "images/pie-chart2.jpg" %}" alt="My image"  width="100%" height="250px"> </div>
+            <div id="linegraph"><img src="{% static "images/pie-chart2.jpg" %}" alt="My image"  width="100%" height="250px"></div>
+            <div id="piechart"><img src="{% static "images/pie-chart2.jpg" %}" alt="My image"  width="100%" height="250px"></div>
             
         </div>
 
@@ -156,7 +157,7 @@
                 <div id="details-title"> ALL REPORTS</div>
                 <div id="sacco-fliter">
                     <select name='sacco-report' onchange="location = this.value;">
-                        <option>----</option>
+                        <option value="/reports/all">All Saccos</option>
                         <option value="/reports/all/Makos">Makos</option>
                         <option value="/reports/all/Manatwa">Manatwa</option>
                         <option value="/reports/all/Metro">Metro</option>
@@ -222,18 +223,6 @@
     </div>
     
 
-    <!-- {{reports_dictionary}}
-    {{reports_list}} -->
-    <!-- <h1><b>List of Reports</b></h1> -->
-    <!-- <a href="">{{reports_dictionary.0.Driver}}</a></br>
-    <a href="">{{reports_dictionary.1}}</a></br> -->
-
-    <!-- {% with report=8 %}
-        <p>{{report}}</p>
-        {{ reports_dictionary.report }} </br>
-    {% endwith %} -->
-
-    <!-- <h1>Reports</h1> -->
     {% load range %}
     {% if reports_dictionary %}
         <!-- {#
