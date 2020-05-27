@@ -90,8 +90,7 @@
       docker:
         - image: circleci/python:3.7
       environment:
-       ANSIBLE_HOST_KEY_CHECKING: "no"
-      # working_directory: ~/repo
+      ANSIBLE_HOST_KEY_CHECKING: "no"
       steps:
         - checkout
         - run:
@@ -100,7 +99,7 @@
                 python3 -m venv venv
                 . venv/bin/activate
                 pip install ansible
-                cd ansible_playbooks/
+                cd ansible_playbooks/gcp
                 ansible-playbook cd_playbook.yml -i hosts.yml
     
   workflows:

@@ -9,31 +9,39 @@
       git:
         repo: 'https://github.com/samsonmuoki/zusha_web_app.git'
         dest: project/
-        owner: sam
+        # owner: sam
     
     # comment here
-    - name: installing requirements
+    - name: Installing requirements
       pip:
         requirements: /home/sam/project/requirements/requirements_main.txt
-        virtualenv: /home/ubuntu/project/venv
+        virtualenv: /home/sam/project/venv
         virtualenv_python: python3.6
     # comments up to here
 
 
-    - name: activate venv and make migrations
+    - name: Activate venv and make migrations
       shell: |
         . /home/sam/project/env.sh
         . /home/sam/project/venv/bin/activate
         pip3 install -r /home/sam/project/requirements/requirements_main.txt
         python3 /home/sam/project/zusha/manage.py migrate
     
+    - name: Recursively change ownership of static directory
+      file:
+        path: /home/sam/project/static
+        state: directory
+        recurse: yes
+        owner: sam
+        mode: 0777
+    
     - name: Collect static
       shell: |
         . /home/sam/project/env.sh
         . /home/sam/project/venv/bin/activate
-        python3 /home/sam/project/zusha/manage.py collectstatic
+        python3 /home/sam/project/zusha/manage.py collectstatic --noinput
 
-    - name: start gunicorn
+    - name: Start gunicorn
       shell: |
         . /home/sam/project/env.sh
         . /home/sam/project/venv/bin/activate
