@@ -57,6 +57,10 @@ def update_reports_db():
         sacco = report['Sacco']
         speed = report['Speed']
         time = report['Time'].replace(' at', '').replace('.', '-')
+        date_list = time.replace(' ', '-').replace(':', '-').split('-')
+        date = datetime.date(
+            int(date_list[0]), int(date_list[1]), int(date_list[2])
+        )
 
         Report.objects.get_or_create(
             regno=regno,
@@ -64,6 +68,7 @@ def update_reports_db():
             speed=speed,
             time=time,
             location=location,
+            date=date
         )
 
 

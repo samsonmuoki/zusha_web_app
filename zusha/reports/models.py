@@ -23,6 +23,9 @@ class Report(models.Model):
     time = models.DateTimeField(
         auto_now=False, auto_now_add=False
     )
+    date = models.DateField(
+        auto_now=False, auto_now_add=False,
+    )
     location = models.CharField(max_length=100, null=True)
     driver = models.CharField(
         max_length=20, null=True, blank=True

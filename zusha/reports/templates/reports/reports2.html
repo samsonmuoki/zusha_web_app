@@ -2,6 +2,15 @@
 <html>
 <head>
 <style>
+
+    /* * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        list-style: none;
+    } */
+
     #header{
         background-color: floralwhite;
         text-align: center;
@@ -79,6 +88,13 @@
     }
     #details-title{
         text-align: center;
+        float: left;
+        width: 75%;
+    }
+    #sacco-filter{
+        text-align: center;
+        float: left;
+        width: 25%;
     }
     table {
     font-family: arial, sans-serif;
@@ -120,9 +136,9 @@
         <ul>
             <li><a href="">HOME</a></li>
             <li><a href="/reports/all">REPORTS</a></li>
-            <li><a href="">DRIVERS</a></li>
-            <li><a href="">SACCOS</a></li>
-            <li><a href="">VEHICLES</a></li>
+            <li><a href="/registrations/drivers">DRIVERS</a></li>
+            <li><a href="/registrations/saccos">SACCOS</a></li>
+            <li><a href="/registrations/vehicles">VEHICLES</a></li>
             <li><a href="">EXTRA</a></li>
         </ul>
     </div>
@@ -136,7 +152,18 @@
         </div>
 
         <div id="details">
-            <div id="details-title"> ALL REPORTS</div>
+            <div>
+                <div id="details-title"> ALL REPORTS</div>
+                <div id="sacco-fliter">
+                    <select name='sacco-report' onchange="location = this.value;">
+                        <option>----</option>
+                        <option value="/reports/all/Makos">Makos</option>
+                        <option value="/reports/all/Manatwa">Manatwa</option>
+                        <option value="/reports/all/Metro">Metro</option>
+                        <option value="/reports/all/Lopha">Lopha</option>
+                    </select>
+                </div>
+            </div>
             <div id="table">
                 {% if reports_dictionary %}
                     <table>
