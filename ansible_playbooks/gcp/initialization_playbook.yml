@@ -111,7 +111,6 @@
           #     . /home/sam/project/venv/bin/activate
           #     python3 /home/sam/project/zusha/manage.py collectstatic
 
-
           - name: Recursively change ownership of zusha directory
             file:
               path: /home/sam/project/zusha

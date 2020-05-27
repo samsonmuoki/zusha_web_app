@@ -8,6 +8,7 @@
     
     - name: start Celery
       shell: |
+        . /home/sam/project/env.sh
         . /home/sam/project/venv/bin/activate
         cd /home/sam/project/zusha
         python3 /home/sam/project/zusha/manage.py migrate django_celery_results
