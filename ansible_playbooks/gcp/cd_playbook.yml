@@ -27,6 +27,12 @@
         pip3 install -r /home/sam/project/requirements/requirements_main.txt
         python3 /home/sam/project/zusha/manage.py migrate
     
+    - name: Collect static
+      shell: |
+        . /home/sam/project/env.sh
+        . /home/sam/project/venv/bin/activate
+        python3 /home/sam/project/zusha/manage.py collectstatic
+
     - name: start gunicorn
       shell: |
         . /home/sam/project/env.sh
