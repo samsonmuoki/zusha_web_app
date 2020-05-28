@@ -11,21 +11,23 @@
   </head>
   <body>
 
-<!-- <h1> {{report_query_data}} </h1> -->
+<h1> {{report}} </h1>
 <h1>Overspeeding Report</h1>
-<p> REGISTRATION: <var id="regno"> {{report_query_data.rego}} </var> </p>
-<p> DRIVER: <var id="driver"> {{report_query_data.driver}} </var> </p>
-<p> SACCO: <var id="sacco"> {{report_query_data.sacco}} </var> </p>
-<p> SPEED: <var id="speed"> {{report_query_data.speed}} </var> </p>
-<p> TIME: <var id="time"> {{report_query_data.time}} </var> </p>
-<p> Location: <var id="speedlocation">{{report_query_data.location}} </var> </p>
+<p> REGISTRATION: <var id="regno"> {{report.regno}} </var> </p>
+<p> DRIVER: <var id="driver"> {{report.driver}} </var> </p>
+<p> SACCO: <var id="sacco"> {{report.sacco}} </var> </p>
+<p> SPEED: <var id="speed"> {{report.speed}} </var> </p>
+<p> TIME: <var id="time"> {{report.time}} </var> </p>
+<p> Location: <var id="speedlocation">{{report.location}} </var> </p>
+<p> SACCO STATUS: {{report.sacco_resolution}} </p>
 
 <p>
   UPDATE STATUS
-  <select id="sacco_options">
-    <option value="pending">Pending</option>
-    <option value="in_progress">In Progress</option>
-    <option value="resolved">Resolve</option>
+  <select id="sacco_options" onchange="location = this.value">
+    <option value="">------</option>
+    <option value="/reports/all/{{report.sacco}}/{{report.regno}}/{{report.id}}/pending">Pending</option>
+    <option value="/reports/all/{{report.sacco}}/{{report.regno}}/{{report.id}}/in_progress">In Progress</option>
+    <option value="/reports/all/{{report.sacco}}/{{report.regno}}/{{report.id}}/resolved">Resolved</option>
   </select>
 </p>
 <h1>Map Location</h1>

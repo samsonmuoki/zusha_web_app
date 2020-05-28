@@ -145,19 +145,12 @@
         </ul>
     </div>
     <div id="contents">
-        <div id="statistics">
-            <div id="summary"> TOTAL REPORTS: {{reports_list|length}} </div>
-            <div id="bargraph"> <img src="{% static "images/pie-chart2.jpg" %}" alt="My image"  width="100%" height="250px"> </div>
-            <div id="linegraph"><img src="{% static "images/bar-graph.svg" %}" alt="My image"  width="100%" height="250px"></div>
-            <div id="piechart"><img src="{% static "images/bargraph.jpg" %}" alt="My image"  width="100%" height="250px"></div>
-            
-        </div>
-
-        <div id="details">
+        
+        <div id="reports-column">
             <div>
-                <div id="details-title"> ALL REPORTS</div>
-                <div id="filter-section">
-                    <div id="filter-text">Filter</div>
+                <div id="details-title"> {{sacco}} REPORTS</div>
+                <div id='filter-section'>
+                  <div id="filter-text">Filter</div>
                     <div id="filter-dropdown">
                         <select name='sacco-report' onchange="location = this.value;">
                             <option value="/reports/all">All Saccos</option>
@@ -167,9 +160,12 @@
                             <option value="/reports/all/Lopha">Lopha</option>
                         </select>
                     </div>
-                </div>
+                  </div>
             </div>
 
+            CASES: {{reports_list}}
+
+            <!-- {{reports}} -->
             <div id="table">
                 {% if reports %}
                     <table>
@@ -183,11 +179,12 @@
                             <th>Driver</th>
                             <th>SACCO ACTION</th>
                             <th>NTSA ACTION</th>
+                            <th>ACTION</th>
                         </tr>
                         {% for report in reports %}
                         <tr>
                             <!-- <td>{{ key }}</td> -->
-                            <td><a href='/reports/all/{{report.regno}}'>{{ report.regno }}</a> </td>
+                            <td>{{ report.regno }} </td>
                             <td>{{ report.sacco }}</td>
                             <td>{{ report.speed }}</td>
                             <td>{{ report.time }}</td>
@@ -195,6 +192,7 @@
                             <td>{{ report.driver}}</td>
                             <td>{{report.sacco_resolution}}</td>
                             <td>{{report.ntsa_resolution}}</td>
+                            <td><a href="/reports/all/{{report.sacco}}/{{report.regno}}/{{report.id}}">update status</a></td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -224,6 +222,10 @@
             
                 {% else %}
                     <p>No reports to display</p>
+
+                    CASES: {{reports_list}}
+                    fdgfdrtdrdrdtrdrsers
+
                 {% endif %}
             </div>
         </div>

@@ -41,30 +41,20 @@ db = firebase.database()
 
 def index(request):
     """Fetch all reports."""
-    reports = Report.objects.all().order_by('-id')
-    reports_dictionary = {}
-    for value in range(0, len(reports)):
-        data = {
-            'regno': reports[value].regno,
-            'sacco': reports[value].sacco,
-            'speed': reports[value].speed,
-            'time': reports[value].time,
-            'location': reports[value].location,
-            'driver': reports[value].driver,
-            'sacco_resolution': reports[value].sacco_resolution,
-            'ntsa_resolution': reports[value].ntsa_resolution,
-        }
-        reports_dictionary.update({reports[value].id: data})
+    reports_list = Report.objects.all().order_by('-id')
 
-    # page = request.GET.get('page', 1)
-    # paginator = Paginator(reports_dictionary, 25)
-    # try:
-    #     reports_dictionary = paginator.page(page)
-    # except PageNotAnInteger:
-    #     reports_dictionary = paginator.page(1)
-    # except EmptyPage:
-    #     reports_dictionary = paginator.page(paginator.num_pages)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reports_list, 50)
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
 
-    context = {'reports_dictionary': reports_dictionary}
+    context = {
+        'reports': reports,
+        'reports_list': reports_list
+    }
 
     return render(request, 'reports/reports2.html', context)

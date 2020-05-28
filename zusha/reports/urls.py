@@ -8,7 +8,7 @@ app_name = 'reports'
 urlpatterns = [
     path('', views.index, name='index'),
     path('all/', views.get_reports, name='reports'),
-    path('all2/', views.get_reports2, name='reports2'),
+    # path('all2/', views.get_reports2, name='reports2'),
     path(
         'all/<int:report_id>/', views.get_speeding_instance,
         name='speeding_instance'
@@ -29,9 +29,16 @@ urlpatterns = [
         name='resolve_sacco_case'
     ),
     path(
-        'all/<slug:sacco>/<slug:regno>/updatestatus/',
-        views.update_sacco_report_status,
-        name='update_sacco_report_status',
+        'all/<slug:sacco>/<slug:regno>/<int:report_id>/<slug:status>',
+        views.update_sacco_case_status,
+        name='update_sacco_case'
     ),
-    # path('vehicles/', views.view_all_vehicles, name="vehicles"),
+    # path(
+    #     'all/<slug:sacco>/<slug:regno>/updatestatus/',
+    #     views.update_sacco_report_status,
+    #     name='update_sacco_report_status',
+    # ),
+    path(
+        'all/<slug:regno>/', views.single_vehicle_cases, name="vehicle_cases"
+    ),
 ]

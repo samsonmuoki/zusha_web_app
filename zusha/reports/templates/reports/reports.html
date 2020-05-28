@@ -23,19 +23,11 @@ tr:nth-child(even) {
     
     <h2>ALL REPORTED CASES</h2>
 
-    {{reports_query_data}}
-    
-
-    {% for report in reports_dictionary %}
-        {{report}}
-    {% endfor %}
-    {% for key, value in reports_dictionary.items %}
-        {{key}}==> {{value.regno}} {{value.sacco_resolution}}
-    {% endfor %}
+    {{reports}}
 
     <h1>ALL REPORTS</h1>
-    {{reports_dictionary}}
-    {% if reports_dictionary %}
+    <!-- {{reports}} -->
+    {% if reports %}
         
         <table>
             <tr>
@@ -47,21 +39,48 @@ tr:nth-child(even) {
                 <!-- <th>Route</th> -->
                 <th>Location Coordinates</th>
                 <th>Driver</th>
+                <th>Sacco Action</th>
+                <th>NTSA Action</th>
             </tr>
-            {% for report in reports_query_data %}
+            {% for report in reports %}
             <tr>
-                <td>{{ forloop.counter|add:'-1'}}</td>
-                <td>{{ report.RegNo}}</td>
-                <td>{{ report.Sacco}}</td>
-                <td>{{ report.Speed}} KM/H</td>
-                <td>{{ report.Time}}</td>
+                <!-- <td>{{ forloop.counter|add:'-1'}}</td> -->
+                <td>{{ report.id}}</td>
+                <td>{{ report.regno }}</td>
+                <td>{{ report.sacco}}</td>
+                <td>{{ report.speed}} KM/H</td>
+                <td>{{ report.time}}</td>
                 <!-- <td>name of route</td> -->
-                <td><a href="/reports/all/{{forloop.counter|add:'-1'}}">{{ report.Location}}</a></td>                
-                <td>{{ report.Driver}}</td>
+                <td><a href="/reports/all/{{report.id}}">{{ report.location}}</a></td>                
+                <td>{{ report.driver}}</td>
+                <td>{{ report.sacco_resolution}}</td>
+                <td>{{ report.ntsa_resolution}}</td>
             </tr>
             {% endfor %}
         </table>
-        <!-- Lopha count =  -->
+
+        {% if reports.has_other_pages %}
+            <ul class="pagination">
+                {% if reports.has_previous %}
+                    <li><a href="?page={{ reports.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                    <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+                {% for i in reports.paginator.page_range %}
+                    {% if reports.number == i %}
+                        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% else %}
+                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if reports.has_next %}
+                    <li><a href="?page={{ reports.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+            </ul>
+        {% endif %}
+
     {% else %}
         <p>No reports to display</p>
     {% endif %}
