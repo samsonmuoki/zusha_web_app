@@ -199,6 +199,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'reports.tasks.update_reports_db',
         'schedule': crontab(),  # execute every minute
     },
+    'track-each-vehicle-reports': {
+        'task': 'reports.tasks.track_each_vehicle_reports',
+        'schedule': crontab(),  # execute every minute
+    },
     'send-alerts': {
         'task': 'reports.tasks.send_alerts',
         'schedule': crontab(),  # execute every minute

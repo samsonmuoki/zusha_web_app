@@ -16,7 +16,7 @@ LICENSE_STATUS = [
 class Sacco(models.Model):
     """Sacco details."""
 
-    sacco_name = models.CharField(max_length=200, primary_key=True)
+    sacco_name = models.CharField(max_length=20, primary_key=True)
     # date registered = models.DateField
     # last_report_revision_date = models.DateField
     email = models.EmailField(max_length=200)

@@ -7,8 +7,10 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 # from registration.models import Vehicle, Sacco, Driver
-from .models import Report
-from .forms import ResolveCaseForm
+from .models import (
+    Report, TrackVehicleReports,
+)
+# from .forms import ResolveCaseForm
 from zusha import settings
 
 
@@ -71,7 +73,7 @@ def view_all_reports_on_map(request):
 
 def get_reports(request):
     """Fetch all reports."""
-    reports_list = Report.objects.all().order_by('-id')
+    reports_list = Report.objects.all().order_by('-id', 'regno')
 
     page = request.GET.get('page', 1)
     paginator = Paginator(reports_list, 50)
@@ -88,6 +90,73 @@ def get_reports(request):
     }
 
     return render(request, 'reports/reports2.html', context)
+
+
+def summary_vehicles_reports(request):
+    """Fetch each vehicle reports."""
+    reports_list = TrackVehicleReports.objects.all().order_by(
+        '-date', '-count'
+    )
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reports_list, 50)
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
+
+    context = {
+        'reports': reports,
+        'reports_list': reports_list
+    }
+
+    return render(request, 'reports/summarised_vehicle_reports.html', context)
+
+
+def summary_saccos_reports(request):
+    """Fetch each vehicle reports."""
+    reports_list = TrackVehicleReports.objects.all().order_by(
+        '-date', '-count'
+    )
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reports_list, 50)
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
+
+    context = {
+        'reports': reports,
+        'reports_list': reports_list
+    }
+
+    return render(request, 'reports/summarised_vehicle_reports.html', context)
+
+
+def fetch_single_vehicle_reports(request, regno, date):
+    """Fetch each vehicle reports."""
+    # reports_list = TrackVehicleReports.objects.all().order_by(
+    #     '-date', '-count'
+    # )
+    reports_list = Report.objects.filter(regno=regno, date=date)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reports_list, 50)
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
+
+    context = {
+        'reports': reports,
+        'reports_list': reports_list
+    }
+
+    return render(request, 'reports/summarised_vehicle_reports.html', context)
 
 
 def get_speeding_instance(request, report_id):
@@ -166,26 +235,8 @@ def update_sacco_case_status(request, regno, sacco, report_id, status):
     return render(request, 'reports/update_sacco_report_status.html', context)
 
 
-def single_vehicle_cases(request, regno):
-    # reports_list = Report.objects.filter(regno=regno).order_by('-id')
-    # page = request.GET.get('page', 1)
-    # paginator = Paginator(reports_list, 50)
-    # try:
-    #     reports = paginator.page(page)
-    # except PageNotAnInteger:
-    #     reports = paginator.page(1)
-    # except EmptyPage:
-    #     reports = paginator.page(paginator.num_pages)
-
-    # context = {
-    #     'reports': reports,
-    #     'reports_list': reports_list
-    # }
-    # context = {
-    #     'reports': reports,
-    #     'regno': regno
-    # }
-    reports_list = Report.objects.filter(regno=regno).order_by(
+def single_vehicle_cases(request, sacco, regno):
+    reports_list = Report.objects.filter(regno=regno, sacco=sacco).order_by(
         '-id',
     )
     page = request.GET.get('page', 1)
@@ -200,8 +251,6 @@ def single_vehicle_cases(request, regno):
     context = {
         'reports_list': reports_list,
         'reports': reports,
-        # 'sacco': sacco,
+        'regno': regno,
     }
-
-    # return render(request, 'reports/test_single_vehicle.html', context)
     return render(request, 'reports/single_vehicle_cases.html', context)

@@ -10,6 +10,14 @@ urlpatterns = [
     path('all/', views.get_reports, name='reports'),
     # path('all2/', views.get_reports2, name='reports2'),
     path(
+        'summary', views.summary_vehicles_reports, name='summary'
+    ),
+    path(
+        'summary/<slug:regno>/<slug:date>/',
+        views.fetch_single_vehicle_reports,
+        name='single_vehicle_reports'
+    ),
+    path(
         'all/<int:report_id>/', views.get_speeding_instance,
         name='speeding_instance'
     ),
@@ -33,12 +41,8 @@ urlpatterns = [
         views.update_sacco_case_status,
         name='update_sacco_case'
     ),
-    # path(
-    #     'all/<slug:sacco>/<slug:regno>/updatestatus/',
-    #     views.update_sacco_report_status,
-    #     name='update_sacco_report_status',
-    # ),
     path(
-        'all/<slug:regno>/', views.single_vehicle_cases, name="vehicle_cases"
+        'all/<slug:sacco>/<slug:regno>/', views.single_vehicle_cases,
+        name="vehicle_cases"
     ),
 ]

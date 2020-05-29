@@ -150,12 +150,11 @@
             <div id="bargraph"> <img src="{% static "images/pie-chart2.jpg" %}" alt="My image"  width="100%" height="250px"> </div>
             <div id="linegraph"><img src="{% static "images/bar-graph.svg" %}" alt="My image"  width="100%" height="250px"></div>
             <div id="piechart"><img src="{% static "images/bargraph.jpg" %}" alt="My image"  width="100%" height="250px"></div>
-            
         </div>
 
         <div id="details">
             <div>
-                <div id="details-title"> ALL REPORTS</div>
+                <div id="details-title"> VEHICLE REPORTS SUMMARY</div>
                 <div id="filter-section">
                     <div id="filter-text">Filter</div>
                     <div id="filter-dropdown">
@@ -174,27 +173,21 @@
                 {% if reports %}
                     <table>
                         <tr>
-                            <!-- <th>Id</th> -->
                             <th>Reg No</th>
                             <th>Sacco</th>
-                            <th>Speed</th>
-                            <th>Time</th>
-                            <th>Location</th>
-                            <th>Driver</th>
+                            <th>Date</th>
+                            <th>Number of Cases</th>
                             <th>SACCO ACTION</th>
                             <th>NTSA ACTION</th>
                         </tr>
                         {% for report in reports %}
                         <tr>
-                            <!-- <td>{{ key }}</td> -->
-                            <td><a href='/reports/all/{{report.sacco}}/{{report.regno}}'>{{ report.regno }}</a> </td>
-                            <td><a href='/reports/all/{{report.sacco}}'>{{ report.sacco }}</a></td>
-                            <td>{{ report.speed }}</td>
-                            <td>{{ report.time }}</td>
-                            <td><a href="/reports/all/{{report.id}}">{{ report.location }}</a></td>
-                            <td>{{ report.driver}}</td>
-                            <td>{{report.sacco_resolution}}</td>
-                            <td>{{report.ntsa_resolution}}</td>
+                            <td><a href='/reports/summary/{{report.regno}}/{{report.date}}'>{{ report.regno }}</a> </td>
+                            <td><a href=''>{{ report.sacco }}</a></td>
+                            <td>{{ report.date }}</td>
+                            <td>{{ report.count }}</td>
+                            <td>{{report.sacco_action}}</td>
+                            <td>{{report.ntsa_action}}</td>
                         </tr>
                         {% endfor %}
                     </table>
