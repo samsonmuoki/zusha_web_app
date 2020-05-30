@@ -21,7 +21,7 @@ from zusha import settings
 
 from registrations.models import Sacco, Driver, Vehicle
 from .models import (
-    Report, TrackVehicleReports, TrackSaccoReports
+    Report, TrackVehicleReports, TrackSaccoReports, TrackDriverReports
 )
 
 # from registration.models import LICENSE_STATUS
@@ -106,43 +106,62 @@ def track_each_sacco_reports():
 
 
 @shared_task
-def blacklist_vehicles():
-    # Fecth all registered vehicles
-    # Fetch all reports
-    # If count for each vehicle is above threshold, blacklist the vehicle.
-    vehicles = Vehicle.objects.all()
-    # reports = db.child('Reports').get()
+def track_each_driver_reports():
     reports = Report.objects.all()
-    # reports_query_data = reports.val()
-    for vehicle in vehicles:
-        reports_list = []
-        for report in reports_query_data:
-            if report["RegNo"] == f"{vehicle.registration_number}":
-                reports_list.append(report)
-        if len(reports_list) > 1:
-            vehicle.license_status = "blacklisted"
-            vehicle.save()
+    for report in reports:
+        case_count = Report.objects.filter(sacco=report.sacco).count()
+        tracker, created = TrackDriverReports.objects.get_or_create(
+            driver=report.driver,
+            date=report.date,
+            defaults={'count': case_count},
+        )
 
 
 @shared_task
-def blacklist_gari2():
-    # Fecth all registered vehicles
-    # Fetch all reports
-    # If count for each vehicle is above threshold, blacklist the vehicle.
+def blacklist_vehicles():
     vehicles = Vehicle.objects.all()
-    reports = db.child('Reports').get()
-    reports_query_data = reports.val()
+    reports = Report.objects.all()
     for vehicle in vehicles:
         reports_list = []
-        for report in reports_query_data:
-            if report["RegNo"] == f"{vehicle.registration_number}":
+        for report in reports:
+            if report.regno == vehicle.registration_number:
                 reports_list.append(report)
-        if len(reports_list) > 1:
+        if len(reports_list) > 5:
             vehicle.license_status = "blacklisted"
             vehicle.save()
 
 
 utc = pytz.utc
+
+
+@shared_task
+def blacklist_saccos():
+    saccos = Sacco.objects.all()
+    reports = Report.objects.all()
+    for sacco in saccos:
+        reports_list = []
+        for report in reports:
+            if report.sacco == sacco.sacco_name:
+                reports_list.append(report)
+        if len(reports_list) > 5:
+            sacco.license_status = "BLACKLISTED"
+            sacco.save()
+
+
+# TODO optimise driver reporting
+# @shared_task
+# def blacklist_drivers():
+#     drivers = Driver.objects.all()
+#     reports = Report.objects.all()
+#     for driver in drivers:
+#         reports_list = []
+#         for report in reports:
+#             if report.driver_id == driver.driver_id:
+#                 reports_list.append(report)
+#         if len(reports_list) > 1:
+#             driver.license_status = "BLACKLISTED"
+#             driver.save()
+
 
 # @periodic_task
 # @shared_task
@@ -177,60 +196,3 @@ utc = pytz.utc
 #                     fail_silently=False,
 #                     html_message=f"Vehicle REG: <b>{value['RegNo']}</b> belonging to <b>{sacco.sacco_name}</b> sacco, has been reported for overspeeding at <b>{value['Speed']}</b> KM/H in this Location <a href='http://localhost:8000/reports/all/{key}'>{value['Location']}</a>."
 #                 )
-
-
-# @periodic_task
-@shared_task
-def blacklist_vehicles2():
-    # Fecth all registered vehicles
-    # Fetch all reports
-    # If count for each vehicle is above threshold, blacklist the vehicle.
-    vehicles = Vehicle.objects.all()
-    reports = db.child('Reports').get()
-    reports_query_data = reports.val()
-    for vehicle in vehicles:
-        reports_list = []
-        for report in reports_query_data:
-            if report["RegNo"] == f"{vehicle.registration_number}":
-                reports_list.append(report)
-        if len(reports_list) > 1:
-            vehicle.license_status = "BLACKLISTED"
-            vehicle.save()
-
-
-# @periodic_task
-@shared_task
-def blacklist_sacco(sacco):
-    # Fetch all reports
-    # Fecth all registered saccos
-    # If count for each sacco is above threshold, blacklist the sacco.
-    saccos = Sacco.objects.all()
-    reports = db.child('Reports').get()
-    reports_query_data = reports.val()
-    for sacco in saccos:
-        reports_list = []
-        for report in reports_query_data:
-            if report["Sacco"] == sacco.name:
-                reports_list.append(report)
-        if len(reports_list) > 1:
-            sacco.license_status = "BLACKLISTED"
-            sacco.save()
-
-
-# @periodic_task
-@shared_task
-def blacklist_drivers():
-    # Fetch all reports
-    # Fecth all registered saccos
-    # If count for each sacco is above threshold, blacklist the sacco.
-    drivers = Driver.objects.all()
-    reports = db.child('Reports').get()
-    reports_query_data = reports.val()
-    for driver in drivers:
-        reports_list = []
-        for report in reports_query_data:
-            if report["Driver"] == driver.name:
-                reports_list.append(report)
-        if len(reports_list) > 1:
-            driver.license_status = "BLACKLISTED"
-            driver.save()

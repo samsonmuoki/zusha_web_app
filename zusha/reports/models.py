@@ -47,7 +47,7 @@ class Report(models.Model):
 
 
 class TrackVehicleReports(models.Model):
-    """Store the total count of cases for a single day for each vehicle."""
+    """Summary for all vehicles reported on a single day."""
     regno = models.CharField(max_length=10)
     sacco = models.CharField(max_length=20)
     date = models.DateField(auto_now=False, auto_now_add=False)
@@ -57,7 +57,7 @@ class TrackVehicleReports(models.Model):
 
 
 class TrackSaccoReports(models.Model):
-    """Store the total count of cases for a single day for each vehicle."""
+    """Summary for all saccos reported on a single day."""
     sacco = models.CharField(max_length=20)
     date = models.DateField(auto_now=False, auto_now_add=False)
     count = models.IntegerField(default=0)
@@ -65,3 +65,10 @@ class TrackSaccoReports(models.Model):
     # number or cases in progress
     # number of cases in resolved
     # show overall number of cases this is going to be shown in a view
+
+
+class TrackDriverReports(models.Model):
+    """Summary for all drivers reported on a single day."""
+    driver = models.CharField(max_length=20, null=True, blank=True)
+    date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    count = models.IntegerField(default=0)

@@ -1,0 +1,225 @@
+{% load static %} 
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+    /* * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        list-style: none;
+    } */
+
+    #header{
+        background-color: floralwhite;
+        text-align: center;
+        font-size: large;
+        width: fit-content;
+        height: 50px;
+    }
+    #menu{
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        width: fit-content;
+    }
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+        
+    }
+
+    li {
+        float: left;
+    }
+  
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+  
+    li a:hover:not(.active) {
+        background-color: #111;
+    }
+    .active {
+        background-color: #4CAF50;
+    }
+    #contents{
+        margin-top: 15px;
+    }
+    #statistics{
+        float: left;
+        width: 24%;
+        background-color: #dddddd;
+    }
+    #summary{
+        padding: 5px;
+        background-color: green;
+    }
+    #bargraph{
+        padding: 5px;
+        margin: 5px;
+        background-color: white;
+        height: 250px;
+    }
+    #linegraph{
+        padding: 5px;
+        margin: 5px;
+        background-color: white;
+        height: 250px;
+    }
+    #piechart{
+        padding: 5px;
+        margin: 5px;
+        background-color: white;
+        height: 250px;
+    }
+    #details{
+        float: left;
+        width: 75%;
+        margin-left: 5px;
+    }
+    #details-title{
+        text-align: center;
+        float: left;
+        width: 75%;
+    }
+    #filter-section{
+        text-align: center;
+        float: left;
+        width: 25%;
+        background-color: aqua;
+    }
+    table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    }
+
+    tr:nth-child(even) {
+    background-color: #dddddd;
+    }
+    /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+    @media screen and (max-width: 800px) {
+        #statistics, #contents {   
+          width: 100%;
+          padding: 0;
+        }
+    }
+</style>
+</head>
+
+<!-- <div id="title">
+     
+    Filter by 
+    <select id="filter">
+        <option value="all"><a href="/reports/all/">All</a></option>
+        <option value="sacco">Sacco</option>
+        <option value="driver">Driver</option>
+    </select>
+</div> -->
+<body>
+    <div id="header"> ZUSHA ROAD SAFETY </div>
+    <div id="menu">
+        <ul>
+            <li><a href="/reports/all">HOME</a></li>
+            <li><a href="/reports/all">REPORTS</a></li>
+            <li><a href="/registrations/drivers">DRIVERS</a></li>
+            <li><a href="/registrations/saccos">SACCOS</a></li>
+            <li><a href="/registrations/vehicles">VEHICLES</a></li>
+            <li><a href="">EXTRA</a></li>
+        </ul>
+    </div>
+    <div id="contents">
+        <div id="statistics">
+            <div id="summary"> TOTAL REPORTS: {{reports_list|length}} </div>
+            <div id="bargraph"> <img src="{% static "images/pie-chart2.jpg" %}" alt="My image"  width="100%" height="250px"> </div>
+            <div id="linegraph"><img src="{% static "images/bar-graph.svg" %}" alt="My image"  width="100%" height="250px"></div>
+            <div id="piechart"><img src="{% static "images/bargraph.jpg" %}" alt="My image"  width="100%" height="250px"></div>
+        </div>
+
+        <div id="details">
+            <div>
+                <div id="details-title"> DRIVERS REPORTS SUMMARY</div>
+                <div id="filter-section">
+                    <div id="filter-text">Filter</div>
+                    <div id="filter-dropdown">
+                        <select name='sacco-report' onchange="location = this.value;">
+                            <option value="/reports/all">All Saccos</option>
+                            <option value="/reports/all/Makos">Makos</option>
+                            <option value="/reports/all/Manatwa">Manatwa</option>
+                            <option value="/reports/all/Metro">Metro</option>
+                            <option value="/reports/all/Lopha">Lopha</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="table">
+                {% if reports %}
+                    <table>
+                        <tr>
+                            <th>Driver</th>
+                            <th>Date</th>
+                            <th>Number of Cases</th>
+                            <th>SACCO ACTION</th>
+                            <th>NTSA ACTION</th>
+                        </tr>
+                        {% for report in reports %}
+                        <tr>
+                            <td><a href=''>{{ report.sacco }}</a></td>
+                            <td>{{ report.date }}</td>
+                            <td>{{ report.count }}</td>
+                            <td>{{report.sacco_action}}</td>
+                            <td>{{report.ntsa_action}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+
+                    {% if reports.has_other_pages %}
+                        <ul class="pagination">
+                            {% if reports.has_previous %}
+                                <li><a href="?page={{ reports.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&laquo;</span></li>
+                            {% endif %}
+                            {% for i in reports.paginator.page_range %}
+                                {% if reports.number == i %}
+                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if reports.has_next %}
+                                <li><a href="?page={{ reports.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                                <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+  
+            
+                {% else %}
+                    <p>No reports to display</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+     
+
+</body>
+</html>

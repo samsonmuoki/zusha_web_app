@@ -8,7 +8,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # from registration.models import Vehicle, Sacco, Driver
 from .models import (
-    Report, TrackVehicleReports,
+    Report, TrackVehicleReports, TrackSaccoReports, TrackDriverReports
 )
 # from .forms import ResolveCaseForm
 from zusha import settings
@@ -49,29 +49,7 @@ def view_all_reports_on_map(request):
     return render(request, 'reports/map.html', context)
 
 
-# def get_reports2(request):
-#     """Fetch all reports."""
-#     reports = Report.objects.all().order_by('-id')
-#     reports_dictionary = {}
-#     for value in range(0, len(reports)):
-#         data = {
-#             'regno': reports[value].regno,
-#             'sacco': reports[value].sacco,
-#             'speed': reports[value].speed,
-#             'time': reports[value].time,
-#             'location': reports[value].location,
-#             'driver': reports[value].driver,
-#             'sacco_resolution': reports[value].sacco_resolution,
-#             'ntsa_resolution': reports[value].ntsa_resolution,
-#         }
-#         reports_dictionary.update({reports[value].id: data})
-
-#     context = {'reports_dictionary': reports_dictionary}
-
-#     return render(request, 'reports/reports2.html', context)
-
-
-def get_reports(request):
+def get_all_reports_list(request):
     """Fetch all reports."""
     reports_list = Report.objects.all().order_by('-id', 'regno')
 
@@ -92,7 +70,7 @@ def get_reports(request):
     return render(request, 'reports/reports2.html', context)
 
 
-def summary_vehicles_reports(request):
+def daily_summary_by_vehicles_reports(request):
     """Fetch each vehicle reports."""
     reports_list = TrackVehicleReports.objects.all().order_by(
         '-date', '-count'
@@ -114,9 +92,9 @@ def summary_vehicles_reports(request):
     return render(request, 'reports/summarised_vehicle_reports.html', context)
 
 
-def summary_saccos_reports(request):
-    """Fetch each vehicle reports."""
-    reports_list = TrackVehicleReports.objects.all().order_by(
+def daily_summary_by_saccos_reports(request):
+    """Summarise all cases for a single day for each sacco reported."""
+    reports_list = TrackSaccoReports.objects.all().order_by(
         '-date', '-count'
     )
     page = request.GET.get('page', 1)
@@ -133,15 +111,14 @@ def summary_saccos_reports(request):
         'reports_list': reports_list
     }
 
-    return render(request, 'reports/summarised_vehicle_reports.html', context)
+    return render(request, 'reports/summarised_sacco_reports.html', context)
 
 
-def fetch_single_vehicle_reports(request, regno, date):
-    """Fetch each vehicle reports."""
-    # reports_list = TrackVehicleReports.objects.all().order_by(
-    #     '-date', '-count'
-    # )
-    reports_list = Report.objects.filter(regno=regno, date=date)
+def daily_summary_by_drivers_reports(request):
+    """Summarise all cases for a single day for each driver reported."""
+    reports_list = TrackDriverReports.objects.all().order_by(
+        '-date', '-count'
+    )
     page = request.GET.get('page', 1)
     paginator = Paginator(reports_list, 50)
     try:
@@ -156,7 +133,151 @@ def fetch_single_vehicle_reports(request, regno, date):
         'reports_list': reports_list
     }
 
-    return render(request, 'reports/summarised_vehicle_reports.html', context)
+    return render(request, 'reports/summarised_driver_reports.html', context)
+
+
+def fetch_reports_for_a_vehicle_on_a_specific_day(request, regno, date):
+    """Fetch each vehicle reports."""
+    reports_list = Report.objects.filter(regno=regno, date=date).order_by(
+        '-id'
+    )
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reports_list, 50)
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
+
+    context = {
+        'reports': reports,
+        'reports_list': reports_list
+    }
+
+    return render(
+        request, 'reports/specific_date_vehicle_reports.html', context
+    )
+
+
+def fetch_reports_for_a_sacco_on_a_specific_day(request, sacco, date):
+    """Fetch each vehicle reports."""
+    reports_list = Report.objects.filter(sacco=sacco, date=date).order_by(
+        '-id'
+    )
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reports_list, 50)
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
+
+    context = {
+        'reports': reports,
+        'reports_list': reports_list
+    }
+
+    return render(
+        request, 'reports/specific_date_sacco_reports.html', context
+    )
+
+
+def fetch_reports_for_a_driver_on_a_specific_day(request, driver, date):
+    """Fetch each vehicle reports."""
+    reports_list = Report.objects.filter(driver=driver, date=date).order_by(
+        '-id'
+    )
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reports_list, 50)
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
+
+    context = {
+        'reports': reports,
+        'reports_list': reports_list
+    }
+
+    return render(
+        request, 'reports/specific_date_driver_reports.html', context
+    )
+
+
+def fetch_all_reports_for_a_specific_vehicle(request, regno):
+    """Fetch the list of all reports for a certain vehicle."""
+    reports_list = Report.objects.filter(regno=regno).order_by(
+        '-date', '-id'
+    )
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reports_list, 50)
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
+
+    context = {
+        'reports': reports,
+        'reports_list': reports_list
+    }
+
+    return render(
+        request, 'reports/all_reports_for_a_specific_vehicle.html', context
+    )
+
+
+def fetch_all_reports_for_a_specific_sacco(request, sacco):
+    """Fetch the list of all reports for a certain sacco."""
+    reports_list = Report.objects.filter(sacco=sacco).order_by(
+        '-time', '-regno'
+    )
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reports_list, 25)
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
+
+    context = {
+        'reports_list': reports_list,
+        'reports': reports,
+        'sacco': sacco,
+    }
+    return render(
+        request, 'reports/all_reports_for_a_specific_sacco.html', context
+    )
+
+
+def fetch_all_reports_for_a_specific_driver(request, driver):
+    """Fetch the list of all reports for a certain driver."""
+    reports_list = Report.objects.filter(driver=driver).order_by(
+        '-date', '-id'
+    )
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reports_list, 50)
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
+
+    context = {
+        'reports': reports,
+        'reports_list': reports_list
+    }
+
+    return render(
+        request, 'reports/all_reports_for_a_specific_driver.html', context
+    )
 
 
 def get_speeding_instance(request, report_id):
@@ -166,7 +287,9 @@ def get_speeding_instance(request, report_id):
     context = {
         'report': report
     }
-    return render(request, 'reports/single_report.html', context)
+    return render(
+        request, 'reports/single_speeding_instance_report.html', context
+    )
 
 
 def order_reports_by_sacco(request):
@@ -190,54 +313,9 @@ def order_reports_by_sacco(request):
     return render(request, 'reports/reports2.html', context)
 
 
-def single_sacco_reports(request, sacco):
-    """Sort reports by sacco."""
-    reports_list = Report.objects.filter(sacco=sacco).order_by(
-        '-time', '-regno'
-    )
-
-    page = request.GET.get('page', 1)
-    paginator = Paginator(reports_list, 25)
-    try:
-        reports = paginator.page(page)
-    except PageNotAnInteger:
-        reports = paginator.page(1)
-    except EmptyPage:
-        reports = paginator.page(paginator.num_pages)
-
-    context = {
-        'reports_list': reports_list,
-        'reports': reports,
-        'sacco': sacco,
-    }
-
-    return render(request, 'reports/sacco_level.html', context)
-
-
-def resolve_sacco_case(request, regno, sacco, report_id):
-    """Resolve all cases for a single vehicle that are reported
-    on the same day."""
-    report = Report.objects.get(id=report_id)
-    context = {'report': report}
-
-    return render(request, 'reports/update_sacco_report_status.html', context)
-
-
-def update_sacco_case_status(request, regno, sacco, report_id, status):
-    """Update the status of a single case"""
-    # report = Report.objects.filter(regno=regno)
-    report = Report.objects.get(id=report_id)
-    report.sacco_resolution = status
-    report.save()
-    report = Report.objects.get(id=report_id)
-
-    context = {'report': report}
-    return render(request, 'reports/update_sacco_report_status.html', context)
-
-
-def single_vehicle_cases(request, sacco, regno):
+def fetch_all_cases_for_a_specific_sacco_vehicle(request, sacco, regno):
     reports_list = Report.objects.filter(regno=regno, sacco=sacco).order_by(
-        '-id',
+        '-date',
     )
     page = request.GET.get('page', 1)
     paginator = Paginator(reports_list, 25)
@@ -253,4 +331,60 @@ def single_vehicle_cases(request, sacco, regno):
         'reports': reports,
         'regno': regno,
     }
+    return render(
+        request,
+        'reports/specific_vehicle_cases_for_a_specific_sacco.html',
+        context
+    )
+
+
+def fetch_all_cases_for_a_specific_sacco_driver(request, sacco, driver):
+    reports_list = Report.objects.filter(driver=driver, sacco=sacco).order_by(
+        '-date',
+    )
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reports_list, 25)
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
+
+    context = {
+        'reports_list': reports_list,
+        'reports': reports,
+        'driver': driver,
+    }
     return render(request, 'reports/single_vehicle_cases.html', context)
+
+
+def resolve_sacco_case(request, report_id, sacco, status):
+    """Resolve all cases for a single vehicle that are reported
+    on the same day."""
+
+    report = TrackVehicleReports.objects.get(id=report_id, sacco=sacco)
+    report.sacco_resolution = status
+    report.save()
+    report = Report.objects.get(id=report_id)
+
+    context = {'report': report}
+    return render(request, 'reports/update_sacco_report_status.html', context)
+
+
+def update_sacco_case_status(request, regno, sacco, report_id, status):
+    """Update the status of a single case"""
+    # report = Report.objects.filter(regno=regno)
+    report = Report.objects.get(id=report_id)
+    report.sacco_resolution = status
+    report.save()
+    report = Report.objects.get(id=report_id)
+
+    context = {'report': report}
+    return render(request, 'reports/update_sacco_report_status.html', context)
+
+
+def provide_driver_for_a_reported_case(request, report_id):
+    """Enter the name of driver that was reported for speeding.
+    Done by sacco admin."""
+    pass

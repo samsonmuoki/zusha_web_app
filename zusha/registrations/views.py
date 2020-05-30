@@ -24,7 +24,7 @@ def index(request):
 
 def get_all_saccos(request):
     """Fetch all registered saccos."""
-    saccos = Sacco.objects.order_by('-sacco_name')
+    saccos = Sacco.objects.order_by('sacco_name')
 
     page = request.GET.get('page', 1)
     paginator = Paginator(saccos, 25)
