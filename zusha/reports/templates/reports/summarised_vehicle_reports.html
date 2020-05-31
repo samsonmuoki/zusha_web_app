@@ -173,6 +173,7 @@
                 {% if reports %}
                     <table>
                         <tr>
+                            <th></th>
                             <th>Reg No</th>
                             <th>Sacco</th>
                             <th>Date</th>
@@ -182,7 +183,9 @@
                         </tr>
                         {% for report in reports %}
                         <tr>
-                            <td><a href='/reports/summary/{{report.regno}}/{{report.date}}'>{{ report.regno }}</a> </td>
+                            <td> <img src="{% static "images/location_icon2.png" %}" alt="view"  width="10px" height="10px"> </td>
+                            <td><a href='/reports/vehicles/{{report.regno}}/'>{{ report.regno }}</a> </td>
+                            <!-- <td><a href='/reports/vehicles/{{report.regno}}/{{report.date}}'>{{ report.regno }}</a> </td> -->
                             <td><a href=''>{{ report.sacco }}</a></td>
                             <td>{{ report.date }}</td>
                             <td>{{ report.count }}</td>

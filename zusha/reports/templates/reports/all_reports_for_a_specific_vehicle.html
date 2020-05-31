@@ -155,7 +155,7 @@
 
         <div id="details">
             <div>
-                <div id="details-title"> {{sacco}} REPORTS</div>
+                <div id="details-title"> {{regno}} REPORTS</div>
                 <div id="filter-section">
                     <div id="filter-text">Filter</div>
                     <div id="filter-dropdown">
@@ -187,11 +187,11 @@
                         {% for report in reports %}
                         <tr>
                             <!-- <td>{{ key }}</td> -->
-                            <td><a href='/reports/vehicles/{{report.regno}}'>{{ report.regno }}</a> </td>
+                            <td><a href=''>{{ report.regno }}</a> </td>
                             <td>{{ report.sacco }}</td>
                             <td>{{ report.speed }}</td>
                             <td>{{ report.time }}</td>
-                            <td><a href="/reports/all/{{report.id}}">{{ report.location }}</a></td>
+                            <td><a href="/reports/vehicles/{{report.regno}}/{{report.id}}">{{ report.location }}</a></td>
                             <td>{{ report.driver}}</td>
                             <td>{{report.sacco_resolution}}</td>
                             <td>{{report.ntsa_resolution}}</td>

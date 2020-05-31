@@ -224,7 +224,8 @@ def fetch_all_reports_for_a_specific_vehicle(request, regno):
 
     context = {
         'reports': reports,
-        'reports_list': reports_list
+        'reports_list': reports_list,
+        'regno': regno,
     }
 
     return render(
@@ -280,9 +281,9 @@ def fetch_all_reports_for_a_specific_driver(request, driver):
     )
 
 
-def get_speeding_instance(request, report_id):
+def get_speeding_instance(request, regno, report_id):
     """Fetch a single speeding instance"""
-    report = Report.objects.get(id=report_id)
+    report = Report.objects.get(id=report_id, regno=regno)
 
     context = {
         'report': report
@@ -333,7 +334,7 @@ def fetch_all_cases_for_a_specific_sacco_vehicle(request, sacco, regno):
     }
     return render(
         request,
-        'reports/specific_vehicle_cases_for_a_specific_sacco.html',
+        'reports/all_cases_for_a_specific_sacco_vehicle.html',
         context
     )
 
