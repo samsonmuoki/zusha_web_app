@@ -23,7 +23,8 @@
         . /home/sam/project/env.sh
         . /home/sam/project/venv/bin/activate
         pip3 install -r /home/sam/project/requirements/requirements_main.txt
-        python3 /home/sam/project/zusha/manage.py migrate
+        python3 /home/sam/project/zusha/manage.py makemigrations --noinput
+        python3 /home/sam/project/zusha/manage.py migrate --noinput
     
     - name: Recursively change ownership of static directory
       file:

@@ -22,17 +22,17 @@ urlpatterns = [
         name='all_drivers_reports_summary'
     ),
     path(
-        'summary/<slug:regno>/<slug:date>/',
+        'summary/vehicles/<slug:regno>/<slug:date>/',
         views.fetch_reports_for_a_vehicle_on_a_specific_day,
         name='specific_day_vehicle_reports'
     ),
     path(
-        'summary/<slug:sacco>/<slug:date>/',
+        'summary/saccos/<slug:sacco>/<slug:date>/',
         views.fetch_reports_for_a_sacco_on_a_specific_day,
         name='specific_day_sacco_reports'
     ),
     path(
-        'summary/<slug:driver>/<slug:date>/',
+        'summary/drivers/<slug:driver>/<slug:date>/',
         views.fetch_reports_for_a_driver_on_a_specific_day,
         name='specific_day_driver_reports'
     ),
@@ -60,7 +60,7 @@ urlpatterns = [
         name='order_reports_by_acco'
     ),
     path(
-        'all/<slug:sacco>/<slug:regno>/',
+        'saccos/<slug:sacco>/<slug:regno>/',
         views.fetch_all_cases_for_a_specific_sacco_vehicle,
         name="vehicle_cases"
         # viewable by logged in sacco admin

@@ -13,3 +13,11 @@ def _range(_min, args=None):
             _max = args
     args = filter(None, (_min, _max, _step))
     return range(*args)
+
+
+@register.filter(name='split')
+def split(value, key):
+    """
+        Returns the value turned into a list.
+    """
+    return value.split(key)

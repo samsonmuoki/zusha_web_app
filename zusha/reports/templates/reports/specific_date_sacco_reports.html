@@ -155,7 +155,7 @@
 
         <div id="details">
             <div>
-                <div id="details-title"> ALL REPORTS</div>
+                <div id="details-title"> {{sacco}} REPORTS on {{date}}</div>
                 <div id="filter-section">
                     <div id="filter-text">Filter</div>
                     <div id="filter-dropdown">
@@ -174,26 +174,24 @@
                 {% if reports %}
                     <table>
                         <tr>
+                            <th>vehicles</th>
                             <th>Reg No</th>
                             <th>Sacco</th>
-                            <th>Speed</th>
-                            <th>Time</th>
-                            <th>Location</th>
+                            <th>Total Cases</th>
                             <th>Driver</th>
                             <th>SACCO ACTION</th>
                             <th>NTSA ACTION</th>
                         </tr>
                         {% for report in reports %}
                         <tr>
-                            <td>{{ report.regno }}</td>
-                            <td>{{ report.sacco }}</td>
-                            <td>{{ report.speed }}</td>
-                            <td>{{ report.time }}</td>
-                            <!-- <td><a href="/reports/vehicles/{{report.regno}}/{{report.id}}">{{ report.location }}</a></td> -->
                             <td>
-                                <a href='/reports/vehicles/{{report.regno}}/{{report.id}}'>
-                                    <img src="{% static "images/location4.png" %}" alt="view"  width="30px" height="30px">
+                                <a href='/reports/summary/vehicles/{{report.regno}}/{{report.date.year}}-{{report.date.month}}-{{report.date.day}}'>
+                                    <img src="{% static "images/arrow3.png" %}" alt="view"  width="50px" height="30px">
                                 </a>
+                            </td>
+                            <td>{{ report.regno }} </td>
+                            <td>{{ report.sacco }}</td>
+                            <td>{{ report.count }}</td>
                             <td>{{ report.driver}}</td>
                             <td>{{report.sacco_resolution}}</td>
                             <td>{{report.ntsa_resolution}}</td>

@@ -152,18 +152,24 @@ def fetch_reports_for_a_vehicle_on_a_specific_day(request, regno, date):
 
     context = {
         'reports': reports,
-        'reports_list': reports_list
+        'reports_list': reports_list,
+        'regno': regno,
+        'date': date,
     }
 
     return render(
-        request, 'reports/specific_date_vehicle_reports.html', context
+        request,
+        'reports/specific_date_vehicle_reports.html',
+        context
     )
 
 
 def fetch_reports_for_a_sacco_on_a_specific_day(request, sacco, date):
     """Fetch each vehicle reports."""
-    reports_list = Report.objects.filter(sacco=sacco, date=date).order_by(
-        '-id'
+    reports_list = TrackVehicleReports.objects.filter(
+        sacco=sacco, date=date
+    ).order_by(
+        '-date', '-count'
     )
     page = request.GET.get('page', 1)
     paginator = Paginator(reports_list, 50)
@@ -176,7 +182,8 @@ def fetch_reports_for_a_sacco_on_a_specific_day(request, sacco, date):
 
     context = {
         'reports': reports,
-        'reports_list': reports_list
+        'reports_list': reports_list,
+        'date': date,
     }
 
     return render(
@@ -235,11 +242,11 @@ def fetch_all_reports_for_a_specific_vehicle(request, regno):
 
 def fetch_all_reports_for_a_specific_sacco(request, sacco):
     """Fetch the list of all reports for a certain sacco."""
-    reports_list = Report.objects.filter(sacco=sacco).order_by(
-        '-time', '-regno'
+    reports_list = TrackVehicleReports.objects.filter(sacco=sacco).order_by(
+        '-date', '-count',
     )
     page = request.GET.get('page', 1)
-    paginator = Paginator(reports_list, 25)
+    paginator = Paginator(reports_list, 50)
     try:
         reports = paginator.page(page)
     except PageNotAnInteger:
@@ -248,10 +255,11 @@ def fetch_all_reports_for_a_specific_sacco(request, sacco):
         reports = paginator.page(paginator.num_pages)
 
     context = {
-        'reports_list': reports_list,
         'reports': reports,
-        'sacco': sacco,
+        'reports_list': reports_list,
+        'sacco': sacco
     }
+
     return render(
         request, 'reports/all_reports_for_a_specific_sacco.html', context
     )

@@ -122,7 +122,6 @@
     }
 </style>
 </head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- <div id="title">
      
@@ -145,28 +144,12 @@
         </ul>
     </div>
     <div id="contents">
-        <div id="statistics">
-            <div id="summary"> TOTAL REPORTS: {{reports_list|length}} </div>
-            <div id="bargraph"> <img src="{% static "images/pie-chart2.jpg" %}" alt="My image"  width="100%" height="250px"> </div>
-            <div id="linegraph"><img src="{% static "images/bar-graph.svg" %}" alt="My image"  width="100%" height="250px"></div>
-            <div id="piechart"><img src="{% static "images/bargraph.jpg" %}" alt="My image"  width="100%" height="250px"></div>
-            
-        </div>
-
-        <div id="details">
+        <div id="report-details">
             <div>
-                <div id="details-title"> ALL REPORTS</div>
-                <div id="filter-section">
-                    <div id="filter-text">Filter</div>
-                    <div id="filter-dropdown">
-                        <select name='sacco-report' onchange="location = this.value;">
-                            <option value="http://localhost:8000">All Saccos</option>
-                            <option value="/reports/saccos/Makos">Makos</option>
-                            <option value="/reports/saccos/Manatwa">Manatwa</option>
-                            <option value="/reports/saccos/Metro">Metro</option>
-                            <option value="/reports/saccos/Lopha">Lopha</option>
-                        </select>
-                    </div>
+                <div id="details-title">
+                    {{regno}} REPORTS on {{date}}
+                    NTSA: {{report.ntsa_action}}
+                    SAACO: {{report.sacco_action}}
                 </div>
             </div>
 
@@ -180,12 +163,10 @@
                             <th>Time</th>
                             <th>Location</th>
                             <th>Driver</th>
-                            <th>SACCO ACTION</th>
-                            <th>NTSA ACTION</th>
                         </tr>
                         {% for report in reports %}
                         <tr>
-                            <td>{{ report.regno }}</td>
+                            <td><a href=''>{{ report.regno }}</a> </td>
                             <td>{{ report.sacco }}</td>
                             <td>{{ report.speed }}</td>
                             <td>{{ report.time }}</td>
@@ -194,9 +175,8 @@
                                 <a href='/reports/vehicles/{{report.regno}}/{{report.id}}'>
                                     <img src="{% static "images/location4.png" %}" alt="view"  width="30px" height="30px">
                                 </a>
+                            </td>
                             <td>{{ report.driver}}</td>
-                            <td>{{report.sacco_resolution}}</td>
-                            <td>{{report.ntsa_resolution}}</td>
                         </tr>
                         {% endfor %}
                     </table>

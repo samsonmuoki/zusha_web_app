@@ -31,16 +31,6 @@ class Report(models.Model):
     driver = models.CharField(
         max_length=20, null=True, blank=True
     )  # to be updated by sacco
-    sacco_resolution = models.CharField(
-        max_length=20,
-        choices=RESOLUTION_OPTIONS,
-        default=PENDING
-    )
-    ntsa_resolution = models.CharField(
-        max_length=20,
-        choices=RESOLUTION_OPTIONS,
-        default=PENDING
-    )
 
     def __str__(self):
         return f"{self.regno} {self.speed}"
@@ -52,8 +42,12 @@ class TrackVehicleReports(models.Model):
     sacco = models.CharField(max_length=20)
     date = models.DateField(auto_now=False, auto_now_add=False)
     count = models.IntegerField(default=0)
-    ntsa_action = models.CharField(max_length=20, choices=RESOLUTION_OPTIONS)
-    sacco_action = models.CharField(max_length=20, choices=RESOLUTION_OPTIONS)
+    ntsa_action = models.CharField(
+        max_length=20, choices=RESOLUTION_OPTIONS, default=PENDING
+    )
+    sacco_action = models.CharField(
+        max_length=20, choices=RESOLUTION_OPTIONS, default=PENDING
+    )
 
 
 class TrackSaccoReports(models.Model):

@@ -133,10 +133,9 @@
     </select>
 </div> -->
 <body>
-    <div id="header"> ZUSHA ROAD SAFETY </div>
     <div id="menu">
         <ul>
-            <li><a href="/reports/all">HOME</a></li>
+            <li><a href="http://localhost:8000">HOME</a></li>
             <li><a href="/reports/all">REPORTS</a></li>
             <li><a href="/registrations/drivers">DRIVERS</a></li>
             <li><a href="/registrations/saccos">SACCOS</a></li>
@@ -159,11 +158,11 @@
                     <div id="filter-text">Filter</div>
                     <div id="filter-dropdown">
                         <select name='sacco-report' onchange="location = this.value;">
-                            <option value="/reports/all">All Saccos</option>
-                            <option value="/reports/all/Makos">Makos</option>
-                            <option value="/reports/all/Manatwa">Manatwa</option>
-                            <option value="/reports/all/Metro">Metro</option>
-                            <option value="/reports/all/Lopha">Lopha</option>
+                            <option value="/reports/saccos">All Saccos</option>
+                            <option value="/reports/saccos/Makos">Makos</option>
+                            <option value="/reports/saccos/Manatwa">Manatwa</option>
+                            <option value="/reports/saccos/Metro">Metro</option>
+                            <option value="/reports/saccos/Lopha">Lopha</option>
                         </select>
                     </div>
                 </div>
@@ -173,6 +172,8 @@
                 {% if reports %}
                     <table>
                         <tr>
+                            <!-- <th>Locations</th> -->
+                            <th></th>
                             <th>Sacco</th>
                             <th>Date</th>
                             <th>Number of Cases</th>
@@ -181,7 +182,12 @@
                         </tr>
                         {% for report in reports %}
                         <tr>
-                            <td><a href='/reports/all/{{report.sacco}}'>{{ report.sacco }}</a></td>
+                            <td>
+                                <a href='/reports/summary/saccos/{{report.sacco}}/{{report.date.year}}-{{report.date.month}}-{{report.date.day}}'>
+                                    <img src="{% static "images/sign.png" %}" alt="view"  width="30px" height="30px">
+                                </a>
+                            </td>
+                            <td>{{ report.sacco }}</td>
                             <td>{{ report.date }}</td>
                             <td>{{ report.count }}</td>
                             <td>{{report.sacco_action}}</td>
