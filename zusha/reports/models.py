@@ -49,6 +49,12 @@ class TrackVehicleReports(models.Model):
         max_length=20, choices=RESOLUTION_OPTIONS, default=PENDING
     )
 
+    def __str__(self):
+        return "{} {} {} {} {} {}".format(
+            self.regno, self.sacco, self.date, self.count, self.ntsa_action,
+            self.sacco_action,
+        )
+
 
 class TrackSaccoReports(models.Model):
     """Summary for all saccos reported on a single day."""
@@ -60,9 +66,13 @@ class TrackSaccoReports(models.Model):
     # number of cases in resolved
     # show overall number of cases this is going to be shown in a view
 
+    def __str__(self):
+        return f"{self.sacco} {self.date} {self.count}"
+
 
 class TrackDriverReports(models.Model):
     """Summary for all drivers reported on a single day."""
     driver = models.CharField(max_length=20, null=True, blank=True)
+    sacco = models.CharField(max_length=20)
     date = models.DateTimeField(auto_now=False, auto_now_add=False)
     count = models.IntegerField(default=0)

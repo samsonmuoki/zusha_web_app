@@ -84,7 +84,9 @@ def update_reports_db():
 def track_each_vehicle_reports():
     reports = Report.objects.all()
     for report in reports:
-        case_count = Report.objects.filter(regno=report.regno).count()
+        case_count = Report.objects.filter(
+            regno=report.regno, date=report.date
+        ).count()
         tracker, created = TrackVehicleReports.objects.get_or_create(
             regno=report.regno,
             date=report.date,
@@ -97,7 +99,9 @@ def track_each_vehicle_reports():
 def track_each_sacco_reports():
     reports = Report.objects.all()
     for report in reports:
-        case_count = Report.objects.filter(sacco=report.sacco).count()
+        case_count = Report.objects.filter(
+            sacco=report.sacco, date=report.date
+        ).count()
         tracker, created = TrackSaccoReports.objects.get_or_create(
             sacco=report.sacco,
             date=report.date,
@@ -109,9 +113,12 @@ def track_each_sacco_reports():
 def track_each_driver_reports():
     reports = Report.objects.all()
     for report in reports:
-        case_count = Report.objects.filter(sacco=report.sacco).count()
+        case_count = Report.objects.filter(
+            driver=report.driver, date=report.date
+        ).count()
         tracker, created = TrackDriverReports.objects.get_or_create(
             driver=report.driver,
+            sacco=report.sacco,
             date=report.date,
             defaults={'count': case_count},
         )
