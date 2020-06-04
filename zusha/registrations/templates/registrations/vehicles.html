@@ -60,10 +60,9 @@
         </style>
     </head>
     <body>
-        <div id="header"> ZUSHA ROAD SAFETY </div>
         <div id="menu">
             <ul>
-                <li><a href="">HOME</a></li>
+                <li><a href="http://localhost:8000">HOME</a></li>
                 <li><a href="/reports/all">REPORTS</a></li>
                 <li><a href="/registrations/drivers">DRIVERS</a></li>
                 <li><a href="/registrations/saccos">SACCOS</a></li>
@@ -81,9 +80,9 @@
                 </tr>
                 {% for vehicle in vehicles %}
                     <tr>
-                        <td><a href="/registrations/vehicles/{{vehicle.registration_number}}">{{ vehicle.registration_number}}</a></td> 
+                        <td><a href="{% url 'registrations:vehicle_details' vehicle.vehicle.registration_number %}">{{ vehicle.vehicle.registration_number}}</a></td> 
                         <td>{{ vehicle.sacco}}</td> 
-                        <td>{{ vehicle.license_status}}</td> 
+                        <td>{{ vehicle.vehicle.license_status}}</td> 
                         
                     </tr>
                 {% endfor %}

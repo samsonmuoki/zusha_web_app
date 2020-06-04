@@ -240,6 +240,31 @@ def fetch_all_reports_for_a_specific_vehicle(request, regno):
     )
 
 
+def fetch_summary_of_all_reports_for_a_specific_vehicle(request, regno):
+    """Fetch the list of all reports for a certain vehicle."""
+    reports_list = TrackVehicleReports.objects.filter(regno=regno).order_by(
+        '-date', '-id'
+    )
+    page = request.GET.get('page', 1)
+    paginator = Paginator(reports_list, 50)
+    try:
+        reports = paginator.page(page)
+    except PageNotAnInteger:
+        reports = paginator.page(1)
+    except EmptyPage:
+        reports = paginator.page(paginator.num_pages)
+
+    context = {
+        'reports': reports,
+        'reports_list': reports_list,
+        'regno': regno,
+    }
+
+    return render(
+        request, 'reports/summary_of_all_reports_for_a_vehicle.html', context
+    )
+
+
 def fetch_all_reports_for_a_specific_sacco(request, sacco):
     """Fetch the list of all reports for a certain sacco."""
     reports_list = TrackVehicleReports.objects.filter(sacco=sacco).order_by(

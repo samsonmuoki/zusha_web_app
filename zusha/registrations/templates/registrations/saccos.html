@@ -60,12 +60,12 @@
         </style>
     </head>
     <body>
-        <div id="header">
+        <!-- <div id="header">
             ZUSHA ROAD SAFETY
             <form class="logout-link" action="{% url 'registrations:sacco_logout' %}" method="post">
                 {% csrf_token %}
                 <button type="submit">Logout</button>
-            </form>
+            </form> -->
         </div>
         <div id="menu">
             <ul>
@@ -74,7 +74,7 @@
                 <li><a href="/registrations/drivers">DRIVERS</a></li>
                 <li><a href="/registrations/saccos">SACCOS</a></li>
                 <li><a href="/registrations/vehicles">VEHICLES</a></li>
-                <li><a href="">EXTRA</a></li>
+                <li><a href="{% url 'registrations:sacco_login' %}">LOGIN</a></li>
 
             </ul>
         </div>

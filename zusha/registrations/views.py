@@ -22,6 +22,10 @@ def index(request):
     return render(request, "registrations/home.html")
 
 
+def saccos_dashboard(request):
+    return render(request, "registrations/sacco_dashboard.html")
+
+
 def get_all_saccos(request):
     """Fetch all registered saccos."""
     saccos = Sacco.objects.order_by('sacco_name')
@@ -41,7 +45,7 @@ def get_all_saccos(request):
 
 def get_all_drivers(request):
     """Fetch all drivers details."""
-    drivers = Driver.objects.order_by('-driver_id')
+    drivers = SaccoDriver.objects.order_by('-driver_id')
 
     page = request.GET.get('page', 1)
     paginator = Paginator(drivers, 25)
@@ -58,7 +62,7 @@ def get_all_drivers(request):
 
 def get_all_vehicles(request):
     """Fetch all vehicles."""
-    vehicles = Vehicle.objects.order_by('registration_number')
+    vehicles = SaccoVehicle.objects.order_by('sacco')
 
     page = request.GET.get('page', 1)
     paginator = Paginator(vehicles, 10)
@@ -75,17 +79,15 @@ def get_all_vehicles(request):
 
 def get_a_single_vehicle(request, registration_number):
     """Fetch a single sacco details."""
-    vehicle = Vehicle.objects.get(registration_number=registration_number)
-    reg_no = vehicle.registration_number
-    sacco = vehicle.sacco
-    email = sacco.email
+    ntsa_vehicle = Vehicle.objects.get(registration_number=registration_number)
+    sacco_vehicle = SaccoVehicle.objects.get(vehicle=ntsa_vehicle)
+    reg_no = ntsa_vehicle.registration_number
+    sacco = sacco_vehicle.sacco
+    email = Sacco.objects.get(sacco_name=sacco).email
     qr_code_values = f"{reg_no},{sacco},{email}"
-    # qr_list = [vehicle.registration_number, vehicle.sacco]
-    # import pdb;
-    # pdb.set_trace()
     context = dict(
-        vehicle=vehicle,
-        # qr_list=qr_list,
+        regno=ntsa_vehicle.registration_number,
+        vehicle=sacco_vehicle,
         qr_code_values=qr_code_values,
         qr_options=QRCodeOptions(
             size='m', border=6, error_correction='L', image_format='png',
@@ -108,7 +110,7 @@ def signup_sacco_admin(request):
             user = form.save()
             # login the user in
             login(request, user)
-            return redirect('registrations:saccos')
+            return redirect('registrations:saccos_dashboard')
     else:
         form = UserCreationForm()
     return render(request, 'registrations/signup.html', {'form': form})
@@ -122,7 +124,7 @@ def login_sacco_admin(request):
             # login the user
             user = form.get_user()
             login(request, user)
-            return redirect('registrations:saccos')
+            return redirect('registrations:saccos_dashboard')
     else:
         form = AuthenticationForm()
     return render(request, 'registrations/login.html', {'form': form})

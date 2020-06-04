@@ -27,6 +27,11 @@ urlpatterns = [
         name='specific_day_vehicle_reports'
     ),
     path(
+        'summary/vehicles/<slug:regno>/',
+        views.fetch_summary_of_all_reports_for_a_specific_vehicle,
+        name='summary_of_all_reports_for_a_specific_vehicle'
+    ),
+    path(
         'summary/saccos/<slug:sacco>/<slug:date>/',
         views.fetch_reports_for_a_sacco_on_a_specific_day,
         name='specific_day_sacco_reports'

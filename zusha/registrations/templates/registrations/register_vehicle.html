@@ -1,16 +1,36 @@
 <!DOCTYPE html>
 <html>
-    <body>
-        <h1>Add a vehicle</h1>
-        <form action="{% url 'registrations:add_vehicle' %}" method="post">
-            {% csrf_token %}
-            <label>sacco</label>
-            <input type="text" name="sacco">
-            </br>
-            <label>Registration Number</label>
-            <input type="text" name="regno" placeholder="K***123*">
-            </br>
-            <input type="submit" name="Add">
-        </form>
+
+    <head>
+        <style>
+            #add_vehicle_window{
+                background-color: white;
+                width: 30%;
+                height: 300px;
+                margin: auto;
+                text-align: center;
+            }
+            #body{
+                background-color: whitesmoke;
+            }
+        </style>
+    </head>
+
+    <body id="body">
+        <div id="add_vehicle_window">
+            <h1>Add a vehicle</h1>
+            <form action="{% url 'registrations:add_vehicle' %}" method="post">
+                {% csrf_token %}
+                <label for="sacco" id="label_sacco">sacco</label>
+                <br>
+                <input type="text" name="sacco" placeholder="Name of Sacco">
+                </br>
+                <label for="regno" id="label_regno">Registration Number</label>
+                <br>
+                <input type="text" name="regno" placeholder="K***123*">
+                </br>
+                <input type="submit" name="Add" value="ADD">
+            </form>
+        </div>
     </body>
 </html>

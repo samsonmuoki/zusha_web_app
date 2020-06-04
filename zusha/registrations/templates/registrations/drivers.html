@@ -60,10 +60,9 @@
         </style>
     </head>
     <body>
-        <div id="header"> ZUSHA ROAD SAFETY </div>
         <div id="menu">
             <ul>
-                <li><a href="">HOME</a></li>
+                <li><a href="https://localhost:8000">HOME</a></li>
                 <li><a href="/reports/all">REPORTS</a></li>
                 <li><a href="/registrations/drivers">DRIVERS</a></li>
                 <li><a href="/registrations/saccos">SACCOS</a></li>
@@ -74,6 +73,7 @@
         {% if drivers %}
             <table>
                 <tr>
+                    <th>Profile</th>
                     <th>Driver ID</th>
                     <th>Name</th>
                     <th>Sacco</th>
@@ -83,10 +83,11 @@
                 </tr>
                 {% for driver in drivers %}
                     <tr>
+                        <td><a href="">View</a></td>
                         <td>{{ driver.driver_id}}</td> 
-                        <td>{{ driver.driver_name}}</td> 
+                        <td>{{ driver.driver}}</td> 
                         <td>{{ driver.sacco}}</td> 
-                        <td>{{ driver.license_status}}</td> 
+                        <td>{{ driver.driver.license_status}}</td> 
                         <td>{{ driver.email}}</td> 
                         <td>{{ driver.phone}}</td> 
                         
