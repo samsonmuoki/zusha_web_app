@@ -1,7 +1,10 @@
+<!DOCTYPE html>
+<html>
+    
 
-
-<form class='site-form' action="{% url 'registrations:sacco_login' %}" method="post">
-    {% csrf_token %}
-    {{form}}
-    <input type="submit" value="Login">
-</form>
+    <form class='site-form' action="{% url 'registrations:sacco_login' %}" method="post">
+        {% csrf_token %}
+        {{form}}
+        <input type="submit" value="Login">
+    </form>
+</html>

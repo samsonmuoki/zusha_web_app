@@ -7,23 +7,36 @@ from django.contrib.auth import (
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-# Create your views here.
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-# from qr_code.qrcode.utils import ContactDetail  # QRCodeOptions
 from qr_code.qrcode.utils import QRCodeOptions
 
 from .models import Sacco, Vehicle, Driver, SaccoDriver, SaccoVehicle
 from .forms import VehicleForm, DriverForm
+from reports.views import (
+    top_sacco_vehicles,
+    top_sacco_drivers,
+    pending_sacco_reports,
+    in_progress_sacco_reports,
+    resolved_sacco_reports,
+)
 
 
 def index(request):
     return render(request, "registrations/home.html")
 
 
-def saccos_dashboard(request):
-    return render(request, "registrations/sacco_dashboard.html")
+def saccos_dashboard(request, sacco):
+    context = {
+        'sacco': sacco,
+        'pending_reports': pending_sacco_reports(sacco),
+        'in_progress_reports': in_progress_sacco_reports(sacco),
+        'resolved_sacco_reports': resolved_sacco_reports(sacco),
+        'top_sacco_vehicles': top_sacco_vehicles(20, sacco),
+        'top_sacco_drivers': top_sacco_drivers(20, sacco),
+    }
+    return render(request, "registrations/sacco_dashboard.html", context)
 
 
 def get_all_saccos(request):

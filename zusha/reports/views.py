@@ -41,6 +41,109 @@ def index(request):
     return render(request, 'reports/index.html')
 
 
+def top_saccos(number):
+    """Fetch each vehicle reports."""
+    reports_list = TrackVehicleReports.objects.all().order_by(
+        '-date', '-count'
+    )
+
+    sacco_list = []
+    for report in reports_list:
+        sacco_list.append(report.sacco)
+    reported_saccos = {}
+    for sacco in sacco_list:
+        reported_saccos.update({sacco: sacco_list.count(sacco)})
+    sorted_list = sorted(
+        reported_saccos.items(), key=lambda x: x[1], reverse=True
+    )
+    top_reported_saccos = sorted_list[:number]
+    return top_reported_saccos
+
+
+def top_vehicles(number):
+    """Fetch each vehicle reports."""
+    reports_list = TrackVehicleReports.objects.all().order_by(
+        '-date', '-count'
+    )
+
+    vehicle_list = []
+    for report in reports_list:
+        vehicle_list.append(f"{report.regno}: {report.sacco}")
+        # vehicle_list.append(report.regno)
+    reported_vehicles = {}
+    for vehicle in vehicle_list:
+        reported_vehicles.update({vehicle: vehicle_list.count(vehicle)})
+    sorted_list = sorted(
+        reported_vehicles.items(), key=lambda x: x[1], reverse=True
+    )
+    top_reported_vehicles = sorted_list[:number]
+    return top_reported_vehicles
+
+
+def top_drivers(number):
+    """Sort drivers according to the number of times they are reported."""
+    reports_list = TrackDriverReports.objects.all().order_by(
+        '-date', '-count'
+    )
+    driver_list = []
+    for report in reports_list:
+        driver_list.append(f"{report.driver}: {report.sacco}")
+    reported_drivers = {}
+    for driver in driver_list:
+        reported_drivers.update({driver: driver_list.count(driver)})
+    sorted_list = sorted(
+        reported_drivers.items(), key=lambda x: x[1], reverse=True
+    )
+    top_reported_drivers = sorted_list[:number]
+    return top_reported_drivers
+
+
+def top_sacco_vehicles(number, sacco):
+    """Fetch each vehicle reports."""
+    reports_list = TrackVehicleReports.objects.filter(
+        sacco=sacco
+    ).order_by(
+        '-date', '-count'
+    )
+
+    return reports_list[:number]
+
+
+def top_sacco_drivers(number, sacco):
+    """Fetch top reported sacco drivers."""
+    reports_list = TrackDriverReports.objects.filter(sacco=sacco).order_by(
+        '-date', '-count'
+    )
+    return reports_list[:number]
+
+
+def pending_sacco_reports(sacco):
+    pending_reports = TrackVehicleReports.objects.filter(
+        sacco=sacco, sacco_action='Pending'
+    ).order_by(
+        '-date'
+    ).count()
+    return pending_reports
+
+
+def in_progress_sacco_reports(sacco):
+    in_progress_reports = TrackVehicleReports.objects.filter(
+        sacco=sacco, sacco_action='in_progress'
+    ).order_by(
+        '-date'
+    ).count()
+    return in_progress_reports
+
+
+def resolved_sacco_reports(sacco):
+    resolved_reports = TrackVehicleReports.objects.filter(
+        sacco=sacco, sacco_action='resolved'
+    ).order_by(
+        '-date'
+    ).count()
+    return resolved_reports
+
+
 def view_all_reports_on_map(request):
     """Open map with markers on reported locations."""
     reports = db.child('Reports').get()
@@ -64,7 +167,8 @@ def get_all_reports_list(request):
 
     context = {
         'reports': reports,
-        'reports_list': reports_list
+        'reports_list': reports_list,
+        'top_saccos': top_saccos(10),
     }
 
     return render(request, 'reports/reports2.html', context)
@@ -75,6 +179,7 @@ def daily_summary_by_vehicles_reports(request):
     reports_list = TrackVehicleReports.objects.all().order_by(
         '-date', '-count'
     )
+
     page = request.GET.get('page', 1)
     paginator = Paginator(reports_list, 50)
     try:
@@ -86,7 +191,10 @@ def daily_summary_by_vehicles_reports(request):
 
     context = {
         'reports': reports,
-        'reports_list': reports_list
+        'reports_list': reports_list,
+        'top_saccos': top_saccos(10),
+        'top_vehicles': top_vehicles(10),
+        'top_drivers': top_drivers(10),
     }
 
     return render(request, 'reports/summarised_vehicle_reports.html', context)

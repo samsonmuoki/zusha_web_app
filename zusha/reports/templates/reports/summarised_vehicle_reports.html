@@ -65,23 +65,26 @@
         padding: 5px;
         background-color: green;
     }
-    #bargraph{
+    #top-saccos{
         padding: 5px;
         margin: 5px;
         background-color: white;
-        height: 250px;
+        height: 400px;
+        text-align: center;
     }
-    #linegraph{
+    #top-vehicles{
         padding: 5px;
         margin: 5px;
         background-color: white;
-        height: 250px;
+        height: 400px;
+        text-align: left;
     }
-    #piechart{
+    #top-drivers{
         padding: 5px;
         margin: 5px;
         background-color: white;
-        height: 250px;
+        height: 400px;
+        text-align: center;
     }
     #details{
         float: left;
@@ -105,13 +108,13 @@
     width: 100%;
     }
 
-    td, th {
+    #td, #th {
     border: 1px solid #dddddd;
     text-align: left;
-    padding: 8px;
+    padding: 5px;
     }
 
-    tr:nth-child(even) {
+    #tr:nth-child(even) {
     background-color: #dddddd;
     }
     /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
@@ -136,7 +139,7 @@
 <body>
     <div id="menu">
         <ul>
-            <li><a href="/http://localhost:8000">HOME</a></li>
+            <li><a href="http://localhost:8000">HOME</a></li>
             <li><a href="/reports/all">REPORTS</a></li>
             <li><a href="/registrations/drivers">DRIVERS</a></li>
             <li><a href="/registrations/saccos">SACCOS</a></li>
@@ -147,9 +150,72 @@
     <div id="contents">
         <div id="statistics">
             <div id="summary"> TOTAL REPORTS: {{reports_list|length}} </div>
-            <div id="bargraph"> <img src="{% static "images/pie-chart2.jpg" %}" alt="My image"  width="100%" height="250px"> </div>
-            <div id="linegraph"><img src="{% static "images/bar-graph.svg" %}" alt="My image"  width="100%" height="250px"></div>
-            <div id="piechart"><img src="{% static "images/bargraph.jpg" %}" alt="My image"  width="100%" height="250px"></div>
+            <div id="top-saccos">
+                <h2>TOP 10 REPORTED SACCOS</h2>
+                {% if top_saccos %}
+                    <table>
+                        <tr>
+                            <th>SACCO</th>
+                            <th>TOTAL CASES</th>
+                        </tr>
+                        {% for key, value in top_saccos %}
+                        <tr>
+                            <td>{{key}}</td> 
+                            <td>{{value}}</td>
+                        </tr>
+                        {% endfor %}
+                </table>
+                {% else %}
+                    No saccos have been reported yet
+                {% endif %}
+            </div>
+            <div id="top-vehicles">
+                <h2>TOP 10 REPORTED VEHICLES</h2>
+                {% if top_vehicles %}
+                    <table>
+                        <tr>
+                            <th>REG</th>
+                            <th>TOTAL</th>
+                            <!-- <th>VIEW</th> -->
+                        </tr>
+                        {% for key, value in top_vehicles %}
+                        <tr>
+                            <td>{{key}}</td> 
+                            <td>{{value}}</td>
+                            <!-- <td>
+                                <a href="">View</a>
+                            </td> -->
+                        </tr>
+                        {% endfor %}
+                </table>
+                {% else %}
+                    No vehicles have been reported yet
+                {% endif %}
+            </div>
+            <div id="top-drivers">
+                <h2>TOP 10 REPORTED DRIVERS</h2>
+                {% if top_drivers %}
+                    <table>
+                        <tr>
+                            <th>REG</th>
+                            <th>TOTAL</th>
+                            <!-- <th>VIEW</th> -->
+                        </tr>
+                        {% for key, value in top_drivers %}
+                        <tr>
+                            <td>{{key}}</td> 
+                            <td>{{value}}</td>
+                            <!-- <td>
+                                <a href="">View</a>
+                            </td> -->
+                        </tr>
+                        {% endfor %}
+                </table>
+                {% else %}
+                    No drivers have been reported yet
+                {% endif %}
+            </div>
+
         </div>
 
         <div id="details">
@@ -159,7 +225,7 @@
                     <div id="filter-text">Filter</div>
                     <div id="filter-dropdown">
                         <select name='sacco-report' onchange="location = this.value;">
-                            <option value="/http://localhost:8000">All Saccos</option>
+                            <option value="http://localhost:8000">All Saccos</option>
                             <option value="/reports/saccosMakos">Makos</option>
                             <option value="/reports/saccosManatwa">Manatwa</option>
                             <option value="/reports/saccosMetro">Metro</option>
@@ -172,17 +238,17 @@
             <div id="table">
                 {% if reports %}
                     <table>
-                        <tr>
-                            <th>Location</th>
-                            <th>Reg No</th>
-                            <th>Sacco</th>
-                            <th>Date</th>
-                            <th>Number of Cases</th>
-                            <th>SACCO ACTION</th>
-                            <th>NTSA ACTION</th>
+                        <tr id="tr">
+                            <th id="td">Location</th>
+                            <th id="td">Reg No</th>
+                            <th id="td">Sacco</th>
+                            <th id="td">Date</th>
+                            <th id="td">Number of Cases</th>
+                            <th id="td">SACCO ACTION</th>
+                            <th id="td">NTSA ACTION</th>
                         </tr>
                         {% for report in reports %}
-                        <tr>
+                        <tr id="tr">
                             <td>
                                 <a href='/reports/summary/vehicles/{{report.regno}}/{{report.date.year}}-{{report.date.month}}-{{report.date.day}}'>
                                     <img src="{% static "images/location4.png" %}" alt="view"  width="30px" height="30px">

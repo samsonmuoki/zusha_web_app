@@ -1,27 +1,76 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <style>
+            #add_driver_window{
+                /* background-color: white; */
+                width: 30%;
+                height: 700px;
+                margin: auto;
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+            }
+            #body{
+                background-color: whitesmoke;
+                padding: 20px;
+            }
+            input[type=text], select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            }
+
+            input[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            }
+
+            input[type=submit]:hover {
+            background-color: #45a049;
+            }
+
+            /* div { */
+            /* #add_vehicle_window {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+            } */
+            h1{
+                text-align: center;
+            }
+        </style>
+    </head>
     <body>
-        <h1>Add a vehicle</h1>
-        <form action="{% url 'registrations:add_driver' %}" method="post">
-            {% csrf_token %}
-            <label>National ID</label> <input type="text" name="driver_id">
-            </br>
-            <label>First Name</label>
-            <input type="text" name="first_name">
-            </br>
-            <label>Last Name</label>
-            <input type="text" name="last_name">
-            </br>
-            <label>Sacco</label>
-            <input type="text" name="sacco">
-            </br>
-            <label>Email</label>
-            <input type="text" name="email">
-            </br>
-            <label>Phone Number</label>
-            <input type="text" name="phone_number">
-            </br>
-            <input type="submit" name="Add">
-        </form>
+        <div id="add_driver_window">
+            <h1>Add a Driver</h1>
+            <form action="{% url 'registrations:add_driver' %}" method="post">
+                {% csrf_token %}
+                <label for="driver_id">National ID</label>
+                <input type="text" name="driver_id">
+                <label for="first_name">First Name</label>
+                <input type="text" name="first_name">
+                <label for="last_name">Last Name</label>
+                <input type="text" name="last_name">
+                <label for="sacco">Sacco</label>
+                <input type="text" name="sacco">
+                <label for="email">Email</label>
+                <input type="text" name="email">
+                <label for="phone_number">Phone Number</label>
+                <input type="text" name="phone_number">
+                <input type="submit" name="add" value="ADD">
+            </form>
+        </div>
+        
     </body>
 </html>

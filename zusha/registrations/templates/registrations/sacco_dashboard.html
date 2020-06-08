@@ -1,16 +1,312 @@
-
+<!DOCTYPE html>
 <html>
-    <p>    
-        <a href="">TOP OF MIND</a>
-        <a href="">Number of All new pending reports</a>
-    </p>
+    <head>
+        <style>
+            body{
+            background-color: whitesmoke;
+            margin: auto;
+            }
+            /* #header{
+                background-color: floralwhite;
+                text-align: center;
+                font-size: large;
+                width: fit-content;
+                height: 50px;
+            } */
+            #menu{
+                position: -webkit-sticky;
+                position: sticky;
+                top: 0;
+                /* width: fit-content; */
+                width: 100%;
+            }
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: #333;
+                
+            }
 
-    <p>
-        <a href="{% url 'registrations:add_vehicle' %}">Add a vehicle</a>
-    </p>
-    <p>
-        <a href="{% url 'registrations:add_driver' %}">Add a Driver</a>
-    </p>
+            li {
+                float: left;
+            }
+        
+            li a {
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+        
+            li a:hover:not(.active) {
+                background-color: #111;
+            }
+            .active {
+                background-color: #4CAF50;
+            }
 
+            #management{
+                background-color: white;
+                height: 50px;
+                padding: 5px;
+                /* text-align: center; */
+                width: 90%;
+                /* width: fit-content; */
+                margin: 10px;
+                border-radius: 1px;
+            }
+            #top-of-mind, #registrations{
+                width: 90%;
+                height: 250px;
+                background-color: white;
+                padding: 5px;
+                border-radius: 5px;
+                margin: 10px;
+            }
+            #top-of-mind-pending-reports{
+                width: 31.5%;
+                height: 100px;
+                background-color: wheat;
+                padding: 10px;
+                border-radius: 5px;
+                margin: 5px;
+                float: left;
+
+            }
+            
+            #top-of-mind-in-progress-reports{
+                width: 31.5%;
+                float: left;
+                height: 100px;
+                margin: 5px;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: wheat;
+            }
+            #top-of-mind-resolved-reports{
+                width: 31.5%;
+                float: left;
+                height: 100px;
+                margin: 5px;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: wheat;
+            }
+            #top-of-mind-pending-reports:hover, #top-of-mind-in-progress-reports:hover, #top-of-mind-resolved-reports:hover{
+                background-color: orange;
+            }
+            #pending-reports-number, #reports-in-progress-number, #resolved-reports-number{
+                font-size: xx-large;
+            }
+            #add-driver, #add-vehicle{
+                width: 48%;
+                float: left;
+                height: 100px;
+                margin: 5px;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: wheat;
+            }
+            #add-vehicle:hover, #add-driver:hover{
+                background-color: goldenrod;
+                }
+            #ones-to-watch{
+                width: 90%;
+                height: 1000px;
+                background-color: white;
+                padding: 5px;
+                border-radius: 5px;
+                margin: 10px;
+            }
+
+            #recent-top-reported-vehicles, #recent-top-reported-drivers{
+                width: 48%;
+                float: left;
+                height: 88%;
+                margin: 5px;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: wheat;
+            }
+            #top-reported-vehicles-header, #top-reported-drivers-header{
+                background-color: white;
+                height: 20px;
+                padding: 5px;
+                width: 98%;
+                margin: 5px;
+                border-radius: 3px;
+            }
+            #top-reported-vehicles-table, #top-reported-drivers-table{
+                background-color: white;
+                height: 95%;
+                padding: 5px;
+                width: 98%;
+                margin: 5px;
+                border-radius: 3px;
+            }
+            table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            }
+
+            td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 10px;
+            }
+
+            tr:nth-child(even) {
+            background-color: #dddddd;
+            }
+
+
+            @media screen and (max-width: 800px) {
+                #top-of-mind{
+                    height: 400px;
+                    width: 100%;
+                    padding: 0;
+                }
+                #top-of-mind-pending-reports, #top-of-mind-in-progress-reports, #top-of-mind-resolved-reports {   
+                width: 97%;
+                padding: 3px;
+                margin-left: 3px;
+                margin-right: 3px;
+                margin-top: 3px;
+                float: none;
+                }
+                #management{
+                    height: 350px;
+                    width: 100%;
+                }
+                #add-vehicle, #add-driver{
+                    width: 93%;
+                    margin: 3px;
+                }
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="menu">
+            <ul>
+                <li><a href="http://localhost:8000">HOME</a></li>
+                <li><a href="/reports/all">REPORTS</a></li>
+                <li><a href="/registrations/drivers">DRIVERS</a></li>
+                <li><a href="/registrations/saccos">SACCOS</a></li>
+                <li><a href="/registrations/vehicles">VEHICLES</a></li>
+                <li><a href="{% url 'registrations:sacco_logout' %}">LOGOUT</a></li>
+            </ul>
+        </div>
+        <div id="management">
+            <center><h1>{{sacco}} MANAGEMENT</h1></center>
+        </div>
+        <div id="top-of-mind">
+            <div id="top-of-mind-header">
+                <h1>TOP OF MIND</h1>
+            </div>
+            <div id="top-of-mind-pending-reports">
+                <div id="pending-reports-text">
+                    NEW PENDING REPORTS
+                </div>
+                <div id="pending-reports-number">
+                    <a href="">{{pending_reports}}</a>
+                </div>
+            </div>
+            <div id="top-of-mind-in-progress-reports">
+                <div id="reports-in-progress-text">
+                    REPORTS IN PROGRESS
+                </div>
+                <div id="reports-in-progress-number">
+                    <a href="">{{in_progress_reports}}</a> 
+                </div>
+            </div>
+            <div id="top-of-mind-resolved-reports">
+                <div id="resolved-reports-text">
+                    RESOLVED CASES
+                </div>
+                <div id="resolved-reports-number">
+                    <a href="">{{resolved_sacco_reports}}</a> 
+                </div>
+            </div>
+        </div>
+        
+        <div id="registrations">
+            <h1>REGISTRATIONS</h1>
+            <div id="add-vehicle">
+                <a href="{% url 'registrations:add_vehicle' %}">Add a vehicle</a>
+            </div>
+            <div id="add-driver">
+                <a href="{% url 'registrations:add_driver' %}">Add a Driver</a>
+            </div>
+        </div>
+        <div id="ones-to-watch">
+            <center><h1>ONES TO WATCH</h1></center>
+            <div id="recent-top-reported-vehicles">
+                <div id="top-reported-vehicles-header">
+                    RECENT TOP REPORTED VEHICLES
+                </div>
+                <div id="top-reported-vehicles-table">
+                    {% if top_sacco_vehicles %}
+                        <table>
+                            <tr>
+                                <th>Regno</th>
+                                <th>Sacco</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>NTSA</th>
+                                <th>SACCO</th>
+                            </tr>
+                            {% for report in top_sacco_vehicles %}
+                            <tr>
+                                <td>{{report.regno}}</td>
+                                <td>{{report.sacco}}</td>
+                                <td>{{report.date}}</td>
+                                <td>{{report.count}}</td>
+                                <td>{{report.ntsa_action}}</td>
+                                <td>{{report.sacco_action}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+
+                    {% else %}
+                        No vehicles to display
+                    {% endif %}
+                </div>
+            </div>
+            <div id="recent-top-reported-drivers">
+                <div id="top-reported-drivers-header">
+                    RECENT TOP REPORTED DRIVERS
+                </div>
+                <div id="top-reported-drivers-table">
+                    {% if top_sacco_drivers %}
+                    <table>
+                        <tr>
+                            <th>DRIVER</th>
+                            <th>SACCO</th>
+                            <th>DATE</th>
+                            <th>TOTAL</th>
+                        </tr>
+                        {% for report in top_sacco_drivers %}
+                        <tr>
+                            <td>{{report.driver}}</td>
+                            <td>{{report.sacco}}</td>
+                            <td>{{report.date}}</td>
+                            <td>{{report.count}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% else %}
+                        No drivers have been reported yet
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    
+    </body>
+    
 
 </html>

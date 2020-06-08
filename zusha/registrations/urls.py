@@ -8,7 +8,11 @@ app_name = 'registrations'
 urlpatterns = [
     path('', views.index, name='index'),
     path('saccos/', views.get_all_saccos, name='saccos'),
-    path('saccos/dashboard', views.saccos_dashboard, name='saccos_dashboard'),
+    path(
+        'saccos/dashboard/<slug:sacco>',
+        views.saccos_dashboard,
+        name='saccos_dashboard'
+    ),
     path('saccos/signup', views.signup_sacco_admin, name='sacco_signup'),
     path('saccos/login', views.login_sacco_admin, name='sacco_login'),
     path('saccos/logout', views.logout_sacco_admin, name='sacco_logout'),
