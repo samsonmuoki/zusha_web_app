@@ -12,7 +12,6 @@ from reports.models import (
     # Report,
     TrackVehicleReports
 )
-from reports.views import top_sacco_vehicles
 # from .forms import ResolveCaseForm
 from zusha import settings
 

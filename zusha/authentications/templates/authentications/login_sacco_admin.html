@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            /* CSS HERE */
+        </style>
+    </head>
+    <body>
+        <div id="sacco-login-form">
+            <h1>SACCO LOGIN FORM</h1>
+            <form action="" method="post">
+                {% csrf_token %}
+                <label for="username">USERNAME</label>
+                <input type="text" placeholder="username">
+                <label for="password">PASSWORD</label>
+                <!-- <input type="password" placeholder="password"> -->
+                <input type="text" placeholder="password">
+                <input type="submit" name="login" value="LOGIN">
+            </form>
+        </div>
+    </body>
+</html>

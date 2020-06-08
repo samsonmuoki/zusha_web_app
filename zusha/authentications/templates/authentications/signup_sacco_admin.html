@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            /* CSS HERE */
+        </style>
+    </head>
+    <body>
+        <div id="sacco-admin-signup-form">
+            <h1>SACCO LOGIN FORM</h1>
+            <form action="{%url 'authentications:signup_sacco_admin'%}" method="post">
+                {% csrf_token %}
+                <label for="first_name">FIRST NAME</label>
+                <input type="text" placeholder="first name">
+                <label for="last_name">LAST NAME</label>
+                <input type="text" placeholder="last name">
+                <!-- <label for="id_no">ID NUMBER</label> -->
+                <!-- <input type="text" placeholder="12345678"> -->
+                <label for="email">EMAIL</label>
+                <input type="text" placeholder="user@example.com">
+                <label for="phone">PHONE NUMBER</label>
+                <input type="text" placeholder="0712345678">
+                <label for="username">USERNAME</label>
+                <input type="text" placeholder="username">
+                <label for="password">PASSWORD</label>
+                <input type="password" placeholder="password">
+                <label for="password-confirmation">PASSWORD CONFIRMATION</label>
+                <input type="password" placeholder="re-enter password">
+            </form>
+        </div>
+    </body>
+</html>

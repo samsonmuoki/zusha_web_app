@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     'registrations.apps.RegistrationsConfig',
     'reports.apps.ReportsConfig',
+    'authentications.apps.AuthenticationsConfig',
     'django_celery_results',
     'django_celery_beat',
     'qr_code',
