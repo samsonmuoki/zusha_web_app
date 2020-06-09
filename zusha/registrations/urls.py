@@ -13,6 +13,11 @@ urlpatterns = [
         views.saccos_dashboard,
         name='saccos_dashboard'
     ),
+    path(
+        'saccos/dashboard/<slug:sacco>/pending_reports/',
+        views.fetch_pending_reports_for_a_sacco,
+        name="pending_reports_sacco"
+    ),
     path('saccos/signup', views.signup_sacco_admin, name='sacco_signup'),
     path('saccos/login', views.login_sacco_admin, name='sacco_login'),
     path('saccos/logout', views.logout_sacco_admin, name='sacco_logout'),

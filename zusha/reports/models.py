@@ -2,7 +2,7 @@ from django.db import models
 
 
 PENDING = 'Pending'
-IN_PROGRESS = 'In Progress'
+IN_PROGRESS = 'In-Progress'
 RESOLVED = 'Resolved'
 
 RESOLUTION_OPTIONS = [

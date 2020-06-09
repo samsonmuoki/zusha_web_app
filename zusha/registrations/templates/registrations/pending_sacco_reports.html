@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #menu{
+                position: -webkit-sticky;
+                position: sticky;
+                top: 0;
+                /* width: fit-content; */
+                width: 100%;
+            }
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: #333;
+                
+            }
+        
+            li {
+                float: left;
+            }
+          
+            li a {
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+          
+            li a:hover:not(.active) {
+                background-color: #111;
+            }
+            .active {
+                background-color: #4CAF50;
+            }
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+
+            tr:nth-child(even) {
+                background-color: #dddddd;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="menu">
+            <ul>
+                <li><a href="http://localhost:8000">HOME</a></li>
+                <li><a href="/reports/all">REPORTS</a></li>
+                <li><a href="/registrations/drivers">DRIVERS</a></li>
+                <li><a href="/registrations/saccos">SACCOS</a></li>
+                <li><a href="/registrations/vehicles">VEHICLES</a></li>
+                <li><a href="{% url 'registrations:sacco_logout' %}">LOGOUT</a></li>
+            </ul>
+        </div>
+        <div>
+            {% if pending_sacco_reports %}
+            <table>
+                <tr>
+                    <th>Registration</th>
+                    <th>Sacco</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Sacco Status</th>
+                    <th>NTSA Status</th>
+                    <th>Update Status</th>
+                </tr>
+                {% for report in pending_sacco_reports %}
+                <tr>
+                    <td>{{report.regno}}</td>
+                    <td>{{report.sacco}}</td>
+                    <td>{{report.date}}</td>
+                    <td>{{report.count}}</td>
+                    <td>{{report.sacco_action}}</td>
+                    <td>{{report.ntsa_action}}</td>
+                    <td>
+                        <!-- <select name='update-sacco-report-status' onchange="location = this.value;">
+                            <option value="">-----</option>
+                            <option value="">PENDING</option>
+                            <option value="">IN PROGRESS</option>
+                            <option value="">RESOLVED</option>
+                        </select> -->
+                        <a href="/reports/saccos/{{report.sacco}}/{{report.regno}}/{{report.date.year}}-{{report.date.month}}-{{report.date.day}}/">action</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+                THERE'S NO NEW PENDING REPORTS
+            {% endif %}
+        </div>
+    </body>
+</html>

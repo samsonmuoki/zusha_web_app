@@ -21,6 +21,9 @@ from reports.views import (
     in_progress_sacco_reports,
     resolved_sacco_reports,
 )
+from reports.models import (
+    Report, TrackVehicleReports, TrackSaccoReports, TrackDriverReports
+)
 
 
 def index(request):
@@ -37,6 +40,21 @@ def saccos_dashboard(request, sacco):
         'top_sacco_drivers': top_sacco_drivers(20, sacco),
     }
     return render(request, "registrations/sacco_dashboard.html", context)
+
+
+def fetch_pending_reports_for_a_sacco(request, sacco):
+    """."""
+    pending_reports = TrackVehicleReports.objects.filter(
+        sacco=sacco, sacco_action='Pending'
+    ).order_by('-date')
+    context = {
+        'pending_sacco_reports': pending_reports,
+    }
+    return render(
+        request,
+        'registrations/pending_sacco_reports.html',
+        context
+    )
 
 
 def get_all_saccos(request):
