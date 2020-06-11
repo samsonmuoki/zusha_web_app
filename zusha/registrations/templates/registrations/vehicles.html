@@ -2,12 +2,8 @@
 <html>
     <head>
         <style>
-            #header{
-                background-color: floralwhite;
-                text-align: center;
-                font-size: large;
-                width: fit-content;
-                height: 50px;
+            body{
+                background-color: whitesmoke;
             }
             #menu{
                 position: -webkit-sticky;
@@ -43,6 +39,35 @@
             .active {
                 background-color: #4CAF50;
             }
+            #registered-vehicles-header-row{
+                background-color: white;
+                margin: 3px;
+                width: 100%;
+                padding: 3px;
+                height: 40px;
+            }
+            #registered-vehicles-header-text{
+                float: left;
+                width: 50%;
+                text-align: center;
+                padding: 3px;
+            }
+            #search-vehicle-bar{
+                float: left;
+                width: 25%;
+                text-align: left;
+                padding: 3px;
+            }
+            #filter{
+                float: left;
+                width: 22%;
+                text-align: left;
+            }
+            #filter-header{
+                float: left;
+                width: 50%;
+                padding: 3px;
+            }
             table {
             font-family: arial, sans-serif;
             border-collapse: collapse;
@@ -71,49 +96,71 @@
                 <li><a href="">EXTRA</a></li>
             </ul>
         </div>
-
-        {% if vehicles %}
-            <table>
-                <tr>
-                    <th>Reg No</th>
-                    <th>Sacco</th>
-                    <th>License Status</th>
-                </tr>
-                {% for vehicle in vehicles %}
-                    <tr>
-                        <td><a href="{% url 'registrations:vehicle_details' vehicle.vehicle.registration_number %}">{{ vehicle.vehicle.registration_number}}</a></td> 
-                        <td>{{ vehicle.sacco}}</td> 
-                        <td>{{ vehicle.vehicle.license_status}}</td> 
-                        
-                    </tr>
-                {% endfor %}
-            </table>    
-            {% if saccos.has_other_pages %}
-                <ul class="pagination">
-                    {% if vehicles.has_previous %}
-                        <li><a href="?page={{ vehicles.previous_page_number }}">&laquo;</a></li>
-                    {% else %}
-                        <li class="disabled"><span>&laquo;</span></li>
-                    {% endif %}
-                    {% for i in vehicles.paginator.page_range %}
-                        {% if vehicles.number == i %}
-                            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                        {% else %}
-                            <li><a href="?page={{ i }}">{{ i }}</a></li>
+        <div id="registered-vehicles-header-row">
+            <div id="registered-vehicles-header-text">ALL REGISTERED VEHICLES</div>
+            <div id="search-vehicle-bar">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <input type="search" placeholder="search for a vehicle">
+                    <input type="submit" name="search" value="SEARCH">
+                </form>
+            </div>
+            <div id="filter">
+                <div id="filter-header">Choose Sacco</div>
+                <div id="drop-down">
+                    <select id="sacco-filter" onchange="location = this.value">
+                        <option name="blank" value="">------</option>
+                        {% if saccos_list %}
+                            {% for sacco in saccos_list %}
+                            <option name="sacco" value="">{{sacco}}</option>
+                            {% endfor %}
                         {% endif %}
+                        <!-- <option name="Makos" value="">MAKOS</option> -->
+                    </select>
+                </div>
+            </div>
+        </div>
+            {% if vehicles %}
+                <table>
+                    <tr>
+                        <th>Reg No</th>
+                        <th>Sacco</th>
+                        <th>License Status</th>
+                    </tr>
+                    {% for vehicle in vehicles %}
+                        <tr>
+                            <td><a href="{% url 'registrations:vehicle_details' vehicle.vehicle.registration_number %}">{{ vehicle.vehicle.registration_number}}</a></td> 
+                            <td>{{ vehicle.sacco}}</td> 
+                            <td>{{ vehicle.vehicle.license_status}}</td> 
+                            
+                        </tr>
                     {% endfor %}
-                    {% if vehicles.has_next %}
-                        <li><a href="?page={{ vehicles.next_page_number }}">&raquo;</a></li>
-                    {% else %}
-                        <li class="disabled"><span>&raquo;</span></li>
-                    {% endif %}
-                </ul>
-            {% endif %}    
+                </table>    
+                {% if saccos.has_other_pages %}
+                    <ul class="pagination">
+                        {% if vehicles.has_previous %}
+                            <li><a href="?page={{ vehicles.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in vehicles.paginator.page_range %}
+                            {% if vehicles.number == i %}
+                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                            {% else %}
+                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if vehicles.has_next %}
+                            <li><a href="?page={{ vehicles.next_page_number }}">&raquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                {% endif %}    
 
-        {% else %}
-            <p>No vehicles are available</p>
-        {% endif %}
-
+            {% else %}
+                <p>No vehicles are available</p>
+            {% endif %}
 
     </body>
 </html>

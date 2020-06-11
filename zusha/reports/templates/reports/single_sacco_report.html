@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+        body{
+            background-color: whitesmoke;
+        }
+        #menu{
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            /* width: fit-content; */
+            width: 100%;
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            
+        }
+
+        li {
+            float: left;
+        }
+    
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+    
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+        .active {
+            background-color: #4CAF50;
+        }
+
+        #report-header{
+            background-color: white;
+            width: 90%;
+            height: 400px;
+            border-radius: 3px;
+            padding: 5px;
+            margin: auto;
+        }
+        #report-header-text{
+            text-align: center;
+            border-radius: 3px;
+            border-style: solid;
+            border-width: 0 0 2px 0;
+            border-color: linen;
+            font-size: xx-large;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            padding: 5px;
+        }
+        #report-details, #provide-driver{
+            float: left;
+            width: 47%;
+            height: 80%;
+            margin: 10px;
+            background-color: orange;
+            padding: 5px;
+            text-align: center;
+            border-radius: 5px;
+        }
+        #row{
+            /* background-color: white; */
+            margin: 3px;
+            padding: 5px;
+            /* height: 40px; */
+        }
+        #left-col, #right-col{
+            float: left;
+            width: 47%;
+            text-align: left;
+            margin: 3px;
+            background-color: white;
+            padding: 5px;
+            border-radius: 3px;
+            height: 30px;
+        }
+        input[type=text], select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+        #map {
+            height: 800px;  /* The height is 400 pixels */
+            width: 100%;  /* The width is the width of the web page */
+            /* background-color: lime; */
+        }
+    </style>
+  </head>
+  <body>
+        <div id="menu">
+            <ul>
+                <li><a href="http://localhost:8000">HOME</a></li>
+                <li><a href="/reports/all">REPORTS</a></li>
+                <li><a href="/registrations/drivers">DRIVERS</a></li>
+                <li><a href="/registrations/saccos">SACCOS</a></li>
+                <li><a href="/registrations/vehicles">VEHICLES</a></li>
+                <li><a href="{% url 'registrations:sacco_logout' %}">LOGOUT</a></li>
+            </ul>
+        </div>
+        <div id="report-header">
+            <div id="report-header-text">SPEEDING REPORT</div>
+            <div id="report-details">
+                <div id="row">
+                    <div id="right-col">REGISTRATION</div>
+                    <div id="right-col">
+                        <var id="regno"> {{report.regno}} </var>
+                    </div>
+                </div>
+                <div id="row">
+                    <div id="left-col">DRIVER</div>
+                    <div id="right-col">
+                        <var id="driver"> {{report.driver}} </var>
+                    </div>
+                </div>
+                <div id="row">
+                    <div id="left-col">SACCO</div>
+                    <div id="right-col">
+                        <var id="sacco"> {{report.sacco}} </var>
+                    </div>
+                </div>
+                <div id="row">
+                    <div id="left-col">SPEED</div>
+                    <div id="right-col">
+                        <var id="speed"> {{report.speed}} </var>
+                    </div>
+                </div>
+                <div id="row">
+                    <div id="left-col">TIME</div>
+                    <div id="right-col">
+                        <var id="time"> {{report.time}} </var>
+                    </div>
+                </div>
+                <div id="row">
+                    <div id="left-col">LOCATION</div>  
+                    <div id="right-col">
+                        <var id="speedlocation">{{report.location}} </var>
+                    </div>
+                </div>
+            </div>
+            <div id="provide-driver">
+                <form method="POST" action="{% url 'reports:resolve_sacco_case' report.sacco report.regno report.id %}">
+                    {% csrf_token %}
+                    <label for="driver">ENTER NAME OF DRIVER</label>
+                    <input type="text" placeholder="Name of driver" name="driver">
+                    <input type="submit" name="submit" value="SUBMIT">
+                </form>
+            </div>
+        </div>
+    <h1>Map Location</h1>
+    <div id="map"></div>
+    <script>
+      
+      // Initialize and add the map
+      function initMap() {
+
+        var regno = document.getElementById("regno").innerHTML;
+        var speed = document.getElementById("speed").innerHTML;
+        var sacco = document.getElementById("sacco").innerHTML;
+        var time = document.getElementById("time").innerHTML;
+
+        var maptitle = "Reg:" + regno + "Speed:" + speed + "Sacco:" + sacco + "Date:" + time;
+
+
+        var speedlocation = document.getElementById("speedlocation").innerHTML;
+        var LocationArray = speedlocation.split(',')
+        
+        var latitude = LocationArray[0].slice(10)
+        var longitude = LocationArray[1].slice(12)
+
+        var reportedLocation = {lat: +latitude, lng: +longitude};
+
+        // The map, centered at the reported Location
+        var map = new google.maps.Map(
+            document.getElementById('map'), {zoom: 15, center: reportedLocation});
+        // The marker, positioned at the reported Location
+        var marker = new google.maps.Marker({
+          position: reportedLocation, 
+          map: map,
+          title: maptitle,
+          draggable: false,
+          label: speed,
+          animation: google.maps.Animation.DROP,
+          });
+        marker.addListener('click', toggleBounce);
+        }
+        function toggleBounce() {
+          if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+          } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+          }
+        }
+    </script>
+
+    <!--Load the API from the specified URL
+    * The async attribute allows the browser to render the page while the API loads
+    * The key parameter will contain your own API key (which is not needed for this tutorial)
+    * The callback parameter executes the initMap() function
+    -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAB-G-i0m3MMdpMv5NYJatAhgiUeOT9hYA&callback=initMap"
+        type="text/javascript">
+    </script>
+  </body>
+</html>

@@ -65,7 +65,7 @@
             </ul>
         </div>
         <div>
-            {% if pending_sacco_reports %}
+            {% if in_progress_sacco_reports %}
             <table>
                 <tr>
                     <th>Registration</th>
@@ -76,7 +76,7 @@
                     <th>NTSA Status</th>
                     <th>Update Status</th>
                 </tr>
-                {% for report in pending_sacco_reports %}
+                {% for report in in_progress_sacco_reports %}
                 <tr>
                     <td>{{report.regno}}</td>
                     <td>{{report.sacco}}</td>
@@ -97,7 +97,7 @@
                 {% endfor %}
             </table>
             {% else %}
-                THERE'S NO NEW PENDING REPORT
+                THERE ARE CURRENTLY NO NEW  REPORTS IN PROGRESS
             {% endif %}
         </div>
     </body>

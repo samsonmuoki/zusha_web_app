@@ -2,17 +2,19 @@ from django.shortcuts import render, redirect
 
 import pyrebase
 
-# from django.http import HttpResponse
+from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
 
 # from registration.models import Vehicle, Sacco, Driver
 from .models import (
     Report, TrackVehicleReports, TrackSaccoReports, TrackDriverReports
 )
-# from .forms import ResolveCaseForm
+from .forms import (
+    # ResolveCaseForm
+    ProvideDriverForm
+)
 from zusha import settings
-
+from registrations.models import Sacco
 
 firebaseConfig = {
     'apiKey': settings.FIREBASE_API_KEY,
@@ -144,6 +146,14 @@ def resolved_sacco_reports(sacco):
     return resolved_reports
 
 
+def saccos_list():
+    saccos = Sacco.objects.all()
+    list_saccos = []
+    for sacco in saccos:
+        list_saccos.append(sacco.sacco_name)
+    return list_saccos
+
+
 def view_all_reports_on_map(request):
     """Open map with markers on reported locations."""
     reports = db.child('Reports').get()
@@ -190,6 +200,7 @@ def daily_summary_by_vehicles_reports(request):
         reports = paginator.page(paginator.num_pages)
 
     context = {
+        'saccos_list': saccos_list(),
         'reports': reports,
         'reports_list': reports_list,
         'top_saccos': top_saccos(10),
@@ -430,7 +441,9 @@ def fetch_all_reports_for_a_specific_sacco(request, sacco):
     context = {
         'reports': reports,
         'reports_list': reports_list,
-        'sacco': sacco
+        'sacco': sacco,
+        'frequently_reported_vehicles': top_sacco_vehicles(10, sacco),
+        'frequently_reported_drivers': top_sacco_drivers(10, sacco)
     }
 
     return render(
@@ -545,15 +558,42 @@ def fetch_sacco_case(request, regno, report_id, sacco):
     """Resolve all cases for a single vehicle that are reported
     on the same day."""
 
-    report = TrackVehicleReports.objects.get(
-        id=report_id, regno=regno, sacco=sacco
-    )
-    # report.sacco_resolution = status
-    # report.save()
-    # report = Report.objects.get(id=report_id)
+    # report = Report.objects.get(
+    #     id=report_id, regno=regno, sacco=sacco
+    # )
+    # # report.sacco_resolution = status
+    # # report.save()
+    # # report = Report.objects.get(id=report_id)
 
-    context = {'report': report}
-    return render(request, 'registrations/pending_sacco_reports.html', context)
+    # context = {'report': report}
+    # return render(request, 'reports/single_sacco_report.html', context)
+    if request.method == 'POST':
+        form = ProvideDriverForm(data=request.POST)
+        if form.is_valid():
+            driver = form.cleaned_data['driver']
+
+            rep = Report.objects.get(id=report_id)
+
+            rep.driver = driver
+            rep.save()
+            return render(
+                request,
+                'reports/single_sacco_report.html',
+                {'report': rep},
+            )
+
+    else:
+        form = ProvideDriverForm()
+    report = Report.objects.get(
+        id=report_id,
+    )
+    return render(
+        request, 'reports/single_sacco_report.html',
+        {
+            'form': form,
+            'report': report,
+        }
+    )
 
 
 def update_sacco_case_status(request, regno, sacco, date, status):
@@ -603,4 +643,30 @@ def update_sacco_case_status(request, regno, sacco, date, status):
 def provide_driver_for_a_reported_case(request, report_id):
     """Enter the name of driver that was reported for speeding.
     Done by sacco admin."""
-    pass
+    if request.method == 'POST':
+        form = ProvideDriverForm(data=request.POST)
+        if form.is_valid():
+            driver = form.cleaned_data['driver']
+
+            rep = Report.objects.get(id=report_id)
+
+            rep.driver = driver
+            rep.save()
+            return render(
+                request,
+                'reports/single_sacco_report.html',
+                {'report': rep},
+            )
+
+    else:
+        form = ProvideDriverForm()
+    report = Report.objects.get(
+        id=report_id,
+    )
+    return render(
+        request, 'reports/single_sacco_report.html',
+        {
+            'form': form,
+            'report': report,
+        }
+    )

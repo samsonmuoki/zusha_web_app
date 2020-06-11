@@ -1,4 +1,5 @@
 from django.db import models
+# from registrations.models import SaccoDriver
 
 
 PENDING = 'Pending'
@@ -31,6 +32,9 @@ class Report(models.Model):
     driver = models.CharField(
         max_length=20, null=True, blank=True
     )  # to be updated by sacco
+    # driver = models.ForeignKey(
+    #     SaccoDriver, on_delete=models.PROTECT, null=True
+    # )
 
     def __str__(self):
         return f"{self.regno} {self.speed}"

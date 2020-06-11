@@ -23,7 +23,8 @@
         position: -webkit-sticky;
         position: sticky;
         top: 0;
-        width: fit-content;
+        /* width: fit-content; */
+        width: 100%;
     }
     ul {
         list-style-type: none;
@@ -122,16 +123,6 @@
     }
 </style>
 </head>
-
-<!-- <div id="title">
-     
-    Filter by 
-    <select id="filter">
-        <option value="all"><a href="/reports/all/">All</a></option>
-        <option value="sacco">Sacco</option>
-        <option value="driver">Driver</option>
-    </select>
-</div> -->
 <body>
     <div id="menu">
         <ul>
@@ -174,6 +165,7 @@
                             <th>Time</th>
                             <th>Location</th>
                             <th>Driver</th>
+                            <th>Provide driver</th>
                         </tr>
                         {% for report in reports %}
                         <tr>
@@ -188,6 +180,7 @@
                                 </a>
                             </td>
                             <td>{{ report.driver}}</td>
+                            <td><a href="/reports/all/{{report.sacco}}/{{report.regno}}/{{report.id}}/">Add driver</a></td>
                         </tr>
                         {% endfor %}
                     </table>

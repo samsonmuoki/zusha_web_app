@@ -5,6 +5,11 @@
             body{
             background-color: whitesmoke;
             margin: auto;
+            width: 100%;
+            }
+            #contents{
+                margin: auto;
+                width: 100%;
             }
             /* #header{
                 background-color: floralwhite;
@@ -58,13 +63,30 @@
                 margin: 10px;
                 border-radius: 1px;
             }
-            #top-of-mind, #registrations{
+            #management-text{
+                text-align: center;
+                font-size: xx-large;
+                font-weight: bold;
+                padding: 5px;
+            }
+            #top-of-mind{
+                width: 90%;
+                height: 200px;
+                background-color: white;
+                padding: 5px;
+                border-radius: 5px;
+                margin: 10px;
+            }
+            #registrations{
                 width: 90%;
                 height: 250px;
                 background-color: white;
                 padding: 5px;
                 border-radius: 5px;
                 margin: 10px;
+            }
+            #registrations a {
+                text-decoration: none;
             }
             #top-of-mind-pending-reports{
                 width: 31.5%;
@@ -109,10 +131,48 @@
                 padding: 10px;
                 border-radius: 5px;
                 background-color: wheat;
+                /* text-align: center; */
+                font-size: large;
             }
+            /* #add-vehicle-header, #add-driver-header{
+                text-align: center;
+                border-style: solid;
+                border-width: 0 0 2px 0;
+                border-color: grey;
+
+            }
+            #add-vehicle-form{
+                margin: 2px;
+                border-radius: 2px;
+                padding: 5px 3px;
+            } */
             #add-vehicle:hover, #add-driver:hover{
                 background-color: goldenrod;
                 }
+            /* input[type=text], select {
+                width: 100%;
+                padding: 12px 20px;
+                margin: 8px 0;
+                display: inline-block;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+
+            input[type=submit] {
+                width: 100%;
+                background-color: orange;
+                color: white;
+                padding: 14px 20px;
+                margin: 8px 0;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            input[type=submit]:hover {
+                background-color: #45a049;
+            } */
             #ones-to-watch{
                 width: 90%;
                 height: 1000px;
@@ -120,6 +180,18 @@
                 padding: 5px;
                 border-radius: 5px;
                 margin: 10px;
+            }
+            #registrations-header, #top-of-mind-header-text{
+                text-align: left;
+                font-size: large;
+                font-weight: bold;
+                padding: 3px;
+            }
+            #ones-to-watch-header{
+                text-align: center;
+                font-size: large;
+                font-weight: bold;
+                padding: 3px;
             }
 
             #recent-top-reported-vehicles, #recent-top-reported-drivers{
@@ -191,121 +263,140 @@
         </style>
     </head>
     <body>
-        <div id="menu">
-            <ul>
-                <li><a href="http://localhost:8000">HOME</a></li>
-                <li><a href="/reports/all">REPORTS</a></li>
-                <li><a href="/registrations/drivers">DRIVERS</a></li>
-                <li><a href="/registrations/saccos">SACCOS</a></li>
-                <li><a href="/registrations/vehicles">VEHICLES</a></li>
-                <li><a href="{% url 'registrations:sacco_logout' %}">LOGOUT</a></li>
-            </ul>
-        </div>
-        <div id="management">
-            <center><h1>{{sacco}} MANAGEMENT</h1></center>
-        </div>
-        <div id="top-of-mind">
-            <div id="top-of-mind-header">
-                <h1>TOP OF MIND</h1>
+        <div id="contents">
+            <div id="menu">
+                <ul>
+                    <li><a href="http://localhost:8000">HOME</a></li>
+                    <li><a href="/reports/all">REPORTS</a></li>
+                    <li><a href="/registrations/drivers">DRIVERS</a></li>
+                    <li><a href="/registrations/saccos">SACCOS</a></li>
+                    <li><a href="/registrations/vehicles">VEHICLES</a></li>
+                    <li><a href="{% url 'registrations:sacco_logout' %}">LOGOUT</a></li>
+                </ul>
             </div>
-            <div id="top-of-mind-pending-reports">
-                <div id="pending-reports-text">
-                    NEW PENDING REPORTS
+            <div id="management">
+                <div id="management-text">{{sacco}} ADMINISTRATION</div>
+            </div>
+            <div id="top-of-mind">
+                <div id="top-of-mind-header">
+                    <div id="top-of-mind-header-text">TOP OF MIND</div>
                 </div>
-                <div id="pending-reports-number">
-                    <a href="/registrations/saccos/dashboard/{{sacco}}/pending_reports/">{{pending_reports}}</a>
+                <div id="top-of-mind-pending-reports">
+                    <div id="pending-reports-text">
+                        NEW PENDING REPORTS
+                    </div>
+                    <div id="pending-reports-number">
+                        <a href="/registrations/saccos/dashboard/{{sacco}}/pending_reports/">{{pending_reports}}</a>
+                    </div>
+                </div>
+                <div id="top-of-mind-in-progress-reports">
+                    <div id="reports-in-progress-text">
+                        REPORTS IN PROGRESS
+                    </div>
+                    <div id="reports-in-progress-number">
+                        <a href="/registrations/saccos/dashboard/{{sacco}}/in_progress_reports/">{{in_progress_reports}}</a> 
+                    </div>
+                </div>
+                <div id="top-of-mind-resolved-reports">
+                    <div id="resolved-reports-text">
+                        RESOLVED CASES
+                    </div>
+                    <div id="resolved-reports-number">
+                        <a href="/registrations/saccos/dashboard/{{sacco}}/resolved_reports/">{{resolved_sacco_reports}}</a> 
+                    </div>
                 </div>
             </div>
-            <div id="top-of-mind-in-progress-reports">
-                <div id="reports-in-progress-text">
-                    REPORTS IN PROGRESS
-                </div>
-                <div id="reports-in-progress-number">
-                    <a href="">{{in_progress_reports}}</a> 
+            
+            <div id="registrations">
+                <div id="registrations-header">REGISTRATIONS</div>
+                <div id="add-vehicle">
+                    <a href="{% url 'registrations:add_vehicle' sacco %}">Add a vehicle</a>
+                    <!-- <div id="add-vehicle-header">ADD A VEHICLE</div>
+                    <div id="add-vehicle-form"> -->
+                        <!-- <form action="{% url 'registrations:add_vehicle' sacco %}" method="post">
+                            {% csrf_token %}
+                            <label for="regno" id="label_regno">Registration Number</label>
+                            <input type="text" name="regno" placeholder="K***123*">
+                            <input type="submit" name="Add" value="ADD">
+                        </form> -->
+                    </div>
+                    <!-- </div> -->
+                <div id="add-driver">
+                    <a href="{% url 'registrations:add_driver' sacco %}">Add a driver</a>
+                    <!-- <div id="add-driver-header">ADD A DRIVER</div>
+                    <div id="add-driver-form">
+                        <form action="{% url 'registrations:add_driver' sacco %}" method="post">
+                            {% csrf_token %}
+                            <label for="driver_id">National ID</label>
+                            <input type="text" name="driver_id" placeholder="12345678">
+                            <input type="submit" name="add" value="ADD">
+                        </form>
+                    </div> -->
                 </div>
             </div>
-            <div id="top-of-mind-resolved-reports">
-                <div id="resolved-reports-text">
-                    RESOLVED CASES
+            <div id="ones-to-watch">
+                <div id="ones-to-watch-header">ONES TO WATCH</div>
+                <div id="recent-top-reported-vehicles">
+                    <div id="top-reported-vehicles-header">
+                        RECENT TOP REPORTED VEHICLES
+                    </div>
+                    <div id="top-reported-vehicles-table">
+                        {% if top_sacco_vehicles %}
+                            <table>
+                                <tr>
+                                    <th>Regno</th>
+                                    <th>Sacco</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>NTSA</th>
+                                    <th>SACCO</th>
+                                </tr>
+                                {% for report in top_sacco_vehicles %}
+                                <tr>
+                                    <td>{{report.regno}}</td>
+                                    <td>{{report.sacco}}</td>
+                                    <td>{{report.date}}</td>
+                                    <td>{{report.count}}</td>
+                                    <td>{{report.ntsa_action}}</td>
+                                    <td>{{report.sacco_action}}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+
+                        {% else %}
+                            No vehicles to display
+                        {% endif %}
+                    </div>
                 </div>
-                <div id="resolved-reports-number">
-                    <a href="">{{resolved_sacco_reports}}</a> 
-                </div>
-            </div>
-        </div>
-        
-        <div id="registrations">
-            <h1>REGISTRATIONS</h1>
-            <div id="add-vehicle">
-                <a href="{% url 'registrations:add_vehicle' %}">Add a vehicle</a>
-            </div>
-            <div id="add-driver">
-                <a href="{% url 'registrations:add_driver' %}">Add a Driver</a>
-            </div>
-        </div>
-        <div id="ones-to-watch">
-            <center><h1>ONES TO WATCH</h1></center>
-            <div id="recent-top-reported-vehicles">
-                <div id="top-reported-vehicles-header">
-                    RECENT TOP REPORTED VEHICLES
-                </div>
-                <div id="top-reported-vehicles-table">
-                    {% if top_sacco_vehicles %}
+                <div id="recent-top-reported-drivers">
+                    <div id="top-reported-drivers-header">
+                        RECENT TOP REPORTED DRIVERS
+                    </div>
+                    <div id="top-reported-drivers-table">
+                        {% if top_sacco_drivers %}
                         <table>
                             <tr>
-                                <th>Regno</th>
-                                <th>Sacco</th>
-                                <th>Date</th>
-                                <th>Total</th>
-                                <th>NTSA</th>
+                                <th>DRIVER</th>
                                 <th>SACCO</th>
+                                <th>DATE</th>
+                                <th>TOTAL</th>
                             </tr>
-                            {% for report in top_sacco_vehicles %}
+                            {% for report in top_sacco_drivers %}
                             <tr>
-                                <td>{{report.regno}}</td>
+                                <td>{{report.driver}}</td>
                                 <td>{{report.sacco}}</td>
                                 <td>{{report.date}}</td>
                                 <td>{{report.count}}</td>
-                                <td>{{report.ntsa_action}}</td>
-                                <td>{{report.sacco_action}}</td>
                             </tr>
                             {% endfor %}
                         </table>
-
-                    {% else %}
-                        No vehicles to display
-                    {% endif %}
-                </div>
-            </div>
-            <div id="recent-top-reported-drivers">
-                <div id="top-reported-drivers-header">
-                    RECENT TOP REPORTED DRIVERS
-                </div>
-                <div id="top-reported-drivers-table">
-                    {% if top_sacco_drivers %}
-                    <table>
-                        <tr>
-                            <th>DRIVER</th>
-                            <th>SACCO</th>
-                            <th>DATE</th>
-                            <th>TOTAL</th>
-                        </tr>
-                        {% for report in top_sacco_drivers %}
-                        <tr>
-                            <td>{{report.driver}}</td>
-                            <td>{{report.sacco}}</td>
-                            <td>{{report.date}}</td>
-                            <td>{{report.count}}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                    {% else %}
-                        No drivers have been reported yet
-                    {% endif %}
+                        {% else %}
+                            No drivers have been reported yet
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
-    
     </body>
     
 

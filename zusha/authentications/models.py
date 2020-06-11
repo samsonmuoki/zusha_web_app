@@ -2,7 +2,7 @@ from django.db import models
 from registrations.models import Sacco
 
 
-class SaccoAdmin(models.Model):
+class SaccoUser(models.Model):
     """."""
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)

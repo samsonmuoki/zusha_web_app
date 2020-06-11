@@ -27,3 +27,8 @@ class ResolveCaseForm(forms.Form):
         max_length=20,
         # default=PENDING
     )
+
+
+class ProvideDriverForm(forms.Form):
+    """Enter driver reported in a speeding instance."""
+    driver = forms.CharField(max_length=20)

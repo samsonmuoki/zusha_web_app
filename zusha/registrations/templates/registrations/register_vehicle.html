@@ -56,10 +56,10 @@
     <body id="body">
         <div id="add_vehicle_window">
             <h1>Add a vehicle</h1>
-            <form action="{% url 'registrations:add_vehicle' %}" method="post">
+            <form action="" method="post">
                 {% csrf_token %}
-                <label for="sacco" id="label_sacco">Sacco</label>
-                <input type="text" name="sacco" placeholder="Name of Sacco">
+                <!-- <label for="sacco" id="label_sacco">Sacco</label>
+                <input type="text" name="sacco" placeholder="Name of Sacco"> -->
                 <label for="regno" id="label_regno">Registration Number</label>
                 <input type="text" name="regno" placeholder="K***123*">
                 <input type="submit" name="Add" value="ADD">

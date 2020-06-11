@@ -39,13 +39,6 @@
             input[type=submit]:hover {
             background-color: #45a049;
             }
-
-            /* div { */
-            /* #add_vehicle_window {
-            border-radius: 5px;
-            background-color: #f2f2f2;
-            padding: 20px;
-            } */
             h1{
                 text-align: center;
             }
@@ -54,7 +47,7 @@
     <body>
         <div id="add_driver_window">
             <h1>Add a Driver</h1>
-            <form action="{% url 'registrations:add_driver' %}" method="post">
+            <form action="" method="post">
                 {% csrf_token %}
                 <label for="driver_id">National ID</label>
                 <input type="text" name="driver_id">
@@ -62,8 +55,8 @@
                 <input type="text" name="first_name">
                 <label for="last_name">Last Name</label>
                 <input type="text" name="last_name">
-                <label for="sacco">Sacco</label>
-                <input type="text" name="sacco">
+                <!-- <label for="sacco">Sacco</label>
+                <input type="text" name="sacco"> -->
                 <label for="email">Email</label>
                 <input type="text" name="email">
                 <label for="phone_number">Phone Number</label>

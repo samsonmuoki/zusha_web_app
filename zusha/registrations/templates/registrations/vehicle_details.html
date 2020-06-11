@@ -1,18 +1,97 @@
-
+<!DOCTYPE html>
 {% load qr_code %}
 
+<html>
+    <head>
+        <style>
+            body{
+                background-color: whitesmoke;
+                /* width: fit-content; */
+            }
+            #content{
+                margin: auto;
+                /* background-color: white; */
+                width: 50%;
+            }
+            #vehicle-details{
+                background-color: white;
+                border-radius: 3px;
+                /* width: fit-content; */
+                width: 100%;
+                padding: 10px;
+                margin: 3px;
+            }
+            #row{
+                padding: 5px;
+                /* width: 100%; */
+            }
+            #sacco-label, #license-status-label{
+                width: 50%;
+                float: left;
+            }
 
-<h1><b>{{regno}}</b></h1>
-<p>{{ vehicle.sacco }}</p>
-<p>{{ vehicle.license_status }}</p>
-reports: <a href="{% url 'reports:summary_of_all_reports_for_a_specific_vehicle' regno %}">Cases</a>
+            #regno{
+                border-style: solid;
+                text-align: center;
+                border-style: solid;
+                border-width: 0 0 2px;
+                border-color: gray;
+                padding: 8px;
+                margin: 3px;
+                font-size: xx-large;
+                font-weight: bold;
+                font-style: normal;
+            }
+            #profile-text{
+                background-color: white;
+                padding: 10px;
+                border-radius: 3px;
+                margin: 3px;
+                /* width: fit-content; */
+                width: 100%;
+            }
+            #qr-code{
+                background-color: white;
+                padding: 10px;
+                border-radius: 3px;
+                margin: 3px;
+                width: 100%;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="content">
+            <div id="vehicle-details">
+                <div id="row">
+                    <div id="regno">{{regno}}</div>
+                </div>
+                <div id="row">
+                    <div id="sacco-label">SACCO</div>
+                    <div id="sacco-text">{{vehicle.sacco}}</div>
+                </div>
+                <div id="row">
+                    <div id="license-status-label">LICENSE STATUS</div>
+                    <div id="license-status-text">{{license_status}}</div>
+                </div>
+            </div>
+            <div id="profile-text">
+                Profile: <a href="{% url 'reports:summary_of_all_reports_for_a_specific_vehicle' regno %}">View history of reported cases</a>
+            </div>
+            <div id="qr-code">
+                <!-- {% qr_from_text qr_code_values options=qr_options %} -->
+                {% qr_from_text qr_code_values size="m" image_format="png" error_correction="L" %}
+            </div>
+        </div>
+    </body>
 
 
-<!-- {{qr_code_values}} <br> -->
 
-<p>QR CODE </p>
+    <!-- {{qr_code_values}} <br> -->
 
-{% qr_from_text qr_code_values options=qr_options %}
-<!-- {% qr_from_text qr_code_values size="m" image_format="png" error_correction="L" %} -->
-<!-- {{qr_list}}
-{% qr_from_text qr_list size="m" image_format="png" error_correction="L" %} -->
+
+    <!-- {% qr_from_text qr_code_values options=qr_options %} -->
+    <!-- {% qr_from_text qr_code_values size="m" image_format="png" error_correction="L" %} -->
+    <!-- {{qr_list}}
+    {% qr_from_text qr_list size="m" image_format="png" error_correction="L" %} -->
+</html>

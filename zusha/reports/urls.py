@@ -62,7 +62,8 @@ urlpatterns = [
         name='all_reports_for_a_specific_driver'
     ),
     path(
-        'vehicles/<slug:regno>/<int:report_id>/', views.get_speeding_instance,
+        'vehicles/<slug:regno>/<int:report_id>/',
+        views.get_speeding_instance,
         name='single_speeding_instance'
     ),
     path(
