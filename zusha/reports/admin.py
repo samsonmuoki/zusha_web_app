@@ -3,14 +3,14 @@ from django.contrib import admin
 # Register your models here.
 
 from .models import (
-    Report,
-    TrackDriverReports,
-    TrackSaccoReports,
-    TrackVehicleReports,
+    SpeedingInstance,
+    DailyDriverReport,
+    DailySaccoReport,
+    DailyVehicleReport,
 )
 
 
-class ReportAdmin(admin.ModelAdmin):
+class SpeedingInstanceAdmin(admin.ModelAdmin):
     """."""
     list_display = (
         'regno', 'sacco', 'time', 'speed', 'driver', 'location'
@@ -19,7 +19,7 @@ class ReportAdmin(admin.ModelAdmin):
     search_fields = ['regno', 'sacco', 'driver']
 
 
-class TrackVehicleReportsAdmin(admin.ModelAdmin):
+class DailVehicleReportAdmin(admin.ModelAdmin):
     """."""
     list_display = (
         'regno', 'sacco', 'date', 'count', 'ntsa_action', 'sacco_action'
@@ -28,7 +28,7 @@ class TrackVehicleReportsAdmin(admin.ModelAdmin):
     search_fields = ['regno', 'sacco']
 
 
-class TrackSaccoReportsAdmin(admin.ModelAdmin):
+class DailySaccoReportAdmin(admin.ModelAdmin):
     """."""
     list_display = (
         'sacco', 'date', 'count',
@@ -37,7 +37,7 @@ class TrackSaccoReportsAdmin(admin.ModelAdmin):
     search_fields = ['sacco']
 
 
-class TrackDriverReportsAdmin(admin.ModelAdmin):
+class DailyDriverReportAdmin(admin.ModelAdmin):
     """."""
     list_display = (
         'driver', 'sacco', 'date', 'count',
@@ -46,7 +46,7 @@ class TrackDriverReportsAdmin(admin.ModelAdmin):
     search_fields = ['driver', 'sacco']
 
 
-admin.site.register(Report, ReportAdmin)
-admin.site.register(TrackVehicleReports, TrackVehicleReportsAdmin)
-admin.site.register(TrackDriverReports, TrackDriverReportsAdmin)
-admin.site.register(TrackSaccoReports, TrackSaccoReportsAdmin)
+admin.site.register(SpeedingInstance, SpeedingInstanceAdmin)
+admin.site.register(DailyVehicleReport, DailVehicleReportAdmin)
+admin.site.register(DailyDriverReport, DailyDriverReportAdmin)
+admin.site.register(DailySaccoReport, DailySaccoReportAdmin)

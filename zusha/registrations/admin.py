@@ -2,7 +2,7 @@ from django.contrib import admin
 
 
 from .models import (
-    Sacco, Vehicle, Driver,
+    Sacco, Vehicle, RegisteredDriver,
     SaccoDriver, SaccoVehicle
 )
 
@@ -18,20 +18,27 @@ class SaccoAdmin(admin.ModelAdmin):
 
 class VehicleAdmin(admin.ModelAdmin):
     """."""
-    list_display = ('registration_number', 'license_status')
-    list_filter = ['license_status']
-    search_fields = ['registration_number']
+    list_display = (
+        'registration_number', 'vehicle_body_type', 'license_status',
+        'name_of_owner', 'owner_national_id', 'year_of_manufacture',
+        'engine_capacity', 'registered_logbook_number'
+    )
+    list_filter = ['vehicle_body_type', 'license_status']
+    search_fields = [
+        'registration_number', 'name_of_owner', 'owner_national_id',
+        'registered_logbook_number'
+    ]
 
 
-class DriverAdmin(admin.ModelAdmin):
+class RegisteredDriverAdmin(admin.ModelAdmin):
     """."""
     list_display = (
-        'driver_id', 'first_name', 'last_name', 'email',
-        'phone_number', 'license_status'
+        'surname', 'other_names', 'sex', 'national_id', 'license_number',
+        'license_status', 'county_of_residence', 'email', 'phone_number',
     )
     list_filter = ['license_status']
     search_fields = [
-        'driver_id', 'first_name', 'last_name', 'email', 'phone_number'
+        'national_id', 'first_name', 'last_name', 'email', 'phone_number'
     ]
 
 
@@ -55,6 +62,6 @@ class SaccoDriverAdmin(admin.ModelAdmin):
 
 admin.site.register(Sacco, SaccoAdmin)
 admin.site.register(Vehicle, VehicleAdmin)
-admin.site.register(Driver, DriverAdmin)
+admin.site.register(RegisteredDriver, RegisteredDriverAdmin)
 admin.site.register(SaccoDriver, SaccoDriverAdmin)
 admin.site.register(SaccoVehicle, SaccoVehicleAdmin)

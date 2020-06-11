@@ -19,9 +19,13 @@ import pytz
 # from celery.contrib import rdb
 from zusha import settings
 
-from registrations.models import Sacco, Driver, Vehicle
+from registrations.models import (
+    Sacco,
+    Driver,
+    Vehicle
+)
 from .models import (
-    Report, TrackVehicleReports, TrackSaccoReports, TrackDriverReports
+    SpeedingInstance, DailyVehicleReport, DailySaccoReport, DailyDriverReport
 )
 
 # from registration.models import LICENSE_STATUS
@@ -70,7 +74,7 @@ def update_reports_db():
             int(date_list[0]), int(date_list[1]), int(date_list[2])
         )
 
-        Report.objects.get_or_create(
+        SpeedingInstance.objects.get_or_create(
             regno=regno,
             sacco=sacco,
             speed=speed,
@@ -82,12 +86,12 @@ def update_reports_db():
 
 @shared_task
 def track_each_vehicle_reports():
-    reports = Report.objects.all()
+    reports = SpeedingInstance.objects.all()
     for report in reports:
-        case_count = Report.objects.filter(
+        case_count = SpeedingInstance.objects.filter(
             regno=report.regno, date=report.date
         ).count()
-        tracker, created = TrackVehicleReports.objects.get_or_create(
+        tracker, created = DailyVehicleReport.objects.get_or_create(
             regno=report.regno,
             date=report.date,
             sacco=report.sacco,
@@ -97,12 +101,12 @@ def track_each_vehicle_reports():
 
 @shared_task
 def track_each_sacco_reports():
-    reports = Report.objects.all()
+    reports = SpeedingInstance.objects.all()
     for report in reports:
-        case_count = Report.objects.filter(
+        case_count = SpeedingInstance.objects.filter(
             sacco=report.sacco, date=report.date
         ).count()
-        tracker, created = TrackSaccoReports.objects.get_or_create(
+        tracker, created = DailySaccoReport.objects.get_or_create(
             sacco=report.sacco,
             date=report.date,
             defaults={'count': case_count},
@@ -111,12 +115,12 @@ def track_each_sacco_reports():
 
 @shared_task
 def track_each_driver_reports():
-    reports = Report.objects.all()
+    reports = SpeedingInstance.objects.all()
     for report in reports:
-        case_count = Report.objects.filter(
+        case_count = SpeedingInstance.objects.filter(
             driver=report.driver, date=report.date
         ).count()
-        tracker, created = TrackDriverReports.objects.get_or_create(
+        tracker, created = DailyDriverReport.objects.get_or_create(
             driver=report.driver,
             sacco=report.sacco,
             date=report.date,
@@ -127,7 +131,7 @@ def track_each_driver_reports():
 @shared_task
 def blacklist_vehicles():
     vehicles = Vehicle.objects.all()
-    reports = Report.objects.all()
+    reports = SpeedingInstance.objects.all()
     for vehicle in vehicles:
         reports_list = []
         for report in reports:
@@ -144,7 +148,7 @@ utc = pytz.utc
 @shared_task
 def blacklist_saccos():
     saccos = Sacco.objects.all()
-    reports = Report.objects.all()
+    reports = SpeedingInstance.objects.all()
     for sacco in saccos:
         reports_list = []
         for report in reports:

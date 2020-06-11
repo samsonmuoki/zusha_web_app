@@ -7,7 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # from registration.models import Vehicle, Sacco, Driver
 from .models import (
-    Report, TrackVehicleReports, TrackSaccoReports, TrackDriverReports
+    SpeedingInstance, DailyVehicleReport, DailySaccoReport, DailyDriverReport
 )
 from .forms import (
     # ResolveCaseForm
@@ -45,7 +45,7 @@ def index(request):
 
 def top_saccos(number):
     """Fetch each vehicle reports."""
-    reports_list = TrackVehicleReports.objects.all().order_by(
+    reports_list = DailyVehicleReport.objects.all().order_by(
         '-date', '-count'
     )
 
@@ -64,7 +64,7 @@ def top_saccos(number):
 
 def top_vehicles(number):
     """Fetch each vehicle reports."""
-    reports_list = TrackVehicleReports.objects.all().order_by(
+    reports_list = DailyVehicleReport.objects.all().order_by(
         '-date', '-count'
     )
 
@@ -84,7 +84,7 @@ def top_vehicles(number):
 
 def top_drivers(number):
     """Sort drivers according to the number of times they are reported."""
-    reports_list = TrackDriverReports.objects.all().order_by(
+    reports_list = DailyDriverReport.objects.all().order_by(
         '-date', '-count'
     )
     driver_list = []
@@ -102,7 +102,7 @@ def top_drivers(number):
 
 def top_sacco_vehicles(number, sacco):
     """Fetch each vehicle reports."""
-    reports_list = TrackVehicleReports.objects.filter(
+    reports_list = DailyVehicleReport.objects.filter(
         sacco=sacco
     ).order_by(
         '-date', '-count'
@@ -113,14 +113,14 @@ def top_sacco_vehicles(number, sacco):
 
 def top_sacco_drivers(number, sacco):
     """Fetch top reported sacco drivers."""
-    reports_list = TrackDriverReports.objects.filter(sacco=sacco).order_by(
+    reports_list = DailyDriverReport.objects.filter(sacco=sacco).order_by(
         '-date', '-count'
     )
     return reports_list[:number]
 
 
 def pending_sacco_reports(sacco):
-    pending_reports = TrackVehicleReports.objects.filter(
+    pending_reports = DailyVehicleReport.objects.filter(
         sacco=sacco, sacco_action='Pending'
     ).order_by(
         '-date'
@@ -129,7 +129,7 @@ def pending_sacco_reports(sacco):
 
 
 def in_progress_sacco_reports(sacco):
-    in_progress_reports = TrackVehicleReports.objects.filter(
+    in_progress_reports = DailyVehicleReport.objects.filter(
         sacco=sacco, sacco_action='In-Progress'
     ).order_by(
         '-date'
@@ -138,7 +138,7 @@ def in_progress_sacco_reports(sacco):
 
 
 def resolved_sacco_reports(sacco):
-    resolved_reports = TrackVehicleReports.objects.filter(
+    resolved_reports = DailyVehicleReport.objects.filter(
         sacco=sacco, sacco_action='Resolved'
     ).order_by(
         '-date'
@@ -164,7 +164,7 @@ def view_all_reports_on_map(request):
 
 def get_all_reports_list(request):
     """Fetch all reports."""
-    reports_list = Report.objects.all().order_by('-id', 'regno')
+    reports_list = SpeedingInstance.objects.all().order_by('-id', 'regno')
 
     page = request.GET.get('page', 1)
     paginator = Paginator(reports_list, 50)
@@ -186,7 +186,7 @@ def get_all_reports_list(request):
 
 def daily_summary_by_vehicles_reports(request):
     """Fetch each vehicle reports."""
-    reports_list = TrackVehicleReports.objects.all().order_by(
+    reports_list = DailyVehicleReport.objects.all().order_by(
         '-date', '-count'
     )
 
@@ -213,7 +213,7 @@ def daily_summary_by_vehicles_reports(request):
 
 def daily_summary_by_saccos_reports(request):
     """Summarise all cases for a single day for each sacco reported."""
-    reports_list = TrackSaccoReports.objects.all().order_by(
+    reports_list = DailySaccoReport.objects.all().order_by(
         '-date', '-count'
     )
     page = request.GET.get('page', 1)
@@ -235,7 +235,7 @@ def daily_summary_by_saccos_reports(request):
 
 def daily_summary_by_drivers_reports(request):
     """Summarise all cases for a single day for each driver reported."""
-    reports_list = TrackDriverReports.objects.all().order_by(
+    reports_list = DailyDriverReport.objects.all().order_by(
         '-date', '-count'
     )
     page = request.GET.get('page', 1)
@@ -257,7 +257,9 @@ def daily_summary_by_drivers_reports(request):
 
 def fetch_reports_for_a_vehicle_on_a_specific_day(request, regno, date):
     """Fetch each vehicle reports."""
-    reports_list = Report.objects.filter(regno=regno, date=date).order_by(
+    reports_list = SpeedingInstance.objects.filter(
+        regno=regno, date=date
+    ).order_by(
         '-id'
     )
     page = request.GET.get('page', 1)
@@ -287,12 +289,12 @@ def fetch_reports_for_a_sacco_vehicle_on_a_specific_day(
     request, sacco, regno, date
 ):
     """Fetch each vehicle reports."""
-    report = TrackVehicleReports.objects.get(
+    report = DailyVehicleReport.objects.get(
         sacco=sacco, regno=regno, date=date
     )
     ntsa_action = report.ntsa_action
     sacco_action = report.sacco_action
-    reports_list = Report.objects.filter(
+    reports_list = SpeedingInstance.objects.filter(
         regno=regno, sacco=sacco, date=date
     ).order_by(
         '-id'
@@ -325,7 +327,7 @@ def fetch_reports_for_a_sacco_vehicle_on_a_specific_day(
 
 def fetch_reports_for_a_sacco_on_a_specific_day(request, sacco, date):
     """Fetch each vehicle reports."""
-    reports_list = TrackVehicleReports.objects.filter(
+    reports_list = DailyVehicleReport.objects.filter(
         sacco=sacco, date=date
     ).order_by(
         '-date', '-count'
@@ -352,7 +354,9 @@ def fetch_reports_for_a_sacco_on_a_specific_day(request, sacco, date):
 
 def fetch_reports_for_a_driver_on_a_specific_day(request, driver, date):
     """Fetch each vehicle reports."""
-    reports_list = Report.objects.filter(driver=driver, date=date).order_by(
+    reports_list = SpeedingInstance.objects.filter(
+        driver=driver, date=date
+    ).order_by(
         '-id'
     )
     page = request.GET.get('page', 1)
@@ -376,7 +380,7 @@ def fetch_reports_for_a_driver_on_a_specific_day(request, driver, date):
 
 def fetch_all_reports_for_a_specific_vehicle(request, regno):
     """Fetch the list of all reports for a certain vehicle."""
-    reports_list = Report.objects.filter(regno=regno).order_by(
+    reports_list = SpeedingInstance.objects.filter(regno=regno).order_by(
         '-date', '-id'
     )
     page = request.GET.get('page', 1)
@@ -401,7 +405,7 @@ def fetch_all_reports_for_a_specific_vehicle(request, regno):
 
 def fetch_summary_of_all_reports_for_a_specific_vehicle(request, regno):
     """Fetch the list of all reports for a certain vehicle."""
-    reports_list = TrackVehicleReports.objects.filter(regno=regno).order_by(
+    reports_list = DailyVehicleReport.objects.filter(regno=regno).order_by(
         '-date', '-id'
     )
     page = request.GET.get('page', 1)
@@ -426,7 +430,7 @@ def fetch_summary_of_all_reports_for_a_specific_vehicle(request, regno):
 
 def fetch_all_reports_for_a_specific_sacco(request, sacco):
     """Fetch the list of all reports for a certain sacco."""
-    reports_list = TrackVehicleReports.objects.filter(sacco=sacco).order_by(
+    reports_list = DailyVehicleReport.objects.filter(sacco=sacco).order_by(
         '-date', '-count',
     )
     page = request.GET.get('page', 1)
@@ -453,7 +457,7 @@ def fetch_all_reports_for_a_specific_sacco(request, sacco):
 
 def fetch_all_reports_for_a_specific_driver(request, driver):
     """Fetch the list of all reports for a certain driver."""
-    reports_list = Report.objects.filter(driver=driver).order_by(
+    reports_list = SpeedingInstance.objects.filter(driver=driver).order_by(
         '-date', '-id'
     )
     page = request.GET.get('page', 1)
@@ -477,7 +481,7 @@ def fetch_all_reports_for_a_specific_driver(request, driver):
 
 def get_speeding_instance(request, regno, report_id):
     """Fetch a single speeding instance"""
-    report = Report.objects.get(id=report_id, regno=regno)
+    report = SpeedingInstance.objects.get(id=report_id, regno=regno)
 
     context = {
         'report': report
@@ -489,7 +493,7 @@ def get_speeding_instance(request, regno, report_id):
 
 def order_reports_by_sacco(request):
     """Sort reports by sacco."""
-    reports_list = Report.objects.all().order_by('sacco')
+    reports_list = SpeedingInstance.objects.all().order_by('sacco')
 
     page = request.GET.get('page', 1)
     paginator = Paginator(reports_list, 25)
@@ -509,7 +513,9 @@ def order_reports_by_sacco(request):
 
 
 def fetch_all_cases_for_a_specific_sacco_vehicle(request, sacco, regno):
-    reports_list = Report.objects.filter(regno=regno, sacco=sacco).order_by(
+    reports_list = SpeedingInstance.objects.filter(
+        regno=regno, sacco=sacco
+    ).order_by(
         '-date',
     )
     page = request.GET.get('page', 1)
@@ -534,7 +540,9 @@ def fetch_all_cases_for_a_specific_sacco_vehicle(request, sacco, regno):
 
 
 def fetch_all_cases_for_a_specific_sacco_driver(request, sacco, driver):
-    reports_list = Report.objects.filter(driver=driver, sacco=sacco).order_by(
+    reports_list = SpeedingInstance.objects.filter(
+        driver=driver, sacco=sacco
+    ).order_by(
         '-date',
     )
     page = request.GET.get('page', 1)
@@ -572,7 +580,7 @@ def fetch_sacco_case(request, regno, report_id, sacco):
         if form.is_valid():
             driver = form.cleaned_data['driver']
 
-            rep = Report.objects.get(id=report_id)
+            rep = SpeedingInstance.objects.get(id=report_id)
 
             rep.driver = driver
             rep.save()
@@ -584,7 +592,7 @@ def fetch_sacco_case(request, regno, report_id, sacco):
 
     else:
         form = ProvideDriverForm()
-    report = Report.objects.get(
+    report = SpeedingInstance.objects.get(
         id=report_id,
     )
     return render(
@@ -599,17 +607,17 @@ def fetch_sacco_case(request, regno, report_id, sacco):
 def update_sacco_case_status(request, regno, sacco, date, status):
     """Update the status of a single case"""
     # report = Report.objects.filter(regno=regno)
-    report = TrackVehicleReports.objects.get(
+    report = DailyVehicleReport.objects.get(
         regno=regno, sacco=sacco, date=date
     )
     report.sacco_action = status
     report.save()
-    report = TrackVehicleReports.objects.get(
+    report = DailyVehicleReport.objects.get(
         sacco=sacco, regno=regno, date=date
     )
     ntsa_action = report.ntsa_action
     sacco_action = report.sacco_action
-    reports_list = Report.objects.filter(
+    reports_list = SpeedingInstance.objects.filter(
         regno=regno, sacco=sacco, date=date
     ).order_by(
         '-id'
@@ -648,7 +656,7 @@ def provide_driver_for_a_reported_case(request, report_id):
         if form.is_valid():
             driver = form.cleaned_data['driver']
 
-            rep = Report.objects.get(id=report_id)
+            rep = SpeedingInstance.objects.get(id=report_id)
 
             rep.driver = driver
             rep.save()
@@ -660,7 +668,7 @@ def provide_driver_for_a_reported_case(request, report_id):
 
     else:
         form = ProvideDriverForm()
-    report = Report.objects.get(
+    report = SpeedingInstance.objects.get(
         id=report_id,
     )
     return render(

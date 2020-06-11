@@ -10,7 +10,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # from registration.models import Vehicle, Sacco, Driver
 from reports.models import (
     # Report,
-    TrackVehicleReports
+    DailyVehicleReport
 )
 # from .forms import ResolveCaseForm
 from zusha import settings
@@ -49,7 +49,7 @@ db = firebase.database()
 
 def index(request):
     """Fetch each vehicle reports."""
-    reports_list = TrackVehicleReports.objects.all().order_by(
+    reports_list = DailyVehicleReport.objects.all().order_by(
         '-date', '-count'
     )
     page = request.GET.get('page', 1)
@@ -78,6 +78,7 @@ def index(request):
         # 'sacco_list': sacco_list,
         'top_saccos': top_saccos(10),
         'top_vehicles': top_vehicles(10),
+        'top_driver': top_drivers(10),
     }
 
     return render(request, 'reports/summarised_vehicle_reports.html', context)

@@ -12,7 +12,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from qr_code.qrcode.utils import QRCodeOptions
 
-from .models import Sacco, Vehicle, Driver, SaccoDriver, SaccoVehicle
+from .models import (
+    Sacco, Vehicle, RegisteredDriver, SaccoDriver, SaccoVehicle
+)
 from .forms import VehicleForm, DriverForm
 from reports.views import (
     top_sacco_vehicles,
@@ -22,7 +24,7 @@ from reports.views import (
     resolved_sacco_reports,
 )
 from reports.models import (
-    Report, TrackVehicleReports, TrackSaccoReports, TrackDriverReports
+    SpeedingInstance, DailyVehicleReport, DailySaccoReport, DailyDriverReport
 )
 
 
@@ -44,7 +46,7 @@ def saccos_dashboard(request, sacco):
 
 def fetch_pending_reports_for_a_sacco(request, sacco):
     """."""
-    pending_reports = TrackVehicleReports.objects.filter(
+    pending_reports = DailyVehicleReport.objects.filter(
         sacco=sacco, sacco_action='Pending'
     ).order_by('-date')
     context = {
@@ -59,7 +61,7 @@ def fetch_pending_reports_for_a_sacco(request, sacco):
 
 def fetch_in_progress_reports_for_a_sacco(request, sacco):
     """."""
-    in_progress_reports = TrackVehicleReports.objects.filter(
+    in_progress_reports = DailyVehicleReport.objects.filter(
         sacco=sacco, sacco_action='In-Progress'
     ).order_by('-date')
     context = {
@@ -74,7 +76,7 @@ def fetch_in_progress_reports_for_a_sacco(request, sacco):
 
 def fetch_resolved_reports_for_a_sacco(request, sacco):
     """."""
-    resolved_reports = TrackVehicleReports.objects.filter(
+    resolved_reports = DailyVehicleReport.objects.filter(
         sacco=sacco, sacco_action='Resolved'
     ).order_by('-date')
     context = {
@@ -173,7 +175,7 @@ def get_a_single_vehicle(request, registration_number):
 
 def get_driver_details(request, driver_id):
     """Fetch a specific driver's details."""
-    driver = get_object_or_404(Driver, driver_id=driver_id)
+    driver = get_object_or_404(RegisteredDriver, driver_id=driver_id)
     context = {'driver': driver}
     return render(request, 'registrations/driver_details.html', context)
 
@@ -252,7 +254,7 @@ def add_driver(request, sacco):
             phone_number = form.cleaned_data['phone_number']
 
             sacco = get_object_or_404(Sacco, sacco_name=sacco)
-            driver = get_object_or_404(Driver, driver_id=driver_id)
+            driver = get_object_or_404(RegisteredDriver, driver_id=driver_id)
 
             SaccoDriver.objects.create(
                 driver=driver,

@@ -1,5 +1,5 @@
 from django.db import models
-# from registrations.models import SaccoDriver
+from registrations.models import SaccoDriver
 
 
 PENDING = 'Pending'
@@ -13,7 +13,7 @@ RESOLUTION_OPTIONS = [
 ]
 
 
-class Report(models.Model):
+class SpeedingInstance(models.Model):
     """Store cases reported by passengers."""
     regno = models.CharField(max_length=10, null=True)
     sacco = models.CharField(max_length=20, null=True)
@@ -25,32 +25,33 @@ class Report(models.Model):
     time = models.DateTimeField(
         auto_now=False, auto_now_add=False
     )
-    date = models.DateField(
-        auto_now=False, auto_now_add=False,
-    )
     location = models.CharField(max_length=100, null=True)
-    driver = models.CharField(
-        max_length=20, null=True, blank=True
-    )  # to be updated by sacco
-    # driver = models.ForeignKey(
-    #     SaccoDriver, on_delete=models.PROTECT, null=True
-    # )
+    # driver = models.CharField(
+    #     max_length=20, null=True, blank=True
+    # )  # to be updated by sacco
+    driver = models.ForeignKey(
+        SaccoDriver, on_delete=models.PROTECT, null=True
+    )  # updated by sacco admin for each case that is reported
 
     def __str__(self):
         return f"{self.regno} {self.speed}"
 
 
-class TrackVehicleReports(models.Model):
+class DailyVehicleReport(models.Model):
     """Summary for all vehicles reported on a single day."""
     regno = models.CharField(max_length=10)
     sacco = models.CharField(max_length=20)
     date = models.DateField(auto_now=False, auto_now_add=False)
-    count = models.IntegerField(default=0)
+    count = models.IntegerField(default=0, editable=False)
     ntsa_action = models.CharField(
         max_length=20, choices=RESOLUTION_OPTIONS, default=PENDING
     )
+    ntsa_action_description = models.TextField(max_length=500, null=True)
     sacco_action = models.CharField(
         max_length=20, choices=RESOLUTION_OPTIONS, default=PENDING
+    )
+    sacco_action_description = models.TextField(
+        max_length=500, null=True
     )
 
     def __str__(self):
@@ -60,21 +61,18 @@ class TrackVehicleReports(models.Model):
         )
 
 
-class TrackSaccoReports(models.Model):
+class DailySaccoReport(models.Model):
     """Summary for all saccos reported on a single day."""
     sacco = models.CharField(max_length=20)
     date = models.DateField(auto_now=False, auto_now_add=False)
     count = models.IntegerField(default=0)
-    # number of cases pending
-    # number or cases in progress
-    # number of cases in resolved
     # show overall number of cases this is going to be shown in a view
 
     def __str__(self):
         return f"{self.sacco} {self.date} {self.count}"
 
 
-class TrackDriverReports(models.Model):
+class DailyDriverReport(models.Model):
     """Summary for all drivers reported on a single day."""
     driver = models.CharField(max_length=20, null=True, blank=True)
     sacco = models.CharField(max_length=20)
