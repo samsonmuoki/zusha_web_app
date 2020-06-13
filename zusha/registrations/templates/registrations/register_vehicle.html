@@ -3,17 +3,26 @@
 
     <head>
         <style>
-            #add_vehicle_window{
-                /* background-color: white; */
-                width: 30%;
-                height: 300px;
-                margin: auto;
-                border-radius: 5px;
-                background-color: #f2f2f2;
+
+            body{
+                /* background-color: whitesmoke; */
                 padding: 20px;
             }
-            #body{
+            #content{
+                width: 60%;
+                margin: auto;
                 background-color: whitesmoke;
+                padding: 5px;
+            }
+            #add_vehicle_window{
+                /* background-color: white; */
+                width: 50%;
+                height: 150px;
+                margin: auto;
+                margin-top: 3px;
+                margin-bottom: 3px;
+                border-radius: 5px;
+                background-color: orange;
                 padding: 20px;
             }
             input[type=text], select {
@@ -40,30 +49,154 @@
             input[type=submit]:hover {
             background-color: #45a049;
             }
-
-            /* div { */
-            /* #add_vehicle_window {
-            border-radius: 5px;
-            background-color: #f2f2f2;
-            padding: 20px;
-            } */
-            h1{
+            #add-vehicle-header{
                 text-align: center;
+                font-size: large;
+                border-style: solid;
+                border-width: 0 0 3px 0;
+                border-color: gray;
+                margin-bottom: 3px;
+            }
+            #vehicle-details{
+                background-color: white;
+                height: 400px;
+                padding: 20px;
+                margin-top: 5px;
+                margin: auto;
+                width: 60%;
+                border-radius: 5px;
+            }
+            #row-header{
+                text-align: center;
+                font-size: large;
+                border-style: solid;
+                border-width: 0 0 3px 0;
+                border-color: gray;
+            }
+            #row{
+                border-style: dotted;
+                border-color: grey;
+                border-width: 0 0 2px 0;
+                padding: 3px;
+                height: 20px;
+            }
+            #col-left, #col-right{
+                float: left;
+                width: 47%;
+            }
+            #col-left{
+                font-weight: bold;
+            }
+            #vehicle-details a {
+                text-decoration: none;
+            }
+
+            #add-button{
+                background-color: #4CAF50;
+                height: 20px;
+                margin: auto;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                padding: 10px;
+                text-align: center;
+                width: fit-content;
+                color: white;
+            }
+            #cant-add-message{
+                background-color: tomato;
+                height: 30px;
+                margin: auto;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                padding: 10px;
+                text-align: center;
+                width: fit-content;
+                color: white;
+            }
+            #add-button:hover{
+                background-color: orange;
+            }
+            #cant-add-message:hover{
+                background-color: rgb(250, 75, 44);
             }
         </style>
     </head>
 
-    <body id="body">
-        <div id="add_vehicle_window">
-            <h1>Add a vehicle</h1>
-            <form action="" method="post">
-                {% csrf_token %}
-                <!-- <label for="sacco" id="label_sacco">Sacco</label>
-                <input type="text" name="sacco" placeholder="Name of Sacco"> -->
-                <label for="regno" id="label_regno">Registration Number</label>
-                <input type="text" name="regno" placeholder="K***123*">
-                <input type="submit" name="Add" value="ADD">
-            </form>
+    <body>
+        <div id="content">
+            <div id="add_vehicle_window">
+                <div id="add-vehicle-header">Add a vehicle</div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <label for="regno" id="label_regno">Registration Number</label>
+                    <input type="text" name="regno" placeholder="K***123*">
+                    <input type="submit" name="Add" value="SEARCH">
+                </form>
+            </div>
+            {% if vehicle %}
+                <div id="vehicle-details">
+                    <div id="row-header">{{vehicle.registration_number}}</div>
+                    <div id="row">
+                        <div id="col-left">NAME OF OWNER</div>
+                        <div id="col-right">{{vehicle.name_of_owner}}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">OWNER ID</div>
+                        <div id="col-right">{{vehicle.owner_national_id}}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">YEAR OF MANUFACTURE</div>
+                        <div id="col-right">{{vehicle.year_of_manufacture}}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">BODY TYPE</div>
+                        <div id="col-right">{{vehicle.vehicle_body_type}}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">ENGINE CAPACITY</div>
+                        <div id="col-right">{{vehicle.engine_capacity}} CC</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">COLOR</div>
+                        <div id="col-right">{{vehicle.color_of_vehicle}}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">LOGBOOK NUMBER</div>
+                        <div id="col-right">{{vehicle.registered_logbook_number}}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">ENGINE NUMBER</div>
+                        <div id="col-right">{{vehicle.registered_engine_number}}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">CHASIS NUMBER</div>
+                        <div id="col-right">{{vehicle.registered_chasis_number}}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">LAST INSPECTION DATE</div>
+                        <div id="col-right">{{vehicle.last_inspection_date}}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">INSPECTION STATUS</div>
+                        <div id="col-right">{{vehicle.inspection_status}}</div>
+                    </div>
+                    {% if public_transport %}
+                        {% if is_approved%}
+                            <a href="{% url 'registrations:confirm_vehicle' sacco_id vehicle.registration_number %}">
+                                <div id="add-button">ADD</div>
+                            </a>
+                        {% else %}
+                            <div id="cant-add-message">
+                                YOU CAN"T ADD THIS VEHICLE! IT"S NOT APPROVED
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div id="cant-add-message">
+                            YOU CAN'T ADD THIS VEHICLE! <br> IT'S NOT A PUBLIC TRANSPORT VEHICLE
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
     </body>
 </html>

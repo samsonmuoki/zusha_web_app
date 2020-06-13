@@ -18,8 +18,10 @@ def login_sacco_admin(request):
                 SaccoUser, username=username, password=password
             )
             sacco = user.sacco
+            sacco_id = sacco.id
             if user:
-                return redirect('registrations:saccos_dashboard', sacco)
+                # return redirect('registrations:saccos_dashboard', sacco)
+                return redirect('registrations:saccos_dashboard', sacco_id)
             else:
                 return HttpResponse("Invalid login credentials")
 

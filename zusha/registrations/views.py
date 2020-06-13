@@ -32,24 +32,29 @@ def index(request):
     return render(request, "registrations/home.html")
 
 
-def saccos_dashboard(request, sacco):
+def saccos_dashboard(request, sacco_id):
+    sacco = Sacco.objects.get(id=sacco_id).sacco_name
     context = {
-        'sacco': sacco.upper(),
-        'pending_reports': pending_sacco_reports(sacco),
-        'in_progress_reports': in_progress_sacco_reports(sacco),
-        'resolved_sacco_reports': resolved_sacco_reports(sacco),
-        'top_sacco_vehicles': top_sacco_vehicles(20, sacco),
-        'top_sacco_drivers': top_sacco_drivers(20, sacco),
+        'sacco_header': sacco.upper(),
+        'sacco': sacco,
+        'sacco_id': sacco_id,
+        'pending_reports': pending_sacco_reports(sacco_id),
+        'in_progress_reports': in_progress_sacco_reports(sacco_id),
+        'resolved_sacco_reports': resolved_sacco_reports(sacco_id),
+        # 'top_sacco_vehicles': top_sacco_vehicles(20, sacco),
+        # 'top_sacco_drivers': top_sacco_drivers(20, sacco),
     }
     return render(request, "registrations/sacco_dashboard.html", context)
 
 
-def fetch_pending_reports_for_a_sacco(request, sacco):
+def fetch_pending_reports_for_a_sacco(request, sacco_id):
     """."""
+    sacco = Sacco.objects.get(id=sacco_id).sacco_name
     pending_reports = DailyVehicleReport.objects.filter(
         sacco=sacco, sacco_action='Pending'
     ).order_by('-date')
     context = {
+        'sacco_id': sacco_id,
         'pending_sacco_reports': pending_reports,
     }
     return render(
@@ -59,12 +64,14 @@ def fetch_pending_reports_for_a_sacco(request, sacco):
     )
 
 
-def fetch_in_progress_reports_for_a_sacco(request, sacco):
+def fetch_in_progress_reports_for_a_sacco(request, sacco_id):
     """."""
+    sacco = Sacco.objects.get(id=sacco_id).sacco_name
     in_progress_reports = DailyVehicleReport.objects.filter(
         sacco=sacco, sacco_action='In-Progress'
     ).order_by('-date')
     context = {
+        'sacco_id': sacco_id,
         'in_progress_sacco_reports': in_progress_reports,
     }
     return render(
@@ -74,12 +81,14 @@ def fetch_in_progress_reports_for_a_sacco(request, sacco):
     )
 
 
-def fetch_resolved_reports_for_a_sacco(request, sacco):
+def fetch_resolved_reports_for_a_sacco(request, sacco_id):
     """."""
+    sacco = Sacco.objects.get(id=sacco_id).sacco_name
     resolved_reports = DailyVehicleReport.objects.filter(
         sacco=sacco, sacco_action='Resolved'
     ).order_by('-date')
     context = {
+        'sacco_id': sacco_id,
         'resolved_sacco_reports': resolved_reports,
     }
     return render(
@@ -214,25 +223,26 @@ def logout_sacco_admin(request):
         return redirect('registrations:saccos')
 
 
-def add_vehicle(request, sacco):
+def add_vehicle(request, sacco_id):
     """Sacco admins add the list of vehicles they operate."""
     if request.method == 'POST':
         form = VehicleForm(request.POST)
         if form.is_valid():
-            # sacco_name = form.cleaned_data['sacco']
             regno = form.cleaned_data['regno']
 
             vehicle = get_object_or_404(Vehicle, registration_number=regno)
-            sacco = get_object_or_404(Sacco, sacco_name=sacco)
-            if sacco:
-                SaccoVehicle.objects.create(
-                    vehicle=vehicle,
-                    sacco=sacco
-                )
-                return HttpResponse('Vehicle successfully Added')
-            # TODO provide useful response below if invalid sacco is provided
-            # else:
-            #     return HttpResponse('The sacco provided does not exist')
+            is_for_public_transport = vehicle.is_for_public_transport()
+            is_approved = vehicle.is_approved()
+            # sacco = get_object_or_404(Sacco, id=sacco_id)
+            context = {
+                'sacco_id': sacco_id,
+                "vehicle": vehicle,
+                'public_transport': is_for_public_transport,
+                'is_approved': is_approved,
+            }
+            return render(
+                request, 'registrations/register_vehicle.html', context
+            )
     else:
         form = VehicleForm()
     return render(
@@ -241,37 +251,58 @@ def add_vehicle(request, sacco):
     )
 
 
-def add_driver(request, sacco):
+def confirm_vehicle(request, sacco_id, regno):
+    """."""
+    vehicle = get_object_or_404(
+        Vehicle, registration_number=regno
+    )
+    sacco = get_object_or_404(Sacco, id=sacco_id)
+    SaccoVehicle.objects.create(
+        vehicle=vehicle,
+        sacco=sacco,
+    )
+    return HttpResponse('VEHICLE SUCCESSFULLY ADDED')
+
+
+def add_driver(request, sacco_id):
     """Sacco admins add the list of vehicles they operate."""
     if request.method == 'POST':
         form = DriverForm(request.POST)
         if form.is_valid():
-            driver_id = form.cleaned_data['driver_id']
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            # sacco_name = form.cleaned_data['sacco']
-            email = form.cleaned_data['email']
-            phone_number = form.cleaned_data['phone_number']
+            national_id = form.cleaned_data['national_id']
 
-            sacco = get_object_or_404(Sacco, sacco_name=sacco)
-            driver = get_object_or_404(RegisteredDriver, driver_id=driver_id)
+            sacco = get_object_or_404(Sacco, id=sacco_id)
 
-            SaccoDriver.objects.create(
-                driver=driver,
-                sacco=sacco,
-                first_name=first_name,
-                last_name=last_name,
-                email=email,
-                phone_number=phone_number
+            driver = get_object_or_404(
+                RegisteredDriver, national_id=national_id
             )
-            return HttpResponse('Driver successfully Added')
-            # TODO provide useful response below if invalid sacco
-            # or driver is provided
-            # else:
-            #     return HttpResponse('The sacco provided does not exist')
+            is_approved = driver.is_approved()
+
+            context = {
+                'sacco_id': sacco_id,
+                'sacco': sacco.sacco_name.upper(),
+                'driver': driver,
+                'is_approved': is_approved,
+            }
+            return render(
+                request, 'registrations/add_driver.html', context
+            )
     else:
-        form = VehicleForm()
+        form = DriverForm()
     return render(
         request, 'registrations/add_driver.html',
         {'form': form}
     )
+
+
+def confirm_driver(request, sacco_id, driver_id):
+    """."""
+    driver = get_object_or_404(
+        RegisteredDriver, national_id=driver_id
+    )
+    sacco = get_object_or_404(Sacco, id=sacco_id)
+    SaccoDriver.objects.create(
+        driver=driver,
+        sacco=sacco,
+    )
+    return HttpResponse('DRIVER SUCCESSFULLY ADDED')

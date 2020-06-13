@@ -16,9 +16,9 @@ class VehicleForm(forms.Form):
 
 class DriverForm(forms.Form):
     """Viewset for add driver."""
-    driver_id = forms.CharField(max_length=8)
-    first_name = forms.CharField(max_length=10)
-    last_name = forms.CharField(max_length=10)
-    # sacco = forms.CharField(max_length=10)
-    email = forms.CharField(max_length=15)
-    phone_number = forms.CharField(max_length=12)
+    national_id = forms.CharField(max_length=8)
+    # first_name = forms.CharField(max_length=10)
+    # last_name = forms.CharField(max_length=10)
+    # # sacco = forms.CharField(max_length=10)
+    # email = forms.CharField(max_length=15)
+    # phone_number = forms.CharField(max_length=12)

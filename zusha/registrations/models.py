@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 
 # Create your models here.
@@ -16,6 +17,8 @@ LICENSE_STATUS = [
 VEHICLE_BODY_TYPES = [
     ('van', ('Van')),
     ('minivan', ('Minivan')),
+    ('bus', ('Bus')),
+    ('minibus', ('Minibus')),
     ('convertible', ('Convertible')),
     ('coupe', ('Coupe')),
     ('crossover', ('Crossover')),
@@ -29,6 +32,13 @@ VEHICLE_BODY_TYPES = [
     ('wagon', ('Wagon')),
     ('supercars', ('Super Cars')),
     ('truck', ('Truck')),
+]
+
+PUBLIC_TRANSPORT_VEHICLES = [
+    'van',
+    'minivan',
+    'bus',
+    'minibus',
 ]
 
 GENDER_CHOICES = [
@@ -117,7 +127,10 @@ class Vehicle(models.Model):
     registered_logbook_number = models.CharField(max_length=50)
     registered_engine_number = models.CharField(max_length=50)
     registered_chasis_number = models.CharField(max_length=50)
-    license_status = models.CharField(
+    last_inspection_date = models.DateField(
+        auto_now=False, auto_now_add=False
+    )
+    inspection_status = models.CharField(
         max_length=32,
         choices=LICENSE_STATUS,
         default=APPROVED,
@@ -127,8 +140,18 @@ class Vehicle(models.Model):
         return "{} {} {}".format(
             self.registration_number,
             self.vehicle_body_type,
-            self.license_status
+            self.inspection_status
         )
+
+    def is_for_public_transport(self):
+        """Determine vehicles that are eligible for public transport."""
+        if self.vehicle_body_type in PUBLIC_TRANSPORT_VEHICLES:
+            return True
+
+    def is_approved(self):
+        """."""
+        if self.inspection_status == APPROVED:
+            return True
 
 
 class RegisteredDriver(models.Model):
@@ -176,16 +199,23 @@ class RegisteredDriver(models.Model):
             self.license_status,
         )
 
+    def is_approved(self):
+        if self.license_status == APPROVED:
+            return True
+
 
 class Sacco(models.Model):
     """Sacco details."""
 
-    sacco_name = models.CharField(max_length=20, primary_key=True)
-    # date registered = models.DateField
-    # last_report_revision_date = models.DateField
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False
+    )
+    sacco_name = models.CharField(max_length=20)
     address = models.TextField(max_length=500)
     email = models.EmailField(max_length=200)
     phone_number = models.CharField(max_length=200)
+    date_registered = models.DateTimeField(auto_now=False, auto_now_add=True)
+    last_inspection_date = models.DateField(auto_now_add=False, auto_now=False)
     license_status = models.CharField(
         max_length=32,
         choices=LICENSE_STATUS,
@@ -195,7 +225,7 @@ class Sacco(models.Model):
     # license_renewal_logs = GenericField
 
     def __str__(self):
-        return f"{self.sacco_name} {self.license_status}"
+        return f"{self.sacco_name} -> {self.license_status}"
 
 
 class SaccoVehicle(models.Model):
@@ -213,10 +243,10 @@ class SaccoDriver(models.Model):
     in this model."""
     driver = models.OneToOneField(RegisteredDriver, on_delete=models.PROTECT)
     sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
-    first_name = models.CharField(max_length=10)
-    last_name = models.CharField(max_length=10)
-    email = models.EmailField(max_length=50)
-    phone_number = models.CharField(max_length=10)
 
     def __str__(self):
         return f"{self.driver}: {self.sacco}"
+
+    def name(self):
+        names = f"{self.driver.surname} {self.driver.other_names}"
+        return names

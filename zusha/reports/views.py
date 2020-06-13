@@ -1,4 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import (
+    render, redirect, get_object_or_404
+)
 
 import pyrebase
 
@@ -14,7 +16,7 @@ from .forms import (
     ProvideDriverForm
 )
 from zusha import settings
-from registrations.models import Sacco
+from registrations.models import Sacco, SaccoDriver, RegisteredDriver
 
 firebaseConfig = {
     'apiKey': settings.FIREBASE_API_KEY,
@@ -119,7 +121,8 @@ def top_sacco_drivers(number, sacco):
     return reports_list[:number]
 
 
-def pending_sacco_reports(sacco):
+def pending_sacco_reports(sacco_id):
+    sacco = Sacco.objects.get(id=sacco_id).sacco_name
     pending_reports = DailyVehicleReport.objects.filter(
         sacco=sacco, sacco_action='Pending'
     ).order_by(
@@ -128,7 +131,8 @@ def pending_sacco_reports(sacco):
     return pending_reports
 
 
-def in_progress_sacco_reports(sacco):
+def in_progress_sacco_reports(sacco_id):
+    sacco = Sacco.objects.get(id=sacco_id).sacco_name
     in_progress_reports = DailyVehicleReport.objects.filter(
         sacco=sacco, sacco_action='In-Progress'
     ).order_by(
@@ -137,7 +141,8 @@ def in_progress_sacco_reports(sacco):
     return in_progress_reports
 
 
-def resolved_sacco_reports(sacco):
+def resolved_sacco_reports(sacco_id):
+    sacco = Sacco.objects.get(id=sacco_id).sacco_name
     resolved_reports = DailyVehicleReport.objects.filter(
         sacco=sacco, sacco_action='Resolved'
     ).order_by(
@@ -286,9 +291,10 @@ def fetch_reports_for_a_vehicle_on_a_specific_day(request, regno, date):
 
 
 def fetch_reports_for_a_sacco_vehicle_on_a_specific_day(
-    request, sacco, regno, date
+    request, sacco_id, regno, date
 ):
     """Fetch each vehicle reports."""
+    sacco = Sacco.objects.get(id=sacco_id).sacco_name
     report = DailyVehicleReport.objects.get(
         sacco=sacco, regno=regno, date=date
     )
@@ -314,6 +320,7 @@ def fetch_reports_for_a_sacco_vehicle_on_a_specific_day(
         'regno': regno,
         'date': date,
         'sacco': sacco,
+        'sacco_id': sacco_id,
         'ntsa_action': ntsa_action,
         'sacco_action': sacco_action,
     }
@@ -562,32 +569,30 @@ def fetch_all_cases_for_a_specific_sacco_driver(request, sacco, driver):
     return render(request, 'reports/single_vehicle_cases.html', context)
 
 
-def fetch_sacco_case(request, regno, report_id, sacco):
+def fetch_sacco_case(request, regno, report_id, sacco_id):
     """Resolve all cases for a single vehicle that are reported
     on the same day."""
 
-    # report = Report.objects.get(
-    #     id=report_id, regno=regno, sacco=sacco
-    # )
-    # # report.sacco_resolution = status
-    # # report.save()
-    # # report = Report.objects.get(id=report_id)
-
-    # context = {'report': report}
-    # return render(request, 'reports/single_sacco_report.html', context)
     if request.method == 'POST':
         form = ProvideDriverForm(data=request.POST)
         if form.is_valid():
-            driver = form.cleaned_data['driver']
+            driver_id = form.cleaned_data['driver']
 
+            driver = get_object_or_404(RegisteredDriver, national_id=driver_id)
+            sacco_driver = get_object_or_404(SaccoDriver, driver=driver)
             rep = SpeedingInstance.objects.get(id=report_id)
 
-            rep.driver = driver
+            rep.driver = sacco_driver
             rep.save()
+            context = {
+                'sacco_id': sacco_id,
+                'report': rep,
+                'sacco_driver': sacco_driver,
+            }
             return render(
                 request,
                 'reports/single_sacco_report.html',
-                {'report': rep},
+                context,
             )
 
     else:
@@ -595,18 +600,23 @@ def fetch_sacco_case(request, regno, report_id, sacco):
     report = SpeedingInstance.objects.get(
         id=report_id,
     )
+    sacco = Sacco.objects.get(id=sacco_id)
+    drivers_list = SaccoDriver.objects.filter(sacco=sacco)
     return render(
         request, 'reports/single_sacco_report.html',
         {
             'form': form,
             'report': report,
+            'drivers': drivers_list,
+            'sacco_id': sacco_id,
         }
     )
 
 
-def update_sacco_case_status(request, regno, sacco, date, status):
+def update_sacco_case_status(request, regno, sacco_id, date, status):
     """Update the status of a single case"""
     # report = Report.objects.filter(regno=regno)
+    sacco = Sacco.objects.get(id=sacco_id).sacco_name
     report = DailyVehicleReport.objects.get(
         regno=regno, sacco=sacco, date=date
     )
@@ -637,6 +647,7 @@ def update_sacco_case_status(request, regno, sacco, date, status):
         'regno': regno,
         'date': date,
         'sacco': sacco,
+        'sacco_id': sacco_id,
         'ntsa_action': ntsa_action,
         'sacco_action': sacco_action,
     }

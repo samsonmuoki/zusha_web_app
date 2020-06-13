@@ -9,22 +9,22 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('saccos/', views.get_all_saccos, name='saccos'),
     path(
-        'saccos/dashboard/<slug:sacco>',
+        'saccos/dashboard/<slug:sacco_id>/',
         views.saccos_dashboard,
         name='saccos_dashboard'
     ),
     path(
-        'saccos/dashboard/<slug:sacco>/pending_reports/',
+        'saccos/dashboard/<slug:sacco_id>/pending_reports/',
         views.fetch_pending_reports_for_a_sacco,
         name="pending_reports_sacco"
     ),
     path(
-        'saccos/dashboard/<slug:sacco>/in_progress_reports/',
+        'saccos/dashboard/<slug:sacco_id>/in_progress_reports/',
         views.fetch_in_progress_reports_for_a_sacco,
         name="in_progress_reports_sacco"
     ),
     path(
-        'saccos/dashboard/<slug:sacco>/resolved_reports/',
+        'saccos/dashboard/<slug:sacco_id>/resolved_reports/',
         views.fetch_resolved_reports_for_a_sacco,
         name="resolved_reports_sacco"
     ),
@@ -32,9 +32,27 @@ urlpatterns = [
     path('saccos/login', views.login_sacco_admin, name='sacco_login'),
     path('saccos/logout', views.logout_sacco_admin, name='sacco_logout'),
     path('drivers/', views.get_all_drivers, name='drivers'),
-    path('drivers/<slug:sacco>/add', views.add_driver, name='add_driver'),
+    path(
+        'saccos/dashboard/<slug:sacco_id>/drivers/add',
+        views.add_driver,
+        name='add_driver'
+    ),
+    path(
+        'saccos/dashboard/<slug:sacco_id>/drivers/add/<slug:driver_id>/',
+        views.confirm_driver,
+        name="confirm_driver"
+    ),
+    path(
+        'saccos/dashboard/<slug:sacco_id>/vehicles/add/<slug:regno>',
+        views.confirm_vehicle,
+        name="confirm_vehicle"
+    ),
     path('vehicles/', views.get_all_vehicles, name='vehicles'),
-    path('vehicles/<slug:sacco>/add', views.add_vehicle, name='add_vehicle'),
+    path(
+        'saccos/dashboard/<slug:sacco_id>/vehicles/add',
+        views.add_vehicle,
+        name='add_vehicle'
+    ),
     path(
         'vehicles/<slug:registration_number>', views.get_a_single_vehicle,
         name='vehicle_details'

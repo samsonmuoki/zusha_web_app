@@ -275,7 +275,7 @@
                 </ul>
             </div>
             <div id="management">
-                <div id="management-text">{{sacco}} ADMINISTRATION</div>
+                <div id="management-text">{{sacco_header}} ADMINISTRATION</div>
             </div>
             <div id="top-of-mind">
                 <div id="top-of-mind-header">
@@ -286,7 +286,7 @@
                         NEW PENDING REPORTS
                     </div>
                     <div id="pending-reports-number">
-                        <a href="/registrations/saccos/dashboard/{{sacco}}/pending_reports/">{{pending_reports}}</a>
+                        <a href="/registrations/saccos/dashboard/{{sacco_id}}/pending_reports/">{{pending_reports}}</a>
                     </div>
                 </div>
                 <div id="top-of-mind-in-progress-reports">
@@ -294,7 +294,7 @@
                         REPORTS IN PROGRESS
                     </div>
                     <div id="reports-in-progress-number">
-                        <a href="/registrations/saccos/dashboard/{{sacco}}/in_progress_reports/">{{in_progress_reports}}</a> 
+                        <a href="/registrations/saccos/dashboard/{{sacco_id}}/in_progress_reports/">{{in_progress_reports}}</a> 
                     </div>
                 </div>
                 <div id="top-of-mind-resolved-reports">
@@ -302,7 +302,7 @@
                         RESOLVED CASES
                     </div>
                     <div id="resolved-reports-number">
-                        <a href="/registrations/saccos/dashboard/{{sacco}}/resolved_reports/">{{resolved_sacco_reports}}</a> 
+                        <a href="/registrations/saccos/dashboard/{{sacco_id}}/resolved_reports/">{{resolved_sacco_reports}}</a> 
                     </div>
                 </div>
             </div>
@@ -310,28 +310,12 @@
             <div id="registrations">
                 <div id="registrations-header">REGISTRATIONS</div>
                 <div id="add-vehicle">
-                    <a href="{% url 'registrations:add_vehicle' sacco %}">Add a vehicle</a>
-                    <!-- <div id="add-vehicle-header">ADD A VEHICLE</div>
-                    <div id="add-vehicle-form"> -->
-                        <!-- <form action="{% url 'registrations:add_vehicle' sacco %}" method="post">
-                            {% csrf_token %}
-                            <label for="regno" id="label_regno">Registration Number</label>
-                            <input type="text" name="regno" placeholder="K***123*">
-                            <input type="submit" name="Add" value="ADD">
-                        </form> -->
-                    </div>
-                    <!-- </div> -->
+                    <a href="{% url 'registrations:add_vehicle' sacco_id %}">Add a vehicle</a>
+                    
+                </div>
                 <div id="add-driver">
-                    <a href="{% url 'registrations:add_driver' sacco %}">Add a driver</a>
-                    <!-- <div id="add-driver-header">ADD A DRIVER</div>
-                    <div id="add-driver-form">
-                        <form action="{% url 'registrations:add_driver' sacco %}" method="post">
-                            {% csrf_token %}
-                            <label for="driver_id">National ID</label>
-                            <input type="text" name="driver_id" placeholder="12345678">
-                            <input type="submit" name="add" value="ADD">
-                        </form>
-                    </div> -->
+                    <a href="{% url 'registrations:add_driver' sacco_id %}">Add a driver</a>
+                    
                 </div>
             </div>
             <div id="ones-to-watch">

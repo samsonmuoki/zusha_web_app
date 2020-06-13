@@ -10,7 +10,8 @@ from .models import (
 class SaccoAdmin(admin.ModelAdmin):
     """."""
     list_display = (
-        'sacco_name', 'email', 'phone_number', 'license_status'
+        'sacco_name', 'email', 'phone_number', 'date_registered',
+        'last_inspection_date', 'license_status'
     )
     list_filter = ['sacco_name']
     search_fields = ['sacco_name']
@@ -19,11 +20,11 @@ class SaccoAdmin(admin.ModelAdmin):
 class VehicleAdmin(admin.ModelAdmin):
     """."""
     list_display = (
-        'registration_number', 'vehicle_body_type', 'license_status',
+        'registration_number', 'vehicle_body_type', 'inspection_status',
         'name_of_owner', 'owner_national_id', 'year_of_manufacture',
         'engine_capacity', 'registered_logbook_number'
     )
-    list_filter = ['vehicle_body_type', 'license_status']
+    list_filter = ['vehicle_body_type', 'inspection_status']
     search_fields = [
         'registration_number', 'name_of_owner', 'owner_national_id',
         'registered_logbook_number'
@@ -33,7 +34,7 @@ class VehicleAdmin(admin.ModelAdmin):
 class RegisteredDriverAdmin(admin.ModelAdmin):
     """."""
     list_display = (
-        'surname', 'other_names', 'sex', 'national_id', 'license_number',
+        'national_id', 'surname', 'other_names', 'sex', 'license_number',
         'license_status', 'county_of_residence', 'email', 'phone_number',
     )
     list_filter = ['license_status']
@@ -52,11 +53,14 @@ class SaccoVehicleAdmin(admin.ModelAdmin):
 class SaccoDriverAdmin(admin.ModelAdmin):
     """."""
     list_display = (
-        'driver', 'sacco', 'first_name', 'last_name', 'email', 'phone_number'
+        # 'driver', 'sacco', 'first_name', 'last_name', 'email', 'phone_number'
+        # 'driver', 'sacco',
+        'name', 'sacco',
     )
     list_filter = ['sacco']
     search_fields = [
-        'sacco', 'first_name', 'last_name', 'email', 'phone_number'
+        # 'sacco', 'first_name', 'last_name', 'email', 'phone_number'
+        'sacco',
     ]
 
 

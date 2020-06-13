@@ -2,18 +2,40 @@
 <html>
     <head>
         <style>
-            #add_driver_window{
-                /* background-color: white; */
-                width: 30%;
-                height: 700px;
-                margin: auto;
-                border-radius: 5px;
-                background-color: #f2f2f2;
+
+            #body{
+                /* background-color: whitesmoke; */
                 padding: 20px;
             }
-            #body{
+            #header{
+                height: 50px;
+                width: 100%;
                 background-color: whitesmoke;
-                padding: 20px;
+                padding: 10px;
+                /* margin: auto; */
+                text-align: center;
+                border-radius: 5px;
+            }
+            #content{
+                width: 60%;
+                margin: auto;
+                background-color: whitesmoke;
+                padding: 5px;
+                height: 800px;
+            }
+            #add_driver_window{
+                /* background-color: white; */
+                width: 50%;
+                height: 150px;
+                margin: auto;
+                border-radius: 5px;
+                background-color: orange;
+                padding: 10px;
+            }
+            #add-driver-header{
+                text-align: center;
+                font-size: large;
+                font-weight: bold;
             }
             input[type=text], select {
             width: 100%;
@@ -42,28 +64,168 @@
             h1{
                 text-align: center;
             }
+            #data{
+                margin: auto;
+                margin-top: 5px;
+            }
+            #driver-details{
+                /* background-color: chocolate; */
+                height: 300px;
+                width: 50%;
+                border-radius: 5px;
+                margin: auto;
+                padding: 5px;
+                margin-top: 5px;
+                background-color: white;
+            }
+            #license-details{
+                /* background-color: chocolate; */
+                height: 200px;
+                width: 50%;
+                border-radius: 5px;
+                margin: auto;
+                padding: 5px;
+                margin-top: 5px;
+                background-color: white;
+            }
+            #row-header{
+                text-align: center;
+                font-size: large;
+                border-style: solid;
+                border-width: 0 0 3px 0;
+                border-color: gray;
+            }
+            #row{
+                border-style: dotted;
+                border-color: grey;
+                border-width: 0 0 2px 0;
+                padding: 3px;
+            }
+            #col-left, #col-right{
+                float: left;
+                width: 47%;
+            }
+            #col-left{
+                font-weight: bold;
+            }
+            #license-details a {
+                text-decoration: none;
+            }
+            #add-button{
+                background-color: #4CAF50;
+                height: 20px;
+                margin: auto;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                padding: 10px;
+                text-align: center;
+                width: fit-content;
+                color: white;
+            }
+            #cant-add-message{
+                background-color: tomato;
+                height: 20px;
+                margin: auto;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                padding: 10px;
+                text-align: center;
+                width: fit-content;
+                color: white;
+            }
+            #add-button:hover{
+                background-color: orange;
+            }
+            #cant-add-message:hover{
+                background-color: rgb(250, 75, 44);
+            }
         </style>
     </head>
     <body>
-        <div id="add_driver_window">
-            <h1>Add a Driver</h1>
-            <form action="" method="post">
-                {% csrf_token %}
-                <label for="driver_id">National ID</label>
-                <input type="text" name="driver_id">
-                <label for="first_name">First Name</label>
-                <input type="text" name="first_name">
-                <label for="last_name">Last Name</label>
-                <input type="text" name="last_name">
-                <!-- <label for="sacco">Sacco</label>
-                <input type="text" name="sacco"> -->
-                <label for="email">Email</label>
-                <input type="text" name="email">
-                <label for="phone_number">Phone Number</label>
-                <input type="text" name="phone_number">
-                <input type="submit" name="add" value="ADD">
-            </form>
+        <div id="header">
+            {{sacco}} ADMINISTRATION
         </div>
-        
+        <div id="content">
+            <div id="add_driver_window">
+                <div id="add-driver-header">Add a Driver</div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <label for="national_id">National ID</label>
+                    <input type="text" name="national_id">
+                    <input type="submit" name="add" value="SEARCH">
+                </form>
+            </div>
+            {% if driver %}
+                <div id="data">
+                    <div id="driver-details">
+                        <div id="row-header">DRIVER DETAILS</div>
+                        <div id="row">
+                            <div id="col-left">NATIONAL ID</div>
+                            <div id="col-rigth">{{driver.national_id}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">SURNAME</div>
+                            <div id="col-rigth">{{driver.surname}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">OTHER NAMES</div>
+                            <div id="col-rigth">{{driver.other_names}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">DATE OF BIRTH</div>
+                            <div id="col-rigth">{{driver.date_of_birth}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">SEX</div>
+                            <div id="col-rigth">{{driver.sex}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">BLOOD GROUP</div>
+                            <div id="col-rigth">{{driver.blood_group}}</div>
+                        </div>
+                        
+                        <div id="row">
+                            <div id="col-left">COUNTY</div>
+                            <div id="col-rigth">{{driver.county_of_residence}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">EMAIL</div>
+                            <div id="col-rigth">{{driver.email}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">PHONE NUMBER</div>
+                            <div id="col-rigth">{{driver.phone_number}}</div>
+                        </div>
+                    </div>
+                    <div id="license-details">
+                        <div id="row-header">LICENSE DETAILS</div>
+                        <div id="row">
+                            <div id="col-left">LICENSE NUMBER</div>
+                            <div id="col-rigth">{{driver.license_number}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">DATE OF ISSUE</div>
+                            <div id="col-rigth">{{driver.date_of_issue}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">DATE OF EXPIRY</div>
+                            <div id="col-rigth">{{driver.date_of_expiry}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">LICENSE STATUS</div>
+                            <div id="col-rigth">{{driver.license_status}}</div>
+                        </div>
+                        {% if is_approved %}
+                            <a href="{% url 'registrations:confirm_driver' sacco_id driver.national_id %}">
+                                <div id="add-button">ADD</div>
+                            </a>
+                        {% else %}
+                            <div id="cant-add-message">YOU CANNOT ADD THIS DRIVER</div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            {% endif %}
+        </div>
     </body>
 </html>

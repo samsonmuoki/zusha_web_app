@@ -21,7 +21,7 @@ from zusha import settings
 
 from registrations.models import (
     Sacco,
-    Driver,
+    RegisteredDriver,
     Vehicle
 )
 from .models import (

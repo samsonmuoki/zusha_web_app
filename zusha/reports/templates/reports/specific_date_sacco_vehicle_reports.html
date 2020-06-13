@@ -12,18 +12,10 @@
         list-style: none;
     } */
 
-    #header{
-        background-color: floralwhite;
-        text-align: center;
-        font-size: large;
-        width: fit-content;
-        height: 50px;
-    }
     #menu{
         position: -webkit-sticky;
         position: sticky;
         top: 0;
-        /* width: fit-content; */
         width: 100%;
     }
     ul {
@@ -54,44 +46,38 @@
         background-color: #4CAF50;
     }
     #contents{
-        margin-top: 15px;
-    }
-    #statistics{
-        float: left;
-        width: 24%;
-        background-color: #dddddd;
-    }
-    #summary{
-        padding: 5px;
+        margin: auto;
         background-color: green;
+        height: fit-content;
     }
-    #bargraph{
-        padding: 5px;
+    #report-header{
+        width: 100%;
+        padding: 10px;
+        height: 100px;
         margin: 5px;
         background-color: white;
-        height: 250px;
     }
-    #linegraph{
-        padding: 5px;
-        margin: 5px;
-        background-color: white;
-        height: 250px;
-    }
-    #piechart{
-        padding: 5px;
-        margin: 5px;
-        background-color: white;
-        height: 250px;
+    #report-header-text{
+        text-align: center;
+        border-color: gray;
+        border-style: solid;
+        border-width: 0 0 3px 0;
     }
     #details{
         float: left;
-        width: 75%;
-        margin-left: 5px;
+        width: 47%;
+        margin: 5px;
+        background-color: white;
+        padding: 5px;
+        border-style: solid;
+        border-width: 0 3px;
     }
-    #details-title{
-        text-align: center;
+    #update-status{
         float: left;
-        width: 75%;
+        width: 46%;
+        padding: 5px;
+        margin: 5px;
+        background-color: white;
     }
     #filter-section{
         text-align: center;
@@ -134,26 +120,30 @@
             <li><a href="">EXTRA</a></li>
         </ul>
     </div>
-    <div id="contents">
-        <div id="report-details">
-            <div>
-                <div id="details-title">
-                    {{regno}} REPORTS on {{date}}
-                    <div>
-                        NTSA: {{ntsa_action}}
-                    </div>
-                    <div>
-                        SACCO: {{sacco_action}} UPDATE STATUS
-                        <select name="update-sacco-action" onchange="location = this.value">
-                            <option value="">-------</option>
-                            <option value="/reports/saccos/{{sacco}}/{{regno}}/{{date}}/Pending/">PENDING</option>
-                            <option value="/reports/saccos/{{sacco}}/{{regno}}/{{date}}/In-Progress/">IN PROGRESS</option>
-                            <option value="/reports/saccos/{{sacco}}/{{regno}}/{{date}}/Resolved/">RESOLVED</option>
-                        </select>
-                    </div>
+    <!-- <div>SACCO ID: {{sacco_id}}</div> -->
 
+    <div id="contents">
+        <div id="report-header">
+            <div id="report-header-text">{{regno}} REPORTS on {{date}}</div>
+
+            <div id="details">
+                <div id="row">
+                    NTSA: {{ntsa_action}}
+                </div>
+                <div id="row">
+                    SACCO: {{sacco_action}} 
                 </div>
             </div>
+            <div id="update-status">
+                UPDATE STATUS
+                <select name="update-sacco-action" onchange="location = this.value">
+                    <option value="">-------</option>
+                    <option value="/reports/saccos/{{sacco}}/{{regno}}/{{date}}/Pending/">PENDING</option>
+                    <option value="/reports/saccos/{{sacco}}/{{regno}}/{{date}}/In-Progress/">IN PROGRESS</option>
+                    <option value="/reports/saccos/{{sacco}}/{{regno}}/{{date}}/Resolved/">RESOLVED</option>
+                </select>
+            </div>
+        </div>
 
             <div id="table">
                 {% if reports %}
@@ -180,7 +170,7 @@
                                 </a>
                             </td>
                             <td>{{ report.driver}}</td>
-                            <td><a href="/reports/all/{{report.sacco}}/{{report.regno}}/{{report.id}}/">Add driver</a></td>
+                            <td><a href="/reports/all/{{sacco_id}}/{{report.regno}}/{{report.id}}/">Add driver</a></td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -212,7 +202,7 @@
                     <p>No reports to display</p>
                 {% endif %}
             </div>
-        </div>
+        
     </div>
      
 

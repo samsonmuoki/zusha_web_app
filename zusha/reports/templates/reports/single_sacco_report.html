@@ -68,23 +68,33 @@
             text-align: center;
             border-radius: 5px;
         }
-        #row{
-            /* background-color: white; */
+        #row-l{
+            background-color: green;
             margin: 3px;
-            padding: 5px;
+            padding: 3px;
+            height: 45px;
             /* height: 40px; */
         }
         #left-col, #right-col{
             float: left;
-            width: 47%;
+            width: 47.5%;
             text-align: left;
             margin: 3px;
             background-color: white;
-            padding: 5px;
+            padding: 3px;
             border-radius: 3px;
-            height: 30px;
+            height: 35px;
         }
         input[type=text], select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type=list], select {
             width: 100%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -108,6 +118,43 @@
         input[type=submit]:hover {
             background-color: #45a049;
         }
+        #driver-details{
+            background-color: white;
+            border-radius: 3px;
+            padding: 5px;
+        }
+        #row-header{
+            border-style: solid;
+            border-width: 0 0 3px 0;
+            border-color: black;
+            padding: 3px;
+        }
+        #row{
+            border-style: dotted;
+            border-width: 0 0 2px 0;
+            border-color: grey;
+        }
+        #col-left{
+            float: left;
+            width: 50%;
+        }
+        #driver-details a {
+            text-decoration: none;
+        }
+        #add-button{
+            background-color: rgb(255, 72, 0);
+            height: 20px;
+            margin: auto;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            padding: 10px;
+            text-align: center;
+            width: fit-content;
+            color: white;
+        }
+        #add-button:hover{
+            background-color: rgba(255, 72, 0, 0.897);
+        }
         #map {
             height: 800px;  /* The height is 400 pixels */
             width: 100%;  /* The width is the width of the web page */
@@ -129,37 +176,37 @@
         <div id="report-header">
             <div id="report-header-text">SPEEDING REPORT</div>
             <div id="report-details">
-                <div id="row">
+                <div id="row-l">
                     <div id="right-col">REGISTRATION</div>
                     <div id="right-col">
                         <var id="regno"> {{report.regno}} </var>
                     </div>
                 </div>
-                <div id="row">
+                <div id="row-l">
                     <div id="left-col">DRIVER</div>
                     <div id="right-col">
                         <var id="driver"> {{report.driver}} </var>
                     </div>
                 </div>
-                <div id="row">
+                <div id="row-l">
                     <div id="left-col">SACCO</div>
                     <div id="right-col">
                         <var id="sacco"> {{report.sacco}} </var>
                     </div>
                 </div>
-                <div id="row">
+                <div id="row-l">
                     <div id="left-col">SPEED</div>
                     <div id="right-col">
-                        <var id="speed"> {{report.speed}} </var>
+                        <var id="speed"> {{report.speed}} KM/H</var>
                     </div>
                 </div>
-                <div id="row">
+                <div id="row-l">
                     <div id="left-col">TIME</div>
                     <div id="right-col">
                         <var id="time"> {{report.time}} </var>
                     </div>
                 </div>
-                <div id="row">
+                <div id="row-l">
                     <div id="left-col">LOCATION</div>  
                     <div id="right-col">
                         <var id="speedlocation">{{report.location}} </var>
@@ -167,12 +214,44 @@
                 </div>
             </div>
             <div id="provide-driver">
-                <form method="POST" action="{% url 'reports:resolve_sacco_case' report.sacco report.regno report.id %}">
+                <form method="POST" action="{% url 'reports:resolve_sacco_case' sacco_id report.regno report.id %}">
                     {% csrf_token %}
-                    <label for="driver">ENTER NAME OF DRIVER</label>
-                    <input type="text" placeholder="Name of driver" name="driver">
-                    <input type="submit" name="submit" value="SUBMIT">
+                    <label for="driver">ENTER NATIONAL ID OF DRIVER</label>
+                    <!-- <input type="text" placeholder="Name of driver" name="driver1"> -->
+
+                    <input list="drivers" name="driver">
+                    <datalist id="drivers">
+                        {% if drivers %}
+                            {% for driver in drivers %}
+                            <option value="{{driver.driver.national_id}}">
+                            {% endfor %}
+                        {% endif %}
+                    </datalist>
+
+                    <input type="submit" name="submit" value="SEARCH">
                 </form>
+                {% if sacco_driver %}
+                    <div id="driver-details">
+                        <div id="row-header">{{sacco_driver.name}}</div>
+                        <div id="row">
+                            <div id="col-left">ID</div>
+                            <div id="col-right">{{sacco_driver.driver.national_id}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">SEX</div>
+                            <div id="col-right">{{sacco_driver.driver.sex}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">LICENSE NUMBER</div>
+                            <div id="col-right">{{sacco_driver.driver.license_number}}</div>
+                        </div>
+                        <div id="row">
+                            <div id="col-left">LICENSE STATUS</div>
+                            <div id="col-right">{{sacco_driver.driver.license_status}}</div>
+                        </div>
+                        <div id="add-button">DRIVER SUBMITTED SUCCESSFULY</div>
+                    </div>
+                {% endif%}
             </div>
         </div>
     <h1>Map Location</h1>
