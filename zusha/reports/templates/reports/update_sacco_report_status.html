@@ -22,7 +22,16 @@
 <p> SACCO STATUS: {{report.sacco_resolution}} </p>
 
 
-<p>
+<div>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="submit">
+  </form>
+</div>
+
+
+<!-- <p>
   UPDATE STATUS
   <select id="sacco_options" onchange="location = this.value">
     <option value="">------</option>
@@ -30,7 +39,7 @@
     <option value="/reports/all/{{report.sacco}}/{{report.regno}}/{{report.id}}/in_progress">In Progress</option>
     <option value="/reports/all/{{report.sacco}}/{{report.regno}}/{{report.id}}/resolved">Resolved</option>
   </select>
-</p>
+</p> -->
 <h1>Map Location</h1>
 
 <!-- <script>

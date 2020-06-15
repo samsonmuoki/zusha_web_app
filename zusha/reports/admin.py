@@ -40,7 +40,8 @@ class DailySaccoReportAdmin(admin.ModelAdmin):
 class DailyDriverReportAdmin(admin.ModelAdmin):
     """."""
     list_display = (
-        'driver', 'sacco', 'date', 'count',
+        'driver', 'regno', 'sacco', 'date', 'count',
+        'ntsa_action', 'ntsa_action_description'
     )
     list_filter = ['date', 'sacco']
     search_fields = ['driver', 'sacco']

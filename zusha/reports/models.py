@@ -51,7 +51,7 @@ class DailyVehicleReport(models.Model):
         max_length=20, choices=RESOLUTION_OPTIONS, default=PENDING
     )
     sacco_action_description = models.TextField(
-        max_length=500, null=True
+        max_length=500, null=True, blank=True
     )
 
     def __str__(self):
@@ -59,6 +59,10 @@ class DailyVehicleReport(models.Model):
             self.regno, self.sacco, self.date, self.count, self.ntsa_action,
             self.sacco_action,
         )
+
+    def is_sacco_pending(self):
+        if self.sacco_action == PENDING:
+            return True
 
 
 class DailySaccoReport(models.Model):
@@ -74,7 +78,15 @@ class DailySaccoReport(models.Model):
 
 class DailyDriverReport(models.Model):
     """Summary for all drivers reported on a single day."""
-    driver = models.CharField(max_length=20, null=True, blank=True)
+    # driver = models.CharField(max_length=20, null=True, blank=True)
+    driver = models.ForeignKey(
+        SaccoDriver, on_delete=models.CASCADE, null=True
+    )
     sacco = models.CharField(max_length=20)
+    regno = models.CharField(max_length=10)
     date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    ntsa_action = models.CharField(max_length=20, choices=RESOLUTION_OPTIONS)
+    ntsa_action_description = models.TextField(
+        max_length=500, null=True, blank=True
+    )
     count = models.IntegerField(default=0)

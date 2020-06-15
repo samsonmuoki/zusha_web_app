@@ -32,3 +32,9 @@ class ResolveCaseForm(forms.Form):
 class ProvideDriverForm(forms.Form):
     """Enter driver reported in a speeding instance."""
     driver = forms.CharField(max_length=20)
+
+
+class UpdateCaseStatusForm(forms.Form):
+    """."""
+    status = forms.CharField(widget=forms.Select(choices=RESOLUTION_OPTIONS))
+    description = forms.CharField(widget=forms.Textarea)

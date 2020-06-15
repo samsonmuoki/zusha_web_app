@@ -97,5 +97,6 @@ urlpatterns = [
     ),
     path('all/map/', views.view_all_reports_on_map, name='map'),
     # path('all/map2/', views.view_map2, name='map2'),
+    path('try/', views.trial, name="trial"),
 
 ]

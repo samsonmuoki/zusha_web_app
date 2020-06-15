@@ -13,7 +13,8 @@ from .models import (
 )
 from .forms import (
     # ResolveCaseForm
-    ProvideDriverForm
+    ProvideDriverForm,
+    UpdateCaseStatusForm
 )
 from zusha import settings
 from registrations.models import Sacco, SaccoDriver, RegisteredDriver
@@ -102,8 +103,9 @@ def top_drivers(number):
     return top_reported_drivers
 
 
-def top_sacco_vehicles(number, sacco):
+def top_sacco_vehicles(number, sacco_id):
     """Fetch each vehicle reports."""
+    sacco = Sacco.objects.get(id=sacco_id).sacco_name
     reports_list = DailyVehicleReport.objects.filter(
         sacco=sacco
     ).order_by(
@@ -113,8 +115,9 @@ def top_sacco_vehicles(number, sacco):
     return reports_list[:number]
 
 
-def top_sacco_drivers(number, sacco):
+def top_sacco_drivers(number, sacco_id):
     """Fetch top reported sacco drivers."""
+    sacco = Sacco.objects.get(id=sacco_id).sacco_name
     reports_list = DailyDriverReport.objects.filter(sacco=sacco).order_by(
         '-date', '-count'
     )
@@ -134,7 +137,7 @@ def pending_sacco_reports(sacco_id):
 def in_progress_sacco_reports(sacco_id):
     sacco = Sacco.objects.get(id=sacco_id).sacco_name
     in_progress_reports = DailyVehicleReport.objects.filter(
-        sacco=sacco, sacco_action='In-Progress'
+        sacco=sacco, sacco_action='In Progress'
     ).order_by(
         '-date'
     ).count()
@@ -314,6 +317,25 @@ def fetch_reports_for_a_sacco_vehicle_on_a_specific_day(
     except EmptyPage:
         reports = paginator.page(paginator.num_pages)
 
+    if request.method == 'POST':
+        form = UpdateCaseStatusForm(request.POST)
+        if form.is_valid():
+            status = form.cleaned_data['status']
+            description = form.cleaned_data['description']
+
+            sacco = Sacco.objects.get(id=sacco_id).sacco_name
+            report = DailyVehicleReport.objects.get(
+                regno=regno, sacco=sacco, date=date
+            )
+            report.sacco_action = status
+            report.sacco_action_description = description
+            report.save()
+
+            return HttpResponse(f"STATUS SUCCESSFULLY UPDATED")
+
+    else:
+        form = UpdateCaseStatusForm()
+
     context = {
         'reports': reports,
         'reports_list': reports_list,
@@ -323,6 +345,10 @@ def fetch_reports_for_a_sacco_vehicle_on_a_specific_day(
         'sacco_id': sacco_id,
         'ntsa_action': ntsa_action,
         'sacco_action': sacco_action,
+        'ntsa_description': report.ntsa_action_description,
+        'sacco_description': report.sacco_action_description,
+        'is_sacco_pending': report.is_sacco_pending,
+        'form': form,
     }
 
     return render(
@@ -687,5 +713,27 @@ def provide_driver_for_a_reported_case(request, report_id):
         {
             'form': form,
             'report': report,
+        }
+    )
+
+
+def trial(request):
+    """Enter the name of driver that was reported for speeding.
+    Done by sacco admin."""
+    if request.method == 'POST':
+        form = UpdateCaseStatusForm(request.POST)
+        if form.is_valid():
+            status = form.cleaned_data['status']
+            description = form.cleaned_data['description']
+            # pdb.set_trace()
+
+            return HttpResponse(f"{status} {description}")
+
+    else:
+        form = UpdateCaseStatusForm()
+    return render(
+        request, 'reports/update_sacco_report_status.html',
+        {
+            'form': form,
         }
     )

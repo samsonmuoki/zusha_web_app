@@ -47,43 +47,86 @@
     }
     #contents{
         margin: auto;
-        background-color: green;
-        height: fit-content;
+        /* background-color: green;
+        height: fit-content; */
     }
     #report-header{
         width: 100%;
         padding: 10px;
-        height: 100px;
+        height: 400px;
         margin: 5px;
-        background-color: white;
+        background-color: whitesmoke;
+        /* background-color: white; */
     }
     #report-header-text{
         text-align: center;
         border-color: gray;
         border-style: solid;
         border-width: 0 0 3px 0;
+        font-size: x-large;
+        font-weight: bold;
+        padding: 5px;
     }
     #details{
         float: left;
         width: 47%;
         margin: 5px;
         background-color: white;
-        padding: 5px;
+        padding: 10px;
         border-style: solid;
-        border-width: 0 3px;
+        border-width: 0 3px 0 0;
+        height: 350px;
+        border-radius: 5px;
     }
     #update-status{
         float: left;
-        width: 46%;
-        padding: 5px;
+        width: 47%;
+        padding: 10px;
         margin: 5px;
+        height: 350px;
+        border-radius: 5px;
+        border-style: solid;
+        border-width: 0 0 0 3px;
+        border-radius: 5px;
         background-color: white;
     }
-    #filter-section{
+    input[type=submit] {
+            width: 100%;
+            /* background-color: #4CAF50; */
+            background-color: orange;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+    }
+    input[type=submit]:hover {
+        background-color: #45a049;
+    }
+    #row-header{
+        border-color: black;
+        border-style: dotted;
+        border-width: 0 0 2px 0;
         text-align: center;
-        float: left;
-        width: 25%;
-        background-color: aqua;
+        font-weight: bold;
+        text-underline-position: below;
+    }
+    #sacco-description{
+        padding: 5px;
+        font-style: italic;
+    }
+    #not-resolved-message{
+        background-color: tomato;
+        padding: 5px;
+        margin: 5px;
+    }
+    #not-resolved-message:hover{
+        background-color: rgb(251, 72, 40);
+    }
+    #table-body{
+        margin: 5px;
+        /* background-color: green; */
     }
     table {
     font-family: arial, sans-serif;
@@ -99,6 +142,15 @@
 
     tr:nth-child(even) {
     background-color: #dddddd;
+    }
+    #add-driver-button{
+        background-color: orange;
+        padding: 3px;
+        text-align: center;
+        border-radius: 3px;
+    }
+    #add-driver-button:hover{
+        background-color: rgb(255, 187, 0);
     }
     /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
     @media screen and (max-width: 800px) {
@@ -125,83 +177,108 @@
     <div id="contents">
         <div id="report-header">
             <div id="report-header-text">{{regno}} REPORTS on {{date}}</div>
-
             <div id="details">
-                <div id="row">
-                    NTSA: {{ntsa_action}}
+                <div id="row-header">
+                    SACCO STATUS: {{sacco_action}}
                 </div>
-                <div id="row">
-                    SACCO: {{sacco_action}} 
+                <div id="sacco-description">
+                    {% if is_sacco_pending %}
+                        <div id="not-resolved-message">
+                            THIS CASE IS PENDING, WAITING FOR YOUR ACTION
+                        </div>
+                    {% else %}
+                        <div id="sacco-message">
+                            {{sacco_description}}
+                        </div>
+                    {% endif %}
+                    
                 </div>
+                
             </div>
             <div id="update-status">
-                UPDATE STATUS
+                <form method="POST">
+                    {% csrf_token %}
+                    <!-- <input type="text"> -->
+                    {{ form.as_p }}
+                    <input type="submit" value="submit">
+                  </form>
+                <!-- UPDATE STATUS
                 <select name="update-sacco-action" onchange="location = this.value">
                     <option value="">-------</option>
-                    <option value="/reports/saccos/{{sacco}}/{{regno}}/{{date}}/Pending/">PENDING</option>
-                    <option value="/reports/saccos/{{sacco}}/{{regno}}/{{date}}/In-Progress/">IN PROGRESS</option>
-                    <option value="/reports/saccos/{{sacco}}/{{regno}}/{{date}}/Resolved/">RESOLVED</option>
-                </select>
+                    <option value="/reports/saccos/{{sacco_id}}/{{regno}}/{{date}}/Pending/">PENDING</option>
+                    <option value="/reports/saccos/{{sacco_id}}/{{regno}}/{{date}}/In-Progress/">IN PROGRESS</option>
+                    <option value="/reports/saccos/{{sacco_id}}/{{regno}}/{{date}}/Resolved/">RESOLVED</option>
+                </select> -->
             </div>
         </div>
 
-            <div id="table">
-                {% if reports %}
-                    <table>
-                        <tr>
-                            <th>Reg No</th>
-                            <th>Sacco</th>
-                            <th>Speed</th>
-                            <th>Time</th>
-                            <th>Location</th>
-                            <th>Driver</th>
-                            <th>Provide driver</th>
-                        </tr>
-                        {% for report in reports %}
-                        <tr>
-                            <td><a href=''>{{ report.regno }}</a> </td>
-                            <td>{{ report.sacco }}</td>
-                            <td>{{ report.speed }}</td>
-                            <td>{{ report.time }}</td>
-                            <!-- <td><a href="/reports/vehicles/{{report.regno}}/{{report.id}}">{{ report.location }}</a></td> -->
-                            <td>
-                                <a href='/reports/vehicles/{{report.regno}}/{{report.id}}'>
-                                    <img src="{% static "images/location4.png" %}" alt="view"  width="30px" height="30px">
-                                </a>
-                            </td>
-                            <td>{{ report.driver}}</td>
-                            <td><a href="/reports/all/{{sacco_id}}/{{report.regno}}/{{report.id}}/">Add driver</a></td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+        <div id="table-body">
+            {% if reports %}
+                <table>
+                    <tr>
+                        <th>Reg No</th>
+                        <th>Sacco</th>
+                        <th>Speed</th>
+                        <th>Time</th>
+                        <th>Location</th>
+                        <th>Driver</th>
+                        <th>Provide driver</th>
+                    </tr>
+                    {% for report in reports %}
+                    <tr>
+                        <td><a href=''>{{ report.regno }}</a> </td>
+                        <td>{{ report.sacco }}</td>
+                        <td>{{ report.speed }}</td>
+                        <td>{{ report.time }}</td>
+                        <!-- <td><a href="/reports/vehicles/{{report.regno}}/{{report.id}}">{{ report.location }}</a></td> -->
+                        <td>
+                            <a href='/reports/vehicles/{{report.regno}}/{{report.id}}'>
+                                <img src="{% static "images/location4.png" %}" alt="view"  width="30px" height="30px">
+                            </a>
+                        </td>
+                        <td>{{ report.driver}}</td>
+                        <td>
+                            {% if report.driver %}
+                                driver already submitted
+                            {% else %}
+                            <a href="/reports/all/{{sacco_id}}/{{report.regno}}/{{report.id}}/">
+                                <div id="add-driver-button">
+                                    submit driver
+                                </div>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
 
-                    {% if reports.has_other_pages %}
-                        <ul class="pagination">
-                            {% if reports.has_previous %}
-                                <li><a href="?page={{ reports.previous_page_number }}">&laquo;</a></li>
+                {% if reports.has_other_pages %}
+                    <ul class="pagination">
+                        {% if reports.has_previous %}
+                            <li><a href="?page={{ reports.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in reports.paginator.page_range %}
+                            {% if reports.number == i %}
+                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
                             {% else %}
-                                <li class="disabled"><span>&laquo;</span></li>
+                                <li><a href="?page={{ i }}">{{ i }}</a></li>
                             {% endif %}
-                            {% for i in reports.paginator.page_range %}
-                                {% if reports.number == i %}
-                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                                {% else %}
-                                    <li><a href="?page={{ i }}">{{ i }}</a></li>
-                                {% endif %}
-                            {% endfor %}
-                            {% if reports.has_next %}
-                                <li><a href="?page={{ reports.next_page_number }}">&raquo;</a></li>
-                            {% else %}
-                                <li class="disabled"><span>&raquo;</span></li>
-                            {% endif %}
-                        </ul>
-                    {% endif %}
-  
-            
-                {% else %}
-                    <p>No reports to display</p>
+                        {% endfor %}
+                        {% if reports.has_next %}
+                            <li><a href="?page={{ reports.next_page_number }}">&raquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
                 {% endif %}
-            </div>
+
+        
+            {% else %}
+                <p>No reports to display</p>
+            {% endif %}
+        </div>
         
     </div>
      

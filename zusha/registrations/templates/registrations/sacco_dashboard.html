@@ -361,6 +361,7 @@
                         <table>
                             <tr>
                                 <th>DRIVER</th>
+                                <th>REGNO</th>
                                 <th>SACCO</th>
                                 <th>DATE</th>
                                 <th>TOTAL</th>
@@ -368,6 +369,7 @@
                             {% for report in top_sacco_drivers %}
                             <tr>
                                 <td>{{report.driver}}</td>
+                                <td>{{report.regno}}</td>
                                 <td>{{report.sacco}}</td>
                                 <td>{{report.date}}</td>
                                 <td>{{report.count}}</td>

@@ -41,8 +41,8 @@ def saccos_dashboard(request, sacco_id):
         'pending_reports': pending_sacco_reports(sacco_id),
         'in_progress_reports': in_progress_sacco_reports(sacco_id),
         'resolved_sacco_reports': resolved_sacco_reports(sacco_id),
-        # 'top_sacco_vehicles': top_sacco_vehicles(20, sacco),
-        # 'top_sacco_drivers': top_sacco_drivers(20, sacco),
+        'top_sacco_vehicles': top_sacco_vehicles(20, sacco_id),
+        'top_sacco_drivers': top_sacco_drivers(20, sacco_id),
     }
     return render(request, "registrations/sacco_dashboard.html", context)
 
@@ -68,7 +68,7 @@ def fetch_in_progress_reports_for_a_sacco(request, sacco_id):
     """."""
     sacco = Sacco.objects.get(id=sacco_id).sacco_name
     in_progress_reports = DailyVehicleReport.objects.filter(
-        sacco=sacco, sacco_action='In-Progress'
+        sacco=sacco, sacco_action='In Progress'
     ).order_by('-date')
     context = {
         'sacco_id': sacco_id,
@@ -167,13 +167,13 @@ def get_a_single_vehicle(request, registration_number):
     ntsa_vehicle = Vehicle.objects.get(registration_number=registration_number)
     sacco_vehicle = SaccoVehicle.objects.get(vehicle=ntsa_vehicle)
     reg_no = ntsa_vehicle.registration_number
-    sacco = sacco_vehicle.sacco
+    sacco = sacco_vehicle.sacco.sacco_name
     email = Sacco.objects.get(sacco_name=sacco).email
     qr_code_values = f"{reg_no},{sacco},{email}"
     context = dict(
         regno=ntsa_vehicle.registration_number,
         vehicle=sacco_vehicle,
-        license_status=ntsa_vehicle.license_status.upper(),
+        license_status=ntsa_vehicle.inspection_status.upper(),
         qr_code_values=qr_code_values,
         qr_options=QRCodeOptions(
             size='m', border=6, error_correction='L', image_format='png',

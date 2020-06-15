@@ -22,6 +22,7 @@ from zusha import settings
 from registrations.models import (
     Sacco,
     RegisteredDriver,
+    SaccoDriver,
     Vehicle
 )
 from .models import (
@@ -118,11 +119,12 @@ def track_each_driver_reports():
     reports = SpeedingInstance.objects.all()
     for report in reports:
         case_count = SpeedingInstance.objects.filter(
-            driver=report.driver, date=report.date
+            driver=report.driver, date=report.date, regno=report.regno
         ).count()
         tracker, created = DailyDriverReport.objects.get_or_create(
             driver=report.driver,
             sacco=report.sacco,
+            regno=report.regno,
             date=report.date,
             defaults={'count': case_count},
         )
@@ -148,7 +150,9 @@ utc = pytz.utc
 @shared_task
 def blacklist_saccos():
     saccos = Sacco.objects.all()
-    reports = SpeedingInstance.objects.all()
+    reports = DailyVehicleReport.objects.filter(
+        ntsa_action="Pending"
+    )
     for sacco in saccos:
         reports_list = []
         for report in reports:
@@ -160,18 +164,33 @@ def blacklist_saccos():
 
 
 # TODO optimise driver reporting
-# @shared_task
-# def blacklist_drivers():
-#     drivers = Driver.objects.all()
-#     reports = Report.objects.all()
-#     for driver in drivers:
-#         reports_list = []
-#         for report in reports:
-#             if report.driver_id == driver.driver_id:
-#                 reports_list.append(report)
-#         if len(reports_list) > 1:
-#             driver.license_status = "BLACKLISTED"
-#             driver.save()
+@shared_task
+def blacklist_drivers():
+    # drivers = SaccoDriver.objects.all()
+    # reports = SpeedingInstance.objects.all()
+    # daily_reports = DailyVehicleReport.objects.filter(
+    #     ntsa_action="Pending"
+    # )
+    # for driver in drivers:
+    #     reports_list = []
+    #     for report in reports:
+    #         if report.driver_id == driver.driver_id:
+    #             reports_list.append(report)
+    #     if len(reports_list) > 1:
+    #         driver.license_status = "BLACKLISTED"
+    #         driver.save()
+    drivers = RegisteredDriver.objects.all()
+    reports = DailyDriverReport.objects.filter(
+        ntsa_action="Pending"
+    )
+    for driver in drivers:
+        reports_list = []
+        for report in reports:
+            if report.driver == driver.driver:
+                reports_list.append(report)
+        if len(reports_list) > 1:
+            driver.license_status = "BLACKLISTED"
+            driver.save()
 
 
 # @periodic_task
