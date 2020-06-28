@@ -32,6 +32,23 @@ urlpatterns = [
     path('saccos/login', views.login_sacco_admin, name='sacco_login'),
     path('saccos/logout', views.logout_sacco_admin, name='sacco_logout'),
     path('drivers/', views.get_all_drivers, name='drivers'),
+    path('vehicles/', views.get_all_vehicles, name='vehicles'),
+
+    path(
+        'vehicles/<slug:registration_number>', views.get_a_single_vehicle,
+        name='vehicle_details'
+    ),
+    path(
+        'drivers/<int:driver_id>/', views.get_driver_details,
+        name='driver_details'
+    ),
+
+    # DASHBOARD SACCO DRIVERS
+    path(
+        'saccos/dashboard/<slug:sacco_id>/drivers/',
+        views.sacco_drivers_list,
+        name='sacco_drivers_list'
+    ),
     path(
         'saccos/dashboard/<slug:sacco_id>/drivers/add',
         views.add_driver,
@@ -43,22 +60,25 @@ urlpatterns = [
         name="confirm_driver"
     ),
     path(
-        'saccos/dashboard/<slug:sacco_id>/vehicles/add/<slug:regno>',
-        views.confirm_vehicle,
-        name="confirm_vehicle"
+        'saccos/dashboard/<slug:sacco_id>/drivers/profile/<slug:driver_id>',
+        views.sacco_driver_profile,
+        name='sacco_driver_profile'
     ),
-    path('vehicles/', views.get_all_vehicles, name='vehicles'),
+
+    # DASHBOARD SACCO VEHICLES
+    path(
+        'saccos/dashboard/<slug:sacco_id>/vehicles/',
+        views.sacco_vehicles_list,
+        name='sacco_vehicles_list'
+    ),
     path(
         'saccos/dashboard/<slug:sacco_id>/vehicles/add',
         views.add_vehicle,
         name='add_vehicle'
     ),
     path(
-        'vehicles/<slug:registration_number>', views.get_a_single_vehicle,
-        name='vehicle_details'
+        'saccos/dashboard/<slug:sacco_id>/vehicles/add/<slug:regno>',
+        views.confirm_vehicle,
+        name="confirm_vehicle"
     ),
-    path(
-        'drivers/<int:driver_id>/', views.get_driver_details,
-        name='driver_details'
-    )
 ]

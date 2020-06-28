@@ -79,7 +79,7 @@
             }
             #registrations{
                 width: 90%;
-                height: 250px;
+                height: 150px;
                 background-color: white;
                 padding: 5px;
                 border-radius: 5px;
@@ -123,30 +123,26 @@
             #pending-reports-number, #reports-in-progress-number, #resolved-reports-number{
                 font-size: xx-large;
             }
-            #add-driver, #add-vehicle{
+            #vehicles-management, #drivers-management{
                 width: 48%;
                 float: left;
-                height: 100px;
+                height: 100%;
                 margin: 5px;
                 padding: 10px;
                 border-radius: 5px;
-                background-color: wheat;
+                /* background-color: yellow; */
                 /* text-align: center; */
                 font-size: large;
             }
-            /* #add-vehicle-header, #add-driver-header{
+            #add-vehicle, #sacco-vehicles-link, #add-driver, #sacco-drivers-link{
                 text-align: center;
-                border-style: solid;
-                border-width: 0 0 2px 0;
-                border-color: grey;
+                background-color: wheat;
+                /* height: 80px; */
+                margin: 3px;
+                padding: 10px;
 
             }
-            #add-vehicle-form{
-                margin: 2px;
-                border-radius: 2px;
-                padding: 5px 3px;
-            } */
-            #add-vehicle:hover, #add-driver:hover{
+            #add-vehicle:hover, #add-driver:hover, #sacco-vehicles-link:hover, #sacco-drivers-link:hover{
                 background-color: goldenrod;
                 }
             /* input[type=text], select {
@@ -309,12 +305,22 @@
             
             <div id="registrations">
                 <div id="registrations-header">REGISTRATIONS</div>
-                <div id="add-vehicle">
-                    <a href="{% url 'registrations:add_vehicle' sacco_id %}">Add a vehicle</a>
+                <div id="vehicles-management">
+                    <a href="{% url 'registrations:add_vehicle' sacco_id %}">
+                        <div id="add-vehicle">Add a vehicle</div>
+                    </a>
+                    <a href="{% url 'registrations:sacco_vehicles_list' sacco_id %}">
+                        <div id="sacco-vehicles-link">ALL VEHICLES LIST</div>
+                    </a>
                     
                 </div>
-                <div id="add-driver">
-                    <a href="{% url 'registrations:add_driver' sacco_id %}">Add a driver</a>
+                <div id="drivers-management">
+                    <a href="{% url 'registrations:add_driver' sacco_id %}">
+                        <div id="add-driver">Add a driver</div>
+                    </a>
+                    <a href="{% url 'registrations:sacco_drivers_list' sacco_id %}">
+                        <div id="sacco-drivers-link">ALL DRIVERS LIST</div>
+                    </a>
                     
                 </div>
             </div>

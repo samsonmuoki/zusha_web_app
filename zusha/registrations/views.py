@@ -6,6 +6,7 @@ from django.contrib.auth import (
 )
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.utils import timezone
 
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -15,7 +16,12 @@ from qr_code.qrcode.utils import QRCodeOptions
 from .models import (
     Sacco, Vehicle, RegisteredDriver, SaccoDriver, SaccoVehicle
 )
-from .forms import VehicleForm, DriverForm
+from .forms import (
+    VehicleForm,
+    DriverForm,
+    UpdateSaccoDriverStatusForm,
+    SearchDriverIdForm
+)
 from reports.views import (
     top_sacco_vehicles,
     top_sacco_drivers,
@@ -45,6 +51,111 @@ def saccos_dashboard(request, sacco_id):
         'top_sacco_drivers': top_sacco_drivers(20, sacco_id),
     }
     return render(request, "registrations/sacco_dashboard.html", context)
+
+
+def sacco_vehicles_list(request, sacco_id):
+    sacco = Sacco.objects.get(id=sacco_id)
+    vehicles_list = SaccoVehicle.objects.filter(sacco=sacco)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(vehicles_list, 50)
+    try:
+        vehicles = paginator.page(page)
+    except PageNotAnInteger:
+        vehicles = paginator.page(1)
+    except EmptyPage:
+        vehicles = paginator.page(paginator.num_pages)
+
+    context = {
+        'vehicles': vehicles,
+        'sacco': sacco.sacco_name.upper()
+    }
+    return render(
+        request,
+        'registrations/dashboard_sacco_vehicles_list.html',
+        context
+    )
+
+
+def sacco_drivers_list(request, sacco_id):
+    sacco = Sacco.objects.get(id=sacco_id)
+    drivers_list = SaccoDriver.objects.filter(sacco=sacco)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(drivers_list, 50)
+    try:
+        drivers = paginator.page(page)
+    except PageNotAnInteger:
+        drivers = paginator.page(1)
+    except EmptyPage:
+        drivers = paginator.page(paginator.num_pages)
+
+    if request.method == "POST":
+        form = SearchDriverIdForm(request.POST)
+        if form.is_valid():
+            national_id = form.cleaned_data['national_id']
+
+            driver = RegisteredDriver.objects.get(
+                national_id=national_id
+            )
+            driver_profile = SaccoDriver.objects.get(
+                driver=driver,
+                sacco=sacco
+            )
+            context = {
+                'driver_profile': driver_profile,
+            }
+            return redirect(
+                'registrations:sacco_driver_profile',
+                # args=[sacco_id, national_id]
+            )
+    else:
+        form = SearchDriverIdForm()
+
+    context = {
+        'sacco_id': sacco_id,
+        'drivers': drivers,
+        'sacco': sacco.sacco_name.upper(),
+        'form': form,
+    }
+    return render(
+        request,
+        'registrations/dashboard_sacco_drivers_list.html',
+        context
+    )
+
+
+def sacco_driver_profile(request, sacco_id, driver_id):
+    driver = RegisteredDriver.objects.get(national_id=driver_id)
+    sacco = Sacco.objects.get(id=sacco_id)
+
+    driver_profile = SaccoDriver.objects.get(
+        driver=driver,
+        sacco=sacco
+    )
+
+    if request.method == 'POST':
+        form = UpdateSaccoDriverStatusForm(request.POST)
+        if form.is_valid():
+            status = form.cleaned_data['status']
+            description = form.cleaned_data['description']
+
+            driver_profile.status = status
+            driver_profile.description = description
+            driver_profile.last_status_update_date = timezone.now()
+    else:
+        form = UpdateSaccoDriverStatusForm()
+
+    context = {
+        'sacco': sacco.sacco_name.upper(),
+        'driver_profile': driver_profile,
+        'form': form,
+    }
+    return render(
+        request,
+        'registrations/dashboard_sacco_driver_profile.html',
+        context
+    )
 
 
 def fetch_pending_reports_for_a_sacco(request, sacco_id):

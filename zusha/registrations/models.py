@@ -13,6 +13,11 @@ LICENSE_STATUS = [
     (BLACKLISTED, ('Not approved to operate')),
 ]
 
+SACCO_DRIVER_STATUS = [
+    ('Approved', ('Approved to operate')),
+    ('Suspended', ('Suspended for the time being')),
+    ('Blacklisted', ('Blacklisted from operating'))
+]
 
 VEHICLE_BODY_TYPES = [
     ('van', ('Van')),
@@ -199,6 +204,12 @@ class RegisteredDriver(models.Model):
             self.license_status,
         )
 
+    def name(self):
+        """Driver full names."""
+        return "{} {}".format(
+            self.surname, self.other_names
+        )
+
     def is_approved(self):
         if self.license_status == APPROVED:
             return True
@@ -229,7 +240,9 @@ class Sacco(models.Model):
 
 
 class SaccoVehicle(models.Model):
-    """Each sacco stores the details of the vehicles
+    """Sacco Vehicles list.
+
+    Each sacco stores the details of the vehicles
     they operate in this model."""
     vehicle = models.OneToOneField(Vehicle, on_delete=models.PROTECT)
     sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
@@ -239,10 +252,25 @@ class SaccoVehicle(models.Model):
 
 
 class SaccoDriver(models.Model):
-    """Each sacco stores the details of drivers it has employed
+    """Sacco Drivers list.
+
+    Each sacco stores the details of drivers it has employed
     in this model."""
     driver = models.OneToOneField(RegisteredDriver, on_delete=models.PROTECT)
     sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
+    status = models.CharField(
+        max_length=20, choices=SACCO_DRIVER_STATUS, default='Approved'
+    )
+    date_registered = models.DateField(
+        auto_now=False, auto_now_add=True
+    )
+    last_status_update_date = models.DateField(
+        auto_now=False, auto_now_add=False
+    )
+    description = models.TextField(max_length=500, null=True, blank=True)
+
+    # status_logs
+    # status_description logs
 
     def __str__(self):
         return f"{self.driver}: {self.sacco}"

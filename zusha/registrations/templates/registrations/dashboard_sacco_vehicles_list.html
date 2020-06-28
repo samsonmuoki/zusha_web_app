@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body{
+                background-color: whitesmoke;
+            }
+            #menu{
+                position: -webkit-sticky;
+                position: sticky;
+                top: 0;
+                /* width: fit-content; */
+                width: 100%;
+            }
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: #333;
+                
+            }
+        
+            li {
+                float: left;
+            }
+          
+            li a {
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+          
+            li a:hover:not(.active) {
+                background-color: #111;
+            }
+            .active {
+                background-color: #4CAF50;
+            }
+            #registered-vehicles-header-row{
+                background-color: white;
+                margin: 3px;
+                width: 100%;
+                padding: 3px;
+                height: 40px;
+            }
+            #registered-vehicles-header-text{
+                float: left;
+                width: 50%;
+                text-align: center;
+                padding: 3px;
+            }
+            #search-vehicle-bar{
+                float: left;
+                width: 25%;
+                text-align: left;
+                padding: 3px;
+            }
+            #filter{
+                float: left;
+                width: 22%;
+                text-align: left;
+            }
+            #filter-header{
+                float: left;
+                width: 50%;
+                padding: 3px;
+            }
+            table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            }
+
+            td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            }
+
+            tr:nth-child(even) {
+            background-color: #dddddd;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="menu">
+            <ul>
+                <li><a href="http://localhost:8000">HOME</a></li>
+                <li><a href="/reports/all">REPORTS</a></li>
+                <li><a href="/registrations/drivers">DRIVERS</a></li>
+                <li><a href="/registrations/saccos">SACCOS</a></li>
+                <li><a href="/registrations/vehicles">VEHICLES</a></li>
+                <li><a href="">EXTRA</a></li>
+            </ul>
+        </div>
+        <div id="registered-vehicles-header-row">
+            <div id="registered-vehicles-header-text">{{sacco}} VEHICLES</div>
+            <div id="search-vehicle-bar">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <input type="search" placeholder="vehicle regno">
+                    <input type="submit" name="search" value="SEARCH">
+                </form>
+            </div>
+        </div>
+            {% if vehicles %}
+                <table>
+                    <tr>
+                        <th>Reg No</th>
+                        <th>Sacco</th>
+                        <th>License Status</th>
+                    </tr>
+                    {% for vehicle in vehicles %}
+                        <tr>
+                            <td><a href="{% url 'registrations:vehicle_details' vehicle.vehicle.registration_number %}">{{ vehicle.vehicle.registration_number}}</a></td> 
+                            <td>{{ vehicle.sacco}}</td> 
+                            <td>{{ vehicle.vehicle.inspection_status}}</td> 
+                            
+                        </tr>
+                    {% endfor %}
+                </table>    
+                {% if saccos.has_other_pages %}
+                    <ul class="pagination">
+                        {% if vehicles.has_previous %}
+                            <li><a href="?page={{ vehicles.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in vehicles.paginator.page_range %}
+                            {% if vehicles.number == i %}
+                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                            {% else %}
+                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if vehicles.has_next %}
+                            <li><a href="?page={{ vehicles.next_page_number }}">&raquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                {% endif %}    
+
+            {% else %}
+                <p>No vehicles are available</p>
+            {% endif %}
+
+    </body>
+</html>

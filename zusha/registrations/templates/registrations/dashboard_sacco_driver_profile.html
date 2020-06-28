@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #name-header-text{
+                padding: 5px;
+                text-align: center;
+                border-width: 0 0 2px 0;
+                border-color: grey;
+                border-style: solid;
+            }
+            #contents{
+                width: 90%;
+                height: 350px;
+                background-color: turquoise;
+                margin: 5px;
+                padding: 5px;
+            }
+            #photo{
+                width: 25%;
+                height: 90%;
+                background-color: whitesmoke;
+                border-radius: 5px;
+                float: left;
+                margin: 3px;
+            }
+            #details{
+                width: 72%;
+                height: 90%;
+                background-color: whitesmoke;
+                border-radius: 5px;
+                float: left;
+                margin: 3px;
+            }
+            #row{
+                height: 40px;
+                margin: 3px;
+            }
+            #col-left{
+                font-weight: bold;
+            }
+            #col-left, #col-right{
+                width: 48%;
+                float: left;
+                margin: 2px;
+                padding: 5px;
+                background-color: white;
+            }
+            #row-bottom{
+                text-align: center;
+                font-weight: bold;
+                height: 20px;
+                background-color: white;
+                border-style: solid;
+                border-width: 2px;
+                padding: 5px;
+                margin: 3px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="profile-window">
+            <div id="name-header-text">{{driver_profile.driver.name}}</div>
+            <div id="contents">
+                <div id="photo">PHOTO</div>
+                <div id="details">
+                    <div id="row">
+                        <div id="col-left">NATIONAL ID</div>
+                        <div id="col-right">{{ driver_profile.driver.national_id }}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">GENDER</div>
+                        <div id="col-right">{{ driver_profile.driver.sex }}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">LICENSE NUMBER</div>
+                        <div id="col-right">{{ driver_profile.driver.license_number }}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">LICENSE STATUS</div>
+                        <div id="col-right">{{ driver_profile.driver.license_status }}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">DATE REGISTERED</div>
+                        <div id="col-right">{{ driver_profile.date_registered }}</div>
+                    </div>
+                    <div id="row">
+                        <div id="col-left">LAST STATUS UPDATE</div>
+                        <div id="col-right">{{ driver_profile.last_status_update_date }}</div>
+                    </div>
+                    <div id="row-bottom">SACCO STATUS: {{driver_profile.status}}</div>
+                </div>
+            </div>
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" name="update" value="SUBMIT">
+            </form>
+        </div>
+    </body>
+</html>
