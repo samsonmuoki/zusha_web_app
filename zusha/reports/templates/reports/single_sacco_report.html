@@ -85,6 +85,17 @@
             border-radius: 3px;
             height: 35px;
         }
+        #missing-driver{
+            background-color: red;
+            color: white;
+            width: 100%;
+            height: 100%;
+            margin: auto;
+            text-align: center;
+        }
+        #missing-driver:hover{
+            background-color: tomato;
+        }
         input[type=text], select {
             width: 100%;
             padding: 12px 20px;
@@ -185,7 +196,15 @@
                 <div id="row-l">
                     <div id="left-col">DRIVER</div>
                     <div id="right-col">
-                        <var id="driver"> {{report.driver}} </var>
+                        <var id="driver">
+                            {% if report.driver %}
+                                {{report.driver}}
+                            {% else %}
+                                <div id="missing-driver">
+                                    Driver not provided
+                                </div>
+                            {% endif %}
+                        </var>
                     </div>
                 </div>
                 <div id="row-l">

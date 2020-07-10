@@ -17,7 +17,7 @@
                 margin: 0;
                 padding: 0;
                 overflow: hidden;
-                background-color: #333;
+                background-color: rgb(73, 33, 33);
                 
             }
         
@@ -83,16 +83,39 @@
             tr:nth-child(even) {
             background-color: #dddddd;
             }
+            #approved{
+                background-color: green;
+                padding: 5px;
+                color: white;
+                border-radius: 3px;
+            }
+            #blacklisted{
+                background-color: red;
+                padding: 5px;
+                color: white;
+                border-radius: 3px;
+            }
+            #expired{
+                background-color: orangered;
+                padding: 5px;
+                border-radius: 3px;
+                color: white
+            }
+            #approved:hover, #blacklisted:hover, #expired:hover{
+                font-size: bold;
+                font-weight: bold;
+                padding: 8px;
+            }
         </style>
     </head>
     <body>
         <div id="menu">
             <ul>
-                <li><a href="http://localhost:8000">HOME</a></li>
-                <li><a href="/reports/all">REPORTS</a></li>
-                <li><a href="/registrations/drivers">DRIVERS</a></li>
-                <li><a href="/registrations/saccos">SACCOS</a></li>
-                <li><a href="/registrations/vehicles">VEHICLES</a></li>
+                <li><a href="{% url 'registrations:saccos_dashboard' sacco_id %}">HOME</a></li>
+                <!-- <li><a href="/reports/all">REPORTS</a></li> -->
+                <li><a href="{% url 'registrations:sacco_drivers_list' sacco_id %}">DRIVERS</a></li>
+                <!-- <li><a href="/registrations/saccos">SACCOS</a></li> -->
+                <li><a href="{% url 'registrations:sacco_vehicles_list' sacco_id %}">VEHICLES</a></li>
                 <li><a href="">EXTRA</a></li>
             </ul>
         </div>
@@ -110,14 +133,24 @@
                 <table>
                     <tr>
                         <th>Reg No</th>
-                        <th>Sacco</th>
+                        <!-- <th>Sacco</th> -->
+                        <th>Date registered</th>
                         <th>License Status</th>
                     </tr>
                     {% for vehicle in vehicles %}
                         <tr>
                             <td><a href="{% url 'registrations:vehicle_details' vehicle.vehicle.registration_number %}">{{ vehicle.vehicle.registration_number}}</a></td> 
-                            <td>{{ vehicle.sacco}}</td> 
-                            <td>{{ vehicle.vehicle.inspection_status}}</td> 
+                            <!-- <td>{{ vehicle.sacco}}</td>  -->
+                            <td>{{ vehicle.date_registered }}</td>
+                            <td>
+                                {% if vehicle.vehicle.inspection_status == "Approved" %}
+                                    <div id="approved">Approved</div>
+                                {% elif vehicle.vehicle.inspection_status == "Blacklisted" %}
+                                    <div id="blacklisted">Blacklisted</div>
+                                {% elif vehicle.vehicle.inspection_status == "Expired" %}
+                                    <div id="expired">Expired</div>
+                                {% endif %}
+                            </td> 
                             
                         </tr>
                     {% endfor %}

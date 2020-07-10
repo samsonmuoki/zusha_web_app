@@ -3,9 +3,9 @@ from django.db import models
 
 # Create your models here.
 
-APPROVED = 'approved'
-BLACKLISTED = 'blacklisted'
-EXPIRED = 'expired'
+APPROVED = 'Approved'
+BLACKLISTED = 'Blacklisted'
+EXPIRED = 'Expired'
 
 LICENSE_STATUS = [
     (APPROVED, ('Approved to operate')),
@@ -245,6 +245,9 @@ class SaccoVehicle(models.Model):
     Each sacco stores the details of the vehicles
     they operate in this model."""
     vehicle = models.OneToOneField(Vehicle, on_delete=models.PROTECT)
+    date_registered = models.DateField(
+        auto_now=False, auto_now_add=True
+    )
     sacco = models.ForeignKey(Sacco, on_delete=models.PROTECT)
 
     def __str__(self):
@@ -265,7 +268,7 @@ class SaccoDriver(models.Model):
         auto_now=False, auto_now_add=True
     )
     last_status_update_date = models.DateField(
-        auto_now=False, auto_now_add=False
+        auto_now=False, auto_now_add=False, null=True, blank=True
     )
     description = models.TextField(max_length=500, null=True, blank=True)
 

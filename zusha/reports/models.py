@@ -3,7 +3,7 @@ from registrations.models import SaccoDriver
 
 
 PENDING = 'Pending'
-IN_PROGRESS = 'In-Progress'
+IN_PROGRESS = 'In Progress'
 RESOLVED = 'Resolved'
 
 RESOLUTION_OPTIONS = [
@@ -63,6 +63,19 @@ class DailyVehicleReport(models.Model):
     def is_sacco_pending(self):
         if self.sacco_action == PENDING:
             return True
+
+    def is_all_drivers_submitted(self):
+        """Check whether all drivers have been submitted."""
+        reports = SpeedingInstance.objects.filter(
+            regno=self.regno,
+            date=self.date
+        )
+        all_drivers_submitted = True
+        for report in reports:
+            if report.driver is None:
+                all_drivers_submitted = False
+
+        return all_drivers_submitted
 
 
 class DailySaccoReport(models.Model):

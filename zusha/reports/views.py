@@ -348,6 +348,7 @@ def fetch_reports_for_a_sacco_vehicle_on_a_specific_day(
         'ntsa_description': report.ntsa_action_description,
         'sacco_description': report.sacco_action_description,
         'is_sacco_pending': report.is_sacco_pending,
+        'is_all_drivers_submitted': report.is_all_drivers_submitted,
         'form': form,
     }
 
@@ -598,6 +599,7 @@ def fetch_all_cases_for_a_specific_sacco_driver(request, sacco, driver):
 def fetch_sacco_case(request, regno, report_id, sacco_id):
     """Resolve all cases for a single vehicle that are reported
     on the same day."""
+    sacco = Sacco.objects.get(id=sacco_id)
 
     if request.method == 'POST':
         form = ProvideDriverForm(data=request.POST)
@@ -605,7 +607,9 @@ def fetch_sacco_case(request, regno, report_id, sacco_id):
             driver_id = form.cleaned_data['driver']
 
             driver = get_object_or_404(RegisteredDriver, national_id=driver_id)
-            sacco_driver = get_object_or_404(SaccoDriver, driver=driver)
+            sacco_driver = get_object_or_404(
+                SaccoDriver, driver=driver, sacco=sacco
+            )
             rep = SpeedingInstance.objects.get(id=report_id)
 
             rep.driver = sacco_driver
@@ -626,7 +630,7 @@ def fetch_sacco_case(request, regno, report_id, sacco_id):
     report = SpeedingInstance.objects.get(
         id=report_id,
     )
-    sacco = Sacco.objects.get(id=sacco_id)
+    # sacco = Sacco.objects.get(id=sacco_id)
     drivers_list = SaccoDriver.objects.filter(sacco=sacco)
     return render(
         request, 'reports/single_sacco_report.html',

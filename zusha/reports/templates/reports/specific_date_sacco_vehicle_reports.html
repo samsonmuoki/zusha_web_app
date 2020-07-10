@@ -104,6 +104,19 @@
     input[type=submit]:hover {
         background-color: #45a049;
     }
+    #missing-drivers-message{
+        background-color: rgb(246, 25, 25);
+        color: white;
+        font-size: large;
+        padding: 5px;
+        text-align: center;
+        border-radius: 5px;
+    }
+    #missing-drivers-message:hover{
+        background-color: red;
+        font-weight: bold;
+        padding: 10px;
+    }
     #row-header{
         border-color: black;
         border-style: dotted;
@@ -117,12 +130,18 @@
         font-style: italic;
     }
     #not-resolved-message{
-        background-color: tomato;
+        background-color: rgb(246, 25, 25);
         padding: 5px;
         margin: 5px;
+        color: white;
+        font-size: large;
+        font-style: normal;
+        text-align: center;
     }
     #not-resolved-message:hover{
         background-color: rgb(251, 72, 40);
+        padding: 10px;
+        font-weight: bold;
     }
     #table-body{
         margin: 5px;
@@ -145,12 +164,12 @@
     }
     #add-driver-button{
         background-color: orange;
-        padding: 3px;
+        padding: 5px;
         text-align: center;
         border-radius: 3px;
     }
     #add-driver-button:hover{
-        background-color: rgb(255, 187, 0);
+        background-color: tomato;
     }
     /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
     @media screen and (max-width: 800px) {
@@ -200,15 +219,16 @@
                     {% csrf_token %}
                     <!-- <input type="text"> -->
                     {{ form.as_p }}
+                {% if is_all_drivers_submitted %}
                     <input type="submit" value="submit">
-                  </form>
-                <!-- UPDATE STATUS
-                <select name="update-sacco-action" onchange="location = this.value">
-                    <option value="">-------</option>
-                    <option value="/reports/saccos/{{sacco_id}}/{{regno}}/{{date}}/Pending/">PENDING</option>
-                    <option value="/reports/saccos/{{sacco_id}}/{{regno}}/{{date}}/In-Progress/">IN PROGRESS</option>
-                    <option value="/reports/saccos/{{sacco_id}}/{{regno}}/{{date}}/Resolved/">RESOLVED</option>
-                </select> -->
+                {% else %}
+                    <div id="missing-drivers-message">
+                        DRIVERS FOR ALL REPORTED INSTANCES ARE<br>
+                        REQUIRED BEFORE THE CASE STATUS CAN BE UPDATED
+                    </div>
+                {% endif %}
+                </form>
+
             </div>
         </div>
 
@@ -221,8 +241,9 @@
                         <th>Speed</th>
                         <th>Time</th>
                         <th>Location</th>
+                        <!-- <th>Driver</th> -->
+                        <!-- <th>Provide driver</th> -->
                         <th>Driver</th>
-                        <th>Provide driver</th>
                     </tr>
                     {% for report in reports %}
                     <tr>
@@ -236,10 +257,11 @@
                                 <img src="{% static "images/location4.png" %}" alt="view"  width="30px" height="30px">
                             </a>
                         </td>
-                        <td>{{ report.driver}}</td>
+                        <!-- <td>{{ report.driver}}</td> -->
                         <td>
                             {% if report.driver %}
-                                driver already submitted
+                                <!-- driver already submitted -->
+                                {{ report.driver }}
                             {% else %}
                             <a href="/reports/all/{{sacco_id}}/{{report.regno}}/{{report.id}}/">
                                 <div id="add-driver-button">

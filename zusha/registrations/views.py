@@ -68,7 +68,8 @@ def sacco_vehicles_list(request, sacco_id):
 
     context = {
         'vehicles': vehicles,
-        'sacco': sacco.sacco_name.upper()
+        'sacco': sacco.sacco_name.upper(),
+        'sacco_id': sacco_id,
     }
     return render(
         request,
@@ -358,7 +359,10 @@ def add_vehicle(request, sacco_id):
         form = VehicleForm()
     return render(
         request, 'registrations/register_vehicle.html',
-        {'form': form}
+        {
+            'form': form,
+            'sacco_id': sacco_id,
+        }
     )
 
 
