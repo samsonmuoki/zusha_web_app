@@ -312,7 +312,7 @@ def get_all_vehicles(request):
     vehicles = SaccoVehicle.objects.order_by('sacco')
 
     page = request.GET.get('page', 1)
-    paginator = Paginator(vehicles, 10)
+    paginator = Paginator(vehicles, 50)
     try:
         vehicles = paginator.page(page)
     except PageNotAnInteger:
