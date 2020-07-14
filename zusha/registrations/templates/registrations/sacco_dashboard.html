@@ -30,7 +30,7 @@
                 margin: 0;
                 padding: 0;
                 overflow: hidden;
-                background-color: #333;
+                background-color: rgb(73, 33, 33);
                 
             }
 
@@ -145,30 +145,6 @@
             #add-vehicle:hover, #add-driver:hover, #sacco-vehicles-link:hover, #sacco-drivers-link:hover{
                 background-color: goldenrod;
                 }
-            /* input[type=text], select {
-                width: 100%;
-                padding: 12px 20px;
-                margin: 8px 0;
-                display: inline-block;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                box-sizing: border-box;
-            }
-
-            input[type=submit] {
-                width: 100%;
-                background-color: orange;
-                color: white;
-                padding: 14px 20px;
-                margin: 8px 0;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-
-            input[type=submit]:hover {
-                background-color: #45a049;
-            } */
             #ones-to-watch{
                 width: 90%;
                 height: 1000px;
@@ -235,6 +211,7 @@
             }
             #pending:hover, #in-progress:hover, #resolved:hover{
                 font-weight: bold;
+                /* background-color: blue; */
             }
             #missing-driver{
                 background-color: red;
@@ -261,6 +238,26 @@
             tr:nth-child(even) {
             background-color: #dddddd;
             }
+            .blink_img {
+            animation: blinker 2s linear infinite;
+            }
+            @keyframes blinker {
+            50% { opacity: 0; }
+            }
+            @keyframes blinker {
+            50% { opacity: 0; }
+            }
+            /* .blinking{
+            animation:blinkingText 1.2s infinite;
+            }
+            /* @keyframes blinker{
+                0%{     color: #000;    }
+                49%{    color: #000; }
+                60%{    color: transparent; }
+                99%{    color:transparent;  }
+                100%{   color: #000;    }
+            } */
+
 
 
             @media screen and (max-width: 800px) {
@@ -293,12 +290,13 @@
         <div id="contents">
             <div id="menu">
                 <ul>
-                    <li><a href="http://localhost:8000">HOME</a></li>
-                    <li><a href="/reports/all">REPORTS</a></li>
-                    <li><a href="/registrations/drivers">DRIVERS</a></li>
-                    <li><a href="/registrations/saccos">SACCOS</a></li>
-                    <li><a href="/registrations/vehicles">VEHICLES</a></li>
-                    <li><a href="{% url 'registrations:sacco_logout' %}">LOGOUT</a></li>
+                    <li><a href="{% url 'registrations:saccos_dashboard' sacco_id %}">HOME</a></li>
+                    <!-- <li><a href="/reports/all">REPORTS</a></li> -->
+                    <li><a href="{% url 'registrations:dashboard_sacco_drivers_list' sacco_id %}">DRIVERS</a></li>
+                    <!-- <li><a href="/registrations/saccos">SACCOS</a></li> -->
+                    <li><a href="{% url 'registrations:sacco_vehicles_list' sacco_id %}">VEHICLES</a></li>
+                    <!-- <li><a href="{% url 'registrations:sacco_logout' %}">LOGOUT</a></li> -->
+                    <li><a href="">LOGOUT</a></li>
                 </ul>
             </div>
             <div id="management">
@@ -349,7 +347,7 @@
                     <a href="{% url 'registrations:add_driver' sacco_id %}">
                         <div id="add-driver">Add a driver</div>
                     </a>
-                    <a href="{% url 'registrations:sacco_drivers_list' sacco_id %}">
+                    <a href="{% url 'registrations:dashboard_sacco_drivers_list' sacco_id %}">
                         <div id="sacco-drivers-link">ALL DRIVERS LIST</div>
                     </a>
                     
@@ -388,11 +386,11 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if report.ntsa_action == "Pending" %}
+                                        {% if report.sacco_action == "Pending" %}
                                             <div id="pending">{{report.sacco_action}}</div>
-                                        {% elif report.ntsa_action == "In Progress" %}
+                                        {% elif report.sacco_action == "In Progress" %}
                                             <div id="in-progress">{{report.sacco_action}}</div>
-                                        {% elif report.ntsa_action == "Resolved" %}
+                                        {% elif report.sacco_action == "Resolved" %}
                                             <div id="resolved">{{ report.sacco_action }}</div>
                                         {% endif %}
                                     </td>

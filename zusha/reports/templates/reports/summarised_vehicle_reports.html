@@ -73,6 +73,21 @@
         height: 400px;
         text-align: center;
     }
+    #top-saccos-header, #top-vehicles-header, #top-drivers-header{
+        font-size: large;
+        font-weight: bold;
+        border-style: solid;
+        border-width: 0 0 2px 0;
+        border-color: gray;
+        padding: 5px;
+    }
+    /* #top-saccos-content{
+        /* padding: 5px; */
+        background-color: yellow;
+    } */
+    #row{
+        background-color: yellow;
+    }
     #top-vehicles{
         padding: 5px;
         margin: 5px;
@@ -118,6 +133,28 @@
     #tr:nth-child(even) {
     background-color: #dddddd;
     }
+    #pending{
+        background-color: red;
+        color: white;
+        border-radius: 3px;
+        padding: 5px;
+    }
+    #in-progress{
+        background-color: rgb(255, 123, 0);
+        color: white;
+        border-radius: 3px;
+        padding: 5px;
+    }
+    #resolved{
+        background-color: rgb(11, 182, 11);
+        color: white;
+        border-radius: 3px;
+        padding: 5px;
+    }
+    #pending:hover, #in-progress:hover, #resolved:hover{
+        font-weight: bold;
+        /* background-color: blue; */
+    }
     /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
     @media screen and (max-width: 800px) {
         #statistics, #contents {   
@@ -150,28 +187,30 @@
     </div>
     <div id="contents">
         <div id="statistics">
-            <div id="summary"> TOTAL REPORTS: {{reports_list|length}} </div>
+            <!-- <div id="summary"> TOTAL REPORTS: {{reports_list|length}} </div> -->
             <div id="top-saccos">
-                <h2>TOP 10 REPORTED SACCOS</h2>
+                <div id="top-saccos-header">TOP 10 REPORTED SACCOS</div>
                 {% if top_saccos %}
-                    <table>
-                        <tr>
-                            <th>SACCO</th>
-                            <th>TOTAL CASES</th>
-                        </tr>
-                        {% for key, value in top_saccos %}
-                        <tr>
-                            <td>{{key}}</td> 
-                            <td>{{value}}</td>
-                        </tr>
-                        {% endfor %}
-                </table>
-                {% else %}
-                    No saccos have been reported yet
+                    <!-- <div id="top-saccos-content"> -->
+                        <table>
+                            <tr>
+                                <th>SACCO</th>
+                                <th>VEHICLES REPORTED</th>
+                            </tr>
+                            {% for key, value in top_saccos %}
+                            <tr id="row">
+                                <td>{{key}}</td> 
+                                <td>{{value}}</td>
+                            </tr>
+                            {% endfor %}
+                    </table>
+                    {% else %}
+                        No saccos have been reported yet
+                    <!-- </div> -->
                 {% endif %}
             </div>
             <div id="top-vehicles">
-                <h2>TOP 10 REPORTED VEHICLES</h2>
+                <div id="top-vehicles-header">TOP 10 REPORTED VEHICLES</div>
                 {% if top_vehicles %}
                     <table>
                         <tr>
@@ -194,7 +233,7 @@
                 {% endif %}
             </div>
             <div id="top-drivers">
-                <h2>TOP 10 REPORTED DRIVERS</h2>
+                <div id="top-drivers-header">TOP 10 REPORTED DRIVERS</div>
                 {% if top_drivers %}
                     <table>
                         <tr>
@@ -221,19 +260,18 @@
 
         <div id="details">
             <div>
-                <div id="details-title"> VEHICLE REPORTS SUMMARY</div>
+                <div id="details-title"> LATEST VEHICLE REPORTS SUMMARY</div>
                 <div id="filter-section">
                     <div id="filter-text">Filter</div>
                     <div id="filter-dropdown">
-                        <select name='sacco-report' onchange="location = this.value;">
-                            <option value="http://localhost:8000">All Saccos</option>
-
-                            {% if saccos_list %}
-                                {% for sacco in saccos_list %}
-                                    <option value="/reports/saccos/{{sacco}}">{{sacco}}</option>
+                        {% if saccos %}
+                            <select name='sacco-report' onchange="location = this.value;">
+                                <option value="http://localhost:8000">All Saccos</option>
+                                {% for sacco in saccos %}
+                                    <option value="http://localhost:8000/reports/saccos/{{sacco.id}}">{{sacco.sacco_name}}</option>
                                 {% endfor %}
-                            {% endif %}
-                        </select>
+                            </select>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -253,7 +291,7 @@
                         <tr id="tr">
                             <td>
                                 <a href='/reports/summary/vehicles/{{report.regno}}/{{report.date.year}}-{{report.date.month}}-{{report.date.day}}'>
-                                    <img src="{% static "images/location4.png" %}" alt="view"  width="30px" height="30px">
+                                    <div class="blink_img"> <img src="{% static "images/location4.png" %}" alt="view"  width="30px" height="30px"> </div>
                                 </a>
                             </td>
                             <td>{{ report.regno }}</td>
@@ -261,8 +299,24 @@
                             <td>{{ report.sacco }}</td>
                             <td>{{ report.date }}</td>
                             <td>{{ report.count }}</td>
-                            <td>{{report.sacco_action}}</td>
-                            <td>{{report.ntsa_action}}</td>
+                            <td>
+                                {% if report.sacco_action == "Pending" %}
+                                    <div id="pending">{{report.sacco_action}}</div>
+                                {% elif report.sacco_action == "In Progress" %}
+                                    <div id="in-progress">{{report.sacco_action}}</div>
+                                {% elif report.sacco_action == "Resolved" %}
+                                    <div id="resolved">{{ report.sacco_action }}</div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if report.ntsa_action == "Pending" %}
+                                    <div id="pending">{{report.ntsa_action}}</div>
+                                {% elif report.ntsa_action == "In Progress" %}
+                                    <div id="in-progress">{{report.ntsa_action}}</div>
+                                {% elif report.ntsa_action == "Resolved" %}
+                                    <div id="resolved">{{ report.ntsa_action }}</div>
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </table>

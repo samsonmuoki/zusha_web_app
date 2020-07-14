@@ -32,6 +32,11 @@ urlpatterns = [
     path('saccos/login', views.login_sacco_admin, name='sacco_login'),
     path('saccos/logout', views.logout_sacco_admin, name='sacco_logout'),
     path('drivers/', views.get_all_drivers, name='drivers'),
+    path(
+        'drivers/saccos/<slug:sacco_id>/',
+        views.sacco_drivers_list,
+        name='sacco_drivers_list'
+    ),
     path('vehicles/', views.get_all_vehicles, name='vehicles'),
 
     path(
@@ -46,8 +51,8 @@ urlpatterns = [
     # DASHBOARD SACCO DRIVERS
     path(
         'saccos/dashboard/<slug:sacco_id>/drivers/',
-        views.sacco_drivers_list,
-        name='sacco_drivers_list'
+        views.dashboard_sacco_drivers_list,
+        name='dashboard_sacco_drivers_list'
     ),
     path(
         'saccos/dashboard/<slug:sacco_id>/drivers/add',

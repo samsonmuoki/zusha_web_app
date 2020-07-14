@@ -121,6 +121,54 @@ def sacco_drivers_list(request, sacco_id):
     }
     return render(
         request,
+        'registrations/sacco_drivers_list.html',
+        context
+    )
+
+
+def dashboard_sacco_drivers_list(request, sacco_id):
+    sacco = Sacco.objects.get(id=sacco_id)
+    drivers_list = SaccoDriver.objects.filter(sacco=sacco)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(drivers_list, 50)
+    try:
+        drivers = paginator.page(page)
+    except PageNotAnInteger:
+        drivers = paginator.page(1)
+    except EmptyPage:
+        drivers = paginator.page(paginator.num_pages)
+
+    if request.method == "POST":
+        form = SearchDriverIdForm(request.POST)
+        if form.is_valid():
+            national_id = form.cleaned_data['national_id']
+
+            driver = RegisteredDriver.objects.get(
+                national_id=national_id
+            )
+            driver_profile = SaccoDriver.objects.get(
+                driver=driver,
+                sacco=sacco
+            )
+            context = {
+                'driver_profile': driver_profile,
+            }
+            return redirect(
+                'registrations:sacco_driver_profile',
+                # args=[sacco_id, national_id]
+            )
+    else:
+        form = SearchDriverIdForm()
+
+    context = {
+        'sacco_id': sacco_id,
+        'drivers': drivers,
+        'sacco': sacco.sacco_name.upper(),
+        'form': form,
+    }
+    return render(
+        request,
         'registrations/dashboard_sacco_drivers_list.html',
         context
     )
@@ -250,7 +298,12 @@ def get_all_drivers(request):
     except EmptyPage:
         drivers = paginator.page(paginator.num_pages)
 
-    context = {'drivers': drivers}
+    saccos = Sacco.objects.order_by('sacco_name')
+
+    context = {
+        'drivers': drivers,
+        'saccos': saccos,
+    }
     return render(request, 'registrations/drivers.html', context)
 
 
@@ -376,7 +429,16 @@ def confirm_vehicle(request, sacco_id, regno):
         vehicle=vehicle,
         sacco=sacco,
     )
-    return HttpResponse('VEHICLE SUCCESSFULLY ADDED')
+    context = {
+        'vehicle': vehicle,
+        'sacco_id': sacco_id,
+    }
+    # return HttpResponse('VEHICLE SUCCESSFULLY ADDED')
+    return render(
+        request,
+        'registrations/message_added_vehicle.html',
+        context
+    )
 
 
 def add_driver(request, sacco_id):
@@ -406,7 +468,10 @@ def add_driver(request, sacco_id):
         form = DriverForm()
     return render(
         request, 'registrations/add_driver.html',
-        {'form': form}
+        {
+            'form': form,
+            'sacco_id': sacco_id
+        }
     )
 
 
@@ -420,4 +485,13 @@ def confirm_driver(request, sacco_id, driver_id):
         driver=driver,
         sacco=sacco,
     )
-    return HttpResponse('DRIVER SUCCESSFULLY ADDED')
+    context = {
+        'driver': driver,
+        "sacco_id": sacco_id,
+    }
+    # return HttpResponse('DRIVER SUCCESSFULLY ADDED')
+    return render(
+        request,
+        "registrations/message_added_driver.html",
+        context
+    )

@@ -83,7 +83,7 @@
             <ul>
                 <li><a href="{% url 'registrations:saccos_dashboard' sacco_id %}">HOME</a></li>
                 <!-- <li><a href="/reports/all">REPORTS</a></li> -->
-                <li><a href="{% url 'registrations:sacco_drivers_list' sacco_id %}">DRIVERS</a></li>
+                <li><a href="{% url 'registrations:dashboard_sacco_drivers_list' sacco_id %}">DRIVERS</a></li>
                 <!-- <li><a href="/registrations/saccos">SACCOS</a></li> -->
                 <li><a href="{% url 'registrations:sacco_vehicles_list' sacco_id %}">VEHICLES</a></li>
                 <li><a href="">EXTRA</a></li>
@@ -113,7 +113,7 @@
                 </tr>
                 {% for driver in drivers %}
                     <tr>
-                        <td><a href="{% url 'registrations:sacco_driver_profile' sacco_id driver.driver.national_id %}">Update Profile</a></td>
+                        <td><a href="{% url 'registrations:sacco_driver_profile' sacco_id driver.driver.national_id %}" target="_blank">Update Profile</a></td>
                         <td>{{ driver.driver.national_id}}</td> 
                         <td>{{ driver.driver.name}}</td>
                         <td>{{ driver.driver.license_status}}</td> 

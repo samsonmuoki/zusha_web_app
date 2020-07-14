@@ -39,20 +39,19 @@
 
             body{
                 /* background-color: whitesmoke; */
-                padding: 20px;
+                /* padding: 20px; */
+                background-color: white;
             }
             #content{
                 width: 60%;
                 margin: auto;
-                background-color: whitesmoke;
                 padding: 5px;
             }
             #add_vehicle_window{
                 /* background-color: white; */
                 width: 50%;
                 height: 150px;
-                margin: auto;
-                margin-top: 3px;
+                margin: 10% 25% 0 25%;
                 margin-bottom: 3px;
                 border-radius: 5px;
                 background-color: orange;
@@ -89,6 +88,7 @@
                 border-width: 0 0 3px 0;
                 border-color: gray;
                 margin-bottom: 3px;
+                padding: 5px;
             }
             #vehicle-details{
                 background-color: white;
@@ -168,7 +168,7 @@
         </div>
         <div id="content">
             <div id="add_vehicle_window">
-                <div id="add-vehicle-header">Add a vehicle</div>
+                <div id="add-vehicle-header">ADD A VEHICLE</div>
                 <form action="" method="post">
                     {% csrf_token %}
                     <label for="regno" id="label_regno">Registration Number</label>

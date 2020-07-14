@@ -52,7 +52,7 @@ urlpatterns = [
         name='all_reports_for_a_specific_vehicle'
     ),
     path(
-        'saccos/<slug:sacco>/',
+        'saccos/<slug:sacco_id>/',
         views.fetch_all_reports_for_a_specific_sacco,
         name='all_reports_for_a_specific_sacco'
     ),

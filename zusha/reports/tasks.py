@@ -70,7 +70,6 @@ def update_reports_db():
         speed = report['Speed']
         time = report['Time'].replace(' at', '').replace('.', '-')
         date_list = time.replace(' ', '-').replace(':', '-').split('-')
-        # date = datetime.date(
         day = date(
             int(date_list[0]), int(date_list[1]), int(date_list[2])
         )
@@ -131,6 +130,26 @@ def track_each_driver_reports():
 
 
 @shared_task
+def blacklist_saccos():
+    saccos = Sacco.objects.all()
+    reports = DailyVehicleReport.objects.filter(
+        # ntsa_action="Pending"
+        ntsa_action="Pending"
+    )
+    # import pdb
+    # pdb.set_trace()
+    for sacco in saccos:
+        reports_list = []
+        for report in reports:
+            # if report.sacco == sacco.sacco_name:
+            if report.sacco == sacco.sacco_name and report.date > sacco.last_inspection_date:
+                reports_list.append(report)
+        if len(reports_list) > 0:
+            sacco.license_status = "Blacklisted"
+            sacco.save()
+
+
+@shared_task
 def blacklist_vehicles():
     vehicles = Vehicle.objects.all()
     reports = SpeedingInstance.objects.all()
@@ -140,27 +159,11 @@ def blacklist_vehicles():
             if report.regno == vehicle.registration_number:
                 reports_list.append(report)
         if len(reports_list) > 5:
-            vehicle.license_status = "blacklisted"
+            vehicle.license_status = "Blacklisted"
             vehicle.save()
 
 
 utc = pytz.utc
-
-
-@shared_task
-def blacklist_saccos():
-    saccos = Sacco.objects.all()
-    reports = DailyVehicleReport.objects.filter(
-        ntsa_action="Pending"
-    )
-    for sacco in saccos:
-        reports_list = []
-        for report in reports:
-            if report.sacco == sacco.sacco_name:
-                reports_list.append(report)
-        if len(reports_list) > 5:
-            sacco.license_status = "BLACKLISTED"
-            sacco.save()
 
 
 # TODO optimise driver reporting
@@ -186,43 +189,9 @@ def blacklist_drivers():
     for driver in drivers:
         reports_list = []
         for report in reports:
-            if report.driver == driver.driver:
+            # if report.driver == driver.driver:
+            if report.driver == driver.driver and report.date > driver.last_revision_date:
                 reports_list.append(report)
         if len(reports_list) > 1:
-            driver.license_status = "BLACKLISTED"
+            driver.license_status = "Blacklisted"
             driver.save()
-
-
-# @periodic_task
-# @shared_task
-# def send_alerts():
-#     """Send notifications to Saccos whose vehicles have been reported."""
-#     # Fetch each sacco's email from the local database.
-#     saccos = Sacco.objects.all()
-#     # Fetch all reports from the firebase
-#     reports = db.child('Reports').get()
-#     reports_query_data = reports.val()
-#     # Filter the reports send in the last minute
-#     # all_latest_reports = []
-#     reports_dictionary = {}
-
-#     for value in range(0, len(reports_query_data)):
-#         time_str = datetime.strptime(reports_query_data[value]['Time'], '%Y.%m.%d at %H:%M:%S')
-#         if timezone.now().replace(tzinfo=None)-time_str < timedelta(hours=1):
-#             reports_dictionary.update({int(value): reports_query_data[value]})
-#     # rdb.set_trace()
-
-#     # for sacco in saccos:
-#     for key, value in reports_dictionary.items():
-#         for sacco in saccos:
-#             if value["Sacco"] == sacco.sacco_name:
-#                 email_subject = "ZUSHA COMPLAINT"
-#                 email_message = f"Vehicle REG: {value['RegNo']} belonging to your sacco, has been reported for overspeeding at {value['Speed']} KM/H in this Location {value['Location']}"
-#                 send_mail(
-#                     email_subject,
-#                     email_message,
-#                     'samsonmuoki97@gmail.com',
-#                     ['samsonmuoki97@gmail.com'],
-#                     fail_silently=False,
-#                     html_message=f"Vehicle REG: <b>{value['RegNo']}</b> belonging to <b>{sacco.sacco_name}</b> sacco, has been reported for overspeeding at <b>{value['Speed']}</b> KM/H in this Location <a href='http://localhost:8000/reports/all/{key}'>{value['Location']}</a>."
-#                 )

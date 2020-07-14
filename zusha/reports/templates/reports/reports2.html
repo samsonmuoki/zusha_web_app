@@ -157,7 +157,7 @@
                     <table>
                         <tr>
                             <th>SACCO</th>
-                            <th>TOTAL CASES</th>
+                            <th>VEHICLES REPORTED</th>
                         </tr>
                         {% for key, value in top_saccos %}
                         <tr>
@@ -185,13 +185,14 @@
                 <div id="filter-section">
                     <div id="filter-text">Filter</div>
                     <div id="filter-dropdown">
-                        <select name='sacco-report' onchange="location = this.value;">
-                            <option value="http://localhost:8000">All Saccos</option>
-                            <option value="/reports/saccos/Makos">Makos</option>
-                            <option value="/reports/saccos/Manatwa">Manatwa</option>
-                            <option value="/reports/saccos/Metro">Metro</option>
-                            <option value="/reports/saccos/Lopha">Lopha</option>
-                        </select>
+                        {% if saccos %}
+                            <select name='sacco-report' onchange="location = this.value;">
+                                <option value="http://localhost:8000">All Saccos</option>
+                                {% for sacco in saccos %}
+                                    <option value="http://localhost:8000/reports/saccos/{{sacco.id}}">{{sacco.sacco_name}}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -206,8 +207,8 @@
                             <th id="th">Time</th>
                             <th id="th">Location</th>
                             <th id="th">Driver</th>
-                            <th id="th">SACCO ACTION</th>
-                            <th id="th">NTSA ACTION</th>
+                            <!-- <th id="th">SACCO ACTION</th>
+                            <th id="th">NTSA ACTION</th> -->
                         </tr>
                         {% for report in reports %}
                         <tr id="tr">
@@ -221,8 +222,8 @@
                                     <img src="{% static "images/location4.png" %}" alt="view"  width="30px" height="30px">
                                 </a>
                             <td id="th">{{ report.driver}}</td>
-                            <td id="th">{{report.sacco_resolution}}</td>
-                            <td id="th">{{report.ntsa_resolution}}</td>
+                            <!-- <td id="th">{{report.sacco_action}}</td>
+                            <td id="th">{{report.ntsa_action}}</td> -->
                         </tr>
                         {% endfor %}
                     </table>

@@ -70,9 +70,72 @@
         background-color: #dddddd;
     }
     #summary{
-        padding: 5px;
+        /* padding: 5px;
         background-color: greenyellow;
+        text-align: center; */
+        padding: 8px;
+        margin: 5px;
+        border-radius: 3px;
+        background-color: white;
+        height: 450px;
         text-align: center;
+    }
+    #summary-header{
+        border-style: solid;
+        border-width: 0px 0px 2px 0px;
+        border-color: grey;
+        background-color: white;
+        padding: 5px;
+        /* border-radius: 3px; */
+    }
+    #summary-contents{
+        padding: 5px;
+        border-radius: 3px;
+        margin: 2px;
+        background-color: white;
+    }
+    #summary-row-pending{
+        padding: 8px;
+        margin: 2px 2px 5px 2px;
+        border-radius: 2px;
+        font-size: large;
+        background-color: red;
+        color: white;
+    }
+    #summary-row-progress{
+        padding: 8px;
+        margin: 2px 2px 5px 2px;
+        border-radius: 2px;
+        font-size: large;
+        background-color: rgb(255, 102, 0);
+        color: white;
+    }
+    #summary-row-resolved{
+        padding: 8px;
+        margin: 2px 2px 5px 2px;
+        border-radius: 2px;
+        font-size: large;
+        background-color: green;
+        color: white;
+    }
+    #summary-row-footer{
+        padding: 10px;
+        margin: 2px;
+        margin-top: 15px;
+        border-radius: 2px;
+        background-color: rgba(63, 183, 30, 0.625);
+        color: white;
+        font-size: xx-large;
+        font-weight: bolder;
+    }
+    #summary-row-pending:hover, #summary-row-progress:hover, #summary-row-resolved:hover{
+        padding: 10px;
+        font-weight: bold;
+    }
+    #summary-row-footer:hover{
+        padding: 15px;
+        font-weight: bold;
+        background-color: green;
     }
     #frequently-reported-vehicles, #frequently-reported-drivers{
         padding: 8px;
@@ -86,7 +149,9 @@
         border-style: solid;
         border-width: 0px 0px 2px 0px;
         border-color: grey;
+        padding: 5px;
     }
+
     #frequently-reported-vehicles-table, #frequently-reported-drivers-table{
         padding: 5px;
     }
@@ -94,6 +159,13 @@
         float: left;
         width: 75%;
         margin-left: 5px;
+    }
+    #latest-reports-header{
+        float: left;
+        width: 72%;
+        margin-left: 5px;
+        padding: 5px;
+        text-align: center;
     }
     #filter-section{
         text-align: center;
@@ -146,11 +218,19 @@
             <li><a href="">EXTRA</a></li>
         </ul>
     </div>
-    <div id="sacco-title"> {{sacco}} REPORTS</div>
+    <div id="sacco-title"> {{sacco}} PROFILE</div>
 
     <div id="contents">
         <div id="statistics">
-            <div id="summary"> TOTAL REPORTS: {{reports_list|length}} </div>
+            <div id="summary">
+                <div id="summary-header"> TOTAL VEHICLES REPORTED: {{reports_list|length}} </div>
+                <div id="summary-contents">
+                    <div id="summary-row-pending">CASES PENDING: <b>{{ pending_reports_percent }} %</b> </div>
+                    <div id="summary-row-progress">CASES IN PROGRESS: <b>{{ in_progress_percent }} %</b> </div>
+                    <div id="summary-row-resolved">CASES RESOLVED: <b>{{ resolved_percent }} %</b> </div>
+                    <div id="summary-row-footer">RATING <b> {{ rating }} </b> </div>
+                </div>                
+            </div>
             <div id="frequently-reported-vehicles">
                 <div id="frequently-reported-vehicles-header">
                     FREQUENTLY REPORTED VEHICLES
@@ -210,16 +290,19 @@
 
         <div id="details">
             <div>
+                <div id="latest-reports-header">LATEST REPORTS</div>
+
                 <div id="filter-section">
                     <div id="filter-text">Filter</div>
                     <div id="filter-dropdown">
-                        <select name='sacco-report' onchange="location = this.value;">
-                            <option value="/reports/saccos">All Saccos</option>
-                            <option value="/reports/saccos/Makos">Makos</option>
-                            <option value="/reports/saccos/Manatwa">Manatwa</option>
-                            <option value="/reports/saccos/Metro">Metro</option>
-                            <option value="/reports/saccos/Lopha">Lopha</option>
-                        </select>
+                        {% if saccos %}
+                            <select name='sacco-report' onchange="location = this.value;">
+                                <option value="http://localhost:8000">All Saccos</option>
+                                {% for sacco in saccos %}
+                                    <option value="http://localhost:8000/reports/saccos/{{sacco.id}}">{{sacco.sacco_name}}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -245,8 +328,8 @@
                             <td>{{ report.date }}</td>
                             <td>{{report.count}}</td>
                             <td>{{ report.driver}}</td>
-                            <td>{{report.sacco_resolution}}</td>
-                            <td>{{report.ntsa_resolution}}</td>
+                            <td>{{report.sacco_action}}</td>
+                            <td>{{report.ntsa_action}}</td>
                         </tr>
                         {% endfor %}
                     </table>

@@ -7,7 +7,10 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
-# from registration.models import Vehicle, Sacco, Driver
+from registrations.models import (
+    Sacco,
+    # Vehicle, Driver
+)
 from reports.models import (
     # Report,
     DailyVehicleReport
@@ -61,16 +64,7 @@ def index(request):
     except EmptyPage:
         reports = paginator.page(paginator.num_pages)
 
-    # sacco_list = []
-    # for report in reports_list:
-    #     sacco_list.append(report.sacco)
-    # reported_saccos = {}
-    # for sacco in sacco_list:
-    #     reported_saccos.update({sacco: sacco_list.count(sacco)})
-    # sorted_list = sorted(
-    #     reported_saccos.items(), key=lambda x: x[1], reverse=True
-    # )
-    # top_saccos = sorted_list[:10]  # print the top 10 reported saccos
+    saccos = Sacco.objects.all()
 
     context = {
         'reports': reports,
@@ -79,6 +73,7 @@ def index(request):
         'top_saccos': top_saccos(10),
         'top_vehicles': top_vehicles(10),
         'top_driver': top_drivers(10),
+        'saccos': saccos,
     }
 
     return render(request, 'reports/summarised_vehicle_reports.html', context)

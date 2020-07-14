@@ -190,12 +190,6 @@ CELERY_RESULT_SERIALIZER = "json"
 
 
 CELERY_BEAT_SCHEDULE = {
-    # 'reports.tasks.send_alerts': {
-    #     'task': 'tasks.send_alerts',
-    #     # 'schedule': crontab(hour=7, minute=30, day_of_week=1),
-    #     'schedule': crontab(),  # execute every minute
-    #     # 'args': (16, 16),
-    # },
     'update-db': {
         'task': 'reports.tasks.update_reports_db',
         'schedule': crontab(),  # execute every minute
@@ -212,16 +206,17 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'reports.tasks.track_each_sacco_reports',
         'schedule': crontab(),  # execute every minute
     },
-    'send-alerts': {
-        'task': 'reports.tasks.send_alerts',
+    # 'send-alerts': {
+    #     'task': 'reports.tasks.send_alerts',
+    #     'schedule': crontab(),  # execute every minute
+    # },
+
+    'zusha.reports.tasks.blacklist_saccos': {
+        'task': 'reports.tasks.blacklist_saccos',
         'schedule': crontab(),  # execute every minute
     },
     'zusha.reports.tasks.blacklist_vehicles': {
         'task': 'reports.tasks.blacklist_vehicles',
-        'schedule': crontab(),  # execute every minute
-    },
-    'zusha.reports.tasks.blacklist_saccos': {
-        'task': 'reports.tasks.blacklist_saccos',
         'schedule': crontab(),  # execute every minute
     },
     'zusha.reports.tasks.blacklist_drivers': {

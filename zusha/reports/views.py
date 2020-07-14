@@ -183,10 +183,13 @@ def get_all_reports_list(request):
     except EmptyPage:
         reports = paginator.page(paginator.num_pages)
 
+    saccos = Sacco.objects.all()
+
     context = {
         'reports': reports,
         'reports_list': reports_list,
         'top_saccos': top_saccos(10),
+        'saccos': saccos,
     }
 
     return render(request, 'reports/reports2.html', context)
@@ -462,8 +465,9 @@ def fetch_summary_of_all_reports_for_a_specific_vehicle(request, regno):
     )
 
 
-def fetch_all_reports_for_a_specific_sacco(request, sacco):
+def fetch_all_reports_for_a_specific_sacco(request, sacco_id):
     """Fetch the list of all reports for a certain sacco."""
+    sacco = Sacco.objects.get(id=sacco_id).sacco_name
     reports_list = DailyVehicleReport.objects.filter(sacco=sacco).order_by(
         '-date', '-count',
     )
@@ -476,12 +480,39 @@ def fetch_all_reports_for_a_specific_sacco(request, sacco):
     except EmptyPage:
         reports = paginator.page(paginator.num_pages)
 
+    saccos = Sacco.objects.all()
+
+    pending_reports = DailyVehicleReport.objects.filter(
+        sacco=sacco, sacco_action='Pending'
+    ).order_by('-date')
+    in_progress_reports = DailyVehicleReport.objects.filter(
+        sacco=sacco, sacco_action='In Progress'
+    ).order_by('-date')
+    resolved_reports = DailyVehicleReport.objects.filter(
+        sacco=sacco, sacco_action='Resolved'
+    ).order_by('-date')
+
+    all_reports = DailyVehicleReport.objects.all().count()
+    total_cases = reports_list.count()
+    pending_reports_percent = pending_reports.count() / total_cases * 100
+    in_progress_percent = in_progress_reports.count() / total_cases * 100
+    resolved_percent = resolved_reports.count() / total_cases * 100
+    rating = round((all_reports - total_cases) / all_reports * 10, 1)
+
     context = {
         'reports': reports,
         'reports_list': reports_list,
         'sacco': sacco,
-        'frequently_reported_vehicles': top_sacco_vehicles(10, sacco),
-        'frequently_reported_drivers': top_sacco_drivers(10, sacco)
+        'saccos': saccos,
+        'frequently_reported_vehicles': top_sacco_vehicles(10, sacco_id),
+        'frequently_reported_drivers': top_sacco_drivers(10, sacco_id),
+        'pending_reports': pending_reports,
+        'in_progress_reports': in_progress_reports,
+        'resolved_reports': resolved_reports,
+        'pending_reports_percent': pending_reports_percent,
+        'in_progress_percent': in_progress_percent,
+        'resolved_percent': resolved_percent,
+        'rating': rating,
     }
 
     return render(

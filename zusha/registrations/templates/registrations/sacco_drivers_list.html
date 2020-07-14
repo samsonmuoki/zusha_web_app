@@ -1,5 +1,3 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -24,7 +22,6 @@
                 padding: 0;
                 overflow: hidden;
                 background-color: #333;
-                
             }
         
             li {
@@ -45,6 +42,25 @@
             .active {
                 background-color: #4CAF50;
             }
+            #registered-drivers-header-row{
+                background-color: white;
+                margin: 3px;
+                width: 100%;
+                padding: 3px;
+                height: 40px;
+            }
+            #registered-drivers-header-text{
+                float: left;
+                width: 50%;
+                text-align: center;
+                padding: 3px;
+            }
+            #search-drivers-bar{
+                float: left;
+                width: 25%;
+                text-align: left;
+                padding: 3px;
+            }
             table {
             font-family: arial, sans-serif;
             border-collapse: collapse;
@@ -60,13 +76,6 @@
             tr:nth-child(even) {
             background-color: #dddddd;
             }
-            #profile-icon{
-                margin: auto;
-            }
-            #profile-icon:hover{
-                margin: auto;
-                background-color: orange;
-            }
         </style>
     </head>
     <body>
@@ -80,52 +89,37 @@
                 <li><a href="">EXTRA</a></li>
             </ul>
         </div>
-        {% if drivers %}
-            <div id="header-bar">
-                <div id="search">
-                    <form>
-                        <input type="text" placeholder="enter driver id" name="driver_id">
-                        <input type="submit" value="SEARCH">
-                    </form>
-                </div>
-                <div id="filter">
-                    Filter:
-                    {% if saccos %}
-                        <select name="sacco-drivers-filter" onchange="location = this.value;">
-                            <option value="">ALL SACCOS</option>
-                            {% for sacco in saccos %}
-                                <option value="{% url 'registrations:sacco_drivers_list' sacco.id %}">{{sacco.sacco_name}}</option>
-                            {% endfor %}
-                        </select>
-                    {% endif %}
-                </div>
+        <div id="registered-drivers-header-row">
+            <div id="registered-drivers-header-text">{{sacco}} DRIVERS</div>
+            <div id="search-driver-bar">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    {{ form }}
+                    <!-- <input type="search" placeholder="driver id number"> -->
+                    <input type="submit" name="search" value="SEARCH">
+                </form>
             </div>
+        </div>
+        {% if drivers %}
             <table>
                 <tr>
                     <th>Profile</th>
                     <th>Driver ID</th>
                     <th>Name</th>
                     <th>License Status</th>
-                    <th>Sacco</th>
-                    <!-- <th>Email</th>
-                    <th>Phone</th> -->
+                    <th>Sacco Status</th>
+                    <th>Email</th>
+                    <th>Phone</th>
                 </tr>
                 {% for driver in drivers %}
                     <tr>
-                        <td>
-                            <div id="profile-icon">
-                                <a href="">
-                                    <img src="{% static "images/profile-icon2.png" %}" alt="view"  width="30px" height="30px"></a>
-                                    <!-- View profile -->
-                                </a>
-                            </div>
-                        </td>
+                        <td><a href="{% url 'registrations:sacco_driver_profile' sacco_id driver.driver.national_id %}" target="_blank">Update Profile</a></td>
                         <td>{{ driver.driver.national_id}}</td> 
-                        <td>{{ driver.driver.name}}</td> 
+                        <td>{{ driver.driver.name}}</td>
                         <td>{{ driver.driver.license_status}}</td> 
-                        <td>{{ driver.sacco}}</td> 
-                        <!-- <td>{{ driver.email}}</td> 
-                        <td>{{ driver.phone}}</td>  -->
+                        <td>SACCO STATUS</td> 
+                        <td>{{ driver.email}}</td> 
+                        <td>{{ driver.phone}}</td> 
                         
                     </tr>
                 {% endfor %}

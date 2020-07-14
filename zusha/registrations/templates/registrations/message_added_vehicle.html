@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <style>
+            body{
+                background-color: white;
+            }
+            #message-window{
+                background-color: whitesmoke;
+                margin: 10% 30% 0 30%;
+                border-radius: 5px;
+                text-align: center;
+                height: 350px;
+            }
+            #header{
+                border-style: solid;
+                border-width: 0 0 2px 0;
+                padding: 10px;
+                font-weight: bold;
+                font-size: large;
+                
+            }
+            #vehicle-details{
+                padding: 3px;
+                background-color: rgb(255, 174, 0);
+                height: 190px;
+            }
+            #row{
+                padding: 3px;
+                text-align: left;
+            }
+            #col-left, #col-right{
+                width: 47%;
+                float: left;
+                background-color: white;
+                margin: 3px;
+                padding: 3px;
+            }
+            #col-left{
+                font-weight: bold;
+            }
+            #text{
+                padding: 10px;
+                color: white;
+                font-size: large;
+                background-color: green;
+                margin-top: 4px;
+            }
+            em{
+                font-weight: bold;
+            }
+            #links{
+                margin-top: 5px;
+                padding: 5px;
+            }
+            #add-another-vehicle, #vehicles-list{
+                float: left;
+                width: 46%;
+                background-color: orangered;
+                font-weight: bold;
+                color: white;
+                margin: 3px;
+                border-radius: 2px;
+                padding: 10px;
+            }
+            #add-another-vehicle:hover, #vehicles-list:hover{
+                background-color: rgb(245, 87, 30);
+                font-weight: bold;
+                padding: 15px;
+                width: 45%;
+            }
+        </style>            
+    </head>
+
+    <body>
+        <div id="message-window">
+            <div id="header">{{vehicle.registration_number}}</div>
+            <div id="vehicle-details">
+                <div id="row">
+                    <div id="col-left">OWNER</div>
+                    <div id="col-right">{{vehicle.name_of_owner}}</div>
+                </div>
+                <div id="row">
+                    <div id="col-left">YEAR OF MANUFACTURE</div>
+                    <div id="col-right">{{vehicle.year_of_manufacture}}</div>
+                </div>
+                <div id="row">
+                    <div id="col-left">ENGINE CAPACITY</div>
+                    <div id="col-right">{{vehicle.engine_capacity}} CC</div>
+                </div>
+                <div id="row">
+                    <div id="col-left">BODY TYPE</div>
+                    <div id="col-right">{{vehicle.vehicle_body_type}}</div>
+                </div>
+                <div id="row">
+                    <div id="col-left">LAST INSPECTION DATE</div>
+                    <div id="col-right">{{vehicle.last_inspection_date}}</div>
+                </div>
+                <div id="row">
+                    <div id="col-left">INSPECTION STATUS</div>
+                    <div id="col-right">{{vehicle.inspection_status}}</div>
+                </div>
+            </div>
+            <div id="text">
+                HAS BEEN SUCCESSFULLY ADDED TO THE SACCO VEHICLES LIST
+            </div>
+            <div id="links">
+                <a href="{% url 'registrations:add_vehicle' sacco_id %}">
+                    <div id="add-another-vehicle">ADD ANOTHER VEHICLE</div>
+                </a>
+                <a href="{% url 'registrations:sacco_vehicles_list' sacco_id %}">
+                    <div id="vehicles-list">LIST OF ALL VEHICLES</div>
+                </a>
+                </div>
+        </div>
+    </body>
+</html>

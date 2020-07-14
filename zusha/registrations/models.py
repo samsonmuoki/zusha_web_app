@@ -13,6 +13,16 @@ LICENSE_STATUS = [
     (BLACKLISTED, ('Not approved to operate')),
 ]
 
+LICENSE_CATEGORIES = [
+    ('A', ('A')),
+    ('B', ('B')),
+    ('C', ('C')),
+    ('D', ('D')),
+    ('E', ('E')),
+    ('F', ('F')),
+    ('G', ('G')),
+]
+
 SACCO_DRIVER_STATUS = [
     ('Approved', ('Approved to operate')),
     ('Suspended', ('Suspended for the time being')),
@@ -172,6 +182,10 @@ class RegisteredDriver(models.Model):
     sex = models.CharField(max_length=10, choices=GENDER_CHOICES)
     blood_group = models.CharField(max_length=10, choices=BLOOD_GROUPS)
     license_number = models.CharField(max_length=10)
+    license_categories = models.CharField(
+        max_length=50,
+        choices=LICENSE_CATEGORIES
+    )
     date_of_issue = models.DateField(
         auto_now=False,
         auto_now_add=False
@@ -185,7 +199,7 @@ class RegisteredDriver(models.Model):
         choices=COUNTIES
     )
     # date registered = models.DateField
-    # last_report_revision_date = models.DateField
+    last_revision_date = models.DateField
     email = models.EmailField(max_length=50)
     phone_number = models.CharField(max_length=10)
     license_status = models.CharField(

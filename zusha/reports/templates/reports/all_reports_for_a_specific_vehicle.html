@@ -197,10 +197,11 @@
                             <td>{{ report.time }}</td>
                             <!-- <td><a href="/reports/vehicles/{{report.regno}}/{{report.id}}">{{ report.location }}</a></td> -->
                             <td><a href="/reports/vehicles/{{report.regno}}/{{report.id}}">
-                                <img src="{% static "images/location4.png" %}" alt="view"  width="30px" height="30px"></a></td>
+                                <img src="{% static "images/location4.png" %}" alt="view"  width="30px" height="30px"></a>
+                            </td>
                             <td>{{ report.driver}}</td>
-                            <td>{{report.sacco_resolution}}</td>
-                            <td>{{report.ntsa_resolution}}</td>
+                            <td>{{report.sacco_action}}</td>
+                            <td>{{report.ntsa_action}}</td>
                         </tr>
                         {% endfor %}
                     </table>
