@@ -84,7 +84,8 @@
                 </tr>
                 {% for sacco in saccos %}
                     <tr>
-                        <td><a href="/registrations/saccos/{{sacco.id}}">{{ sacco.sacco_name}}</a></td> 
+                        <!-- <td><a href="/registrations/saccos/{{sacco.id}}">{{ sacco.sacco_name}}</a></td>  -->
+                        <td><a href="{% url 'reports:all_reports_for_a_specific_sacco' sacco.id %}">{{ sacco.sacco_name}}</a></td> 
                         <td>{{ sacco.license_status}}</td> 
                         <td>{{ sacco.email}}</td> 
                         <td>{{ sacco.phone}}</td> 
