@@ -299,7 +299,6 @@
                             <select name='sacco-report' onchange="location = this.value;">
                                 <option value="{% url 'home' %}">All Saccos</option>
                                 {% for sacco in saccos %}
-                                    <!-- <option value="http://localhost:8000/reports/saccos/{{sacco.id}}">{{sacco.sacco_name}}</option> -->
                                     <option value="{% url 'reports:all_reports_for_a_specific_sacco' sacco.id %}">{{sacco.sacco_name}}</option>
                                 {% endfor %}
                             </select>
