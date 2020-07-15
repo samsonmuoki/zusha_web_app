@@ -186,8 +186,8 @@
                             <th>Time</th>
                             <th>Location</th>
                             <th>Driver</th>
-                            <th>SACCO ACTION</th>
-                            <th>NTSA ACTION</th>
+                            <!-- <th>SACCO ACTION</th>
+                            <th>NTSA ACTION</th> -->
                         </tr>
                         {% for report in reports %}
                         <tr>
@@ -200,8 +200,8 @@
                                 <img src="{% static "images/location4.png" %}" alt="view"  width="30px" height="30px"></a>
                             </td>
                             <td>{{ report.driver}}</td>
-                            <td>{{report.sacco_action}}</td>
-                            <td>{{report.ntsa_action}}</td>
+                            <!-- <td>{{report.sacco_action}}</td>
+                            <td>{{report.ntsa_action}}</td> -->
                         </tr>
                         {% endfor %}
                     </table>

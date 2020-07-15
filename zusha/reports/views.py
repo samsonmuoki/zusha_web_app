@@ -429,10 +429,13 @@ def fetch_all_reports_for_a_specific_vehicle(request, regno):
     except EmptyPage:
         reports = paginator.page(paginator.num_pages)
 
+    number = reports_list.count()
+
     context = {
         'reports': reports,
         'reports_list': reports_list,
         'regno': regno,
+        'number': number,
     }
 
     return render(
