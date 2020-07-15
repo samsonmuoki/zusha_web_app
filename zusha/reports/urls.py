@@ -77,7 +77,7 @@ urlpatterns = [
         # viewable by logged in sacco admin
     ),
     path(
-        'all/<slug:sacco_id>/<slug:regno>/',
+        'all/<slug:sacco_id>/drivers/<slug:driver_id>/',
         views.fetch_all_cases_for_a_specific_sacco_driver,
         name="vehicle_cases"
         # viewable by logged in sacco admin
