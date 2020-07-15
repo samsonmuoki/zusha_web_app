@@ -73,7 +73,6 @@ def update_reports_db():
         day = date(
             int(date_list[0]), int(date_list[1]), int(date_list[2])
         )
-
         SpeedingInstance.objects.get_or_create(
             regno=regno,
             sacco=sacco,

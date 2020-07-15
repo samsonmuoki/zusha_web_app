@@ -74,7 +74,7 @@ urlpatterns = [
     path(
         'saccos/dashboard/<slug:sacco_id>/vehicles/',
         views.sacco_vehicles_list,
-        name='sacco_vehicles_list'
+        name='dashboard_sacco_vehicles_list'
     ),
     path(
         'saccos/dashboard/<slug:sacco_id>/vehicles/add',

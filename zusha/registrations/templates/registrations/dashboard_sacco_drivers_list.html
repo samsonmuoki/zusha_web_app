@@ -85,8 +85,9 @@
                 <!-- <li><a href="/reports/all">REPORTS</a></li> -->
                 <li><a href="{% url 'registrations:dashboard_sacco_drivers_list' sacco_id %}">DRIVERS</a></li>
                 <!-- <li><a href="/registrations/saccos">SACCOS</a></li> -->
-                <li><a href="{% url 'registrations:sacco_vehicles_list' sacco_id %}">VEHICLES</a></li>
-                <li><a href="">EXTRA</a></li>
+                <li><a href="{% url 'registrations:dashboard_sacco_vehicles_list' sacco_id %}">VEHICLES</a></li>
+                <li><a href="{% url 'registrations:saccos' %}">LOGOUT</a></li>
+    
             </ul>
         </div>
         <div id="registered-drivers-header-row">

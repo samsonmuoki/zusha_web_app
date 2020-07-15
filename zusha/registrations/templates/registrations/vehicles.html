@@ -88,12 +88,13 @@
     <body>
         <div id="menu">
             <ul>
-                <li><a href="http://localhost:8000">HOME</a></li>
+                <!-- <li><a href="http://localhost:8000">HOME</a></li> -->
+                <li><a href="{% url 'home' %}">HOME</a></li>
                 <li><a href="/reports/all">REPORTS</a></li>
                 <li><a href="/registrations/drivers">DRIVERS</a></li>
                 <li><a href="/registrations/saccos">SACCOS</a></li>
                 <li><a href="/registrations/vehicles">VEHICLES</a></li>
-                <li><a href="">EXTRA</a></li>
+                <!-- <li><a href="">EXTRA</a></li> -->
             </ul>
         </div>
         <div id="registered-vehicles-header-row">

@@ -14,7 +14,8 @@
                 margin: 0;
                 padding: 0;
                 overflow: hidden;
-                background-color: #333;
+                background-color: rgb(73, 33, 33);                
+                /* background-color: #333; */
                 
             }
         
@@ -56,12 +57,12 @@
     <body>
         <div id="menu">
             <ul>
-                <li><a href="http://localhost:8000">HOME</a></li>
-                <li><a href="/reports/all">REPORTS</a></li>
-                <li><a href="/registrations/drivers">DRIVERS</a></li>
-                <li><a href="/registrations/saccos">SACCOS</a></li>
-                <li><a href="/registrations/vehicles">VEHICLES</a></li>
-                <li><a href="{% url 'registrations:sacco_logout' %}">LOGOUT</a></li>
+                <li><a href="{% url 'registrations:saccos_dashboard' sacco_id %}">HOME</a></li>
+                <!-- <li><a href="/reports/all">REPORTS</a></li> -->
+                <li><a href="{% url 'registrations:dashboard_sacco_drivers_list' sacco_id %}">DRIVERS</a></li>
+                <!-- <li><a href="/registrations/saccos">SACCOS</a></li> -->
+                <li><a href="{% url 'registrations:dashboard_sacco_vehicles_list' sacco_id %}">VEHICLES</a></li>
+                <li><a href="{% url 'registrations:saccos' %}">LOGOUT</a></li>
             </ul>
         </div>
         <div>
