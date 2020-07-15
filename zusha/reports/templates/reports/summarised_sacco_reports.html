@@ -84,8 +84,8 @@
         height: 250px;
     }
     #details{
-        float: left;
-        width: 75%;
+        /* float: left; */
+        width: 100%;
         margin-left: 5px;
     }
     #details-title{
@@ -146,19 +146,19 @@
         </ul>
     </div>
     <div id="contents">
-        <div id="statistics">
-            <div id="summary"> TOTAL REPORTS: {{reports_list|length}} </div>
+        <!-- <div id="statistics"> -->
+            <!-- <div id="summary"> TOTAL REPORTS: {{reports_list|length}} </div> -->
             <!-- <div id="bargraph"> <img src="{% static "images/pie-chart2.jpg" %}" alt="My image"  width="100%" height="250px"> </div>
             <div id="linegraph"><img src="{% static "images/bar-graph.svg" %}" alt="My image"  width="100%" height="250px"></div>
             <div id="piechart"><img src="{% static "images/bargraph.jpg" %}" alt="My image"  width="100%" height="250px"></div> -->
-        </div>
+        <!-- </div> -->
 
         <div id="details">
             <div>
                 <div id="details-title"> SACCO REPORTS SUMMARY</div>
                 <div id="filter-section">
                     <div id="filter-text">Filter</div>
-                    <div id="filter-dropdown">
+                    <!-- <div id="filter-dropdown">
                         {% if saccos %}
                             <select name='sacco-report' onchange="location = this.value;">
                                 <option value="http://localhost:8000">All Saccos</option>
@@ -167,7 +167,7 @@
                                 {% endfor %}
                             </select>
                         {% endif %}
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -186,7 +186,7 @@
                         {% for report in reports %}
                         <tr>
                             <td>
-                                <a href='/reports/summary/saccos/{{report.sacco}}/{{report.date.year}}-{{report.date.month}}-{{report.date.day}}'>
+                                <!-- <a href='/reports/summary/saccos/{{report.sacco}}/{{report.date.year}}-{{report.date.month}}-{{report.date.day}}'> -->
                                     <img src="{% static "images/sign.png" %}" alt="view"  width="30px" height="30px">
                                 </a>
                             </td>

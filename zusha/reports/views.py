@@ -497,10 +497,10 @@ def fetch_all_reports_for_a_specific_sacco(request, sacco_id):
 
     all_reports = DailyVehicleReport.objects.all().count()
     total_cases = reports_list.count()
-    pending_reports_percent = pending_reports.count() / total_cases * 100
-    in_progress_percent = in_progress_reports.count() / total_cases * 100
-    resolved_percent = resolved_reports.count() / total_cases * 100
-    rating = round((all_reports - total_cases) / all_reports * 10, 1)
+    pending_reports_percent = pending_reports.count() / (total_cases +1 ) * 100
+    in_progress_percent = in_progress_reports.count() / (total_cases + 1) * 100
+    resolved_percent = resolved_reports.count() / (total_cases + 1) * 100
+    rating = round((all_reports - total_cases) / (all_reports) * 10, 1)
 
     context = {
         'reports': reports,
